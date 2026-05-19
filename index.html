@@ -3,193 +3,294 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PureFlix Ultra - Bibliotecas Integradas</title>
+  <title>PureFlix - Performance Edition</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
   <style>
-    *{ margin:0; padding:0; box-sizing:border-box; }
-    body{ background:#0b0b0b; color:white; font-family:'Poppins', sans-serif; overflow-x:hidden; }
+    :root {
+      --netflix-red: #e50914;
+      --netflix-black: #141414;
+      --netflix-dark: #000000;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     
-    header{ 
-      width:100%; padding:15px 50px; display:flex; justify-content:space-between; align-items:center; 
-      position:fixed; top:0; left:0; z-index:1000; background:rgba(0,0,0,0.95); border-bottom: 1px solid #222;
+    body { 
+      background-color: var(--netflix-black); 
+      color: white; 
+      font-family: 'Roboto', sans-serif; 
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
-    .logo{ font-size:28px; font-weight:700; color:#e50914; letter-spacing:2px; cursor: pointer; }
 
-    .container{ max-width: 1200px; margin: 100px auto 50px; padding: 0 20px; }
+    /* Otimização de Renderização: GPU Acceleration */
+    header, .movie-card, .netflix-loader {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
 
-    .search-section{ text-align: center; margin-bottom: 40px; }
-    .search-section h1{ font-size: 42px; margin-bottom: 10px; }
-    
-    .input-group{ max-width: 700px; margin: 20px auto; display: flex; flex-direction: column; gap: 15px; }
-    .search-container{ display: flex; gap: 10px; }
-    
-    input{ 
-      flex:1; padding:15px; border:none; border-radius:8px; background:#1e1e1e; 
-      color:white; font-size:16px; outline:none; border: 2px solid transparent; transition: 0.3s; 
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 15px 4%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+      transition: background 0.3s ease;
     }
-    input:focus{ border-color: #e50914; }
-    
-    button{ 
-      padding:15px 25px; border:none; border-radius:8px; background:#e50914; 
-      color:white; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; 
-    }
-    button:hover{ background:#ff1f29; transform: translateY(-2px); }
-    button.secondary{ background: #333; }
 
-    /* Resultados da Busca */
-    .results-grid{ 
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-      gap: 20px; margin-top: 30px; display: none;
-    }
-    .result-card{ 
-      background: #181818; border-radius: 12px; padding: 20px; border: 1px solid #333;
-      transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; position: relative;
-    }
-    .result-card:hover{ border-color: #e50914; background: #222; transform: scale(1.02); }
-    
-    .source-badge{ position: absolute; top: 10px; right: 10px; background: #2980b9; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
-    .best-badge{ background: #e50914; margin-right: 5px; }
+    header.scrolled { background-color: var(--netflix-dark); }
 
-    .result-title{ font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #fff; line-height: 1.4; padding-right: 60px; }
-    .result-meta{ font-size: 12px; color: #888; display: flex; justify-content: space-between; align-items: center; }
-    .seeders{ color: #2ecc71; font-weight: bold; }
+    .logo {
+      color: var(--netflix-red);
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
 
-    /* Player Section */
-    #player-section{ display: none; margin-top: 30px; }
-    .player-wrapper{ 
-      background: #000; border-radius: 15px; overflow: hidden; 
-      box-shadow: 0 10px 50px rgba(0,0,0,0.8); position: relative;
+    .hero {
+      height: 80vh;
+      position: relative;
+      background: linear-gradient(to right, rgba(0,0,0,0.9) 20%, transparent 80%),
+                  url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      padding: 0 4%;
     }
-    video, audio{ width: 100%; max-height: 70vh; display: block; background: #000; }
-    
-    .status-bar{ 
-      background: #181818; padding: 15px 20px; border-radius: 0 0 15px 15px; 
-      border: 1px solid #333; border-top: none;
-    }
-    .info-row{ display: flex; justify-content: space-between; font-size: 13px; color: #aaa; margin-bottom: 5px; }
 
-    #loading-overlay{
-      position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
-      display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px;
-    }
-    .spinner{ width: 50px; height: 50px; border: 5px solid #333; border-top-color: #e50914; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-    @keyframes spin{ to{ transform: rotate(360deg); } }
+    .hero-content { max-width: 550px; z-index: 2; }
+    .hero-title { font-size: clamp(32px, 8vw, 56px); font-weight: 900; margin-bottom: 15px; line-height: 1.1; }
+    .hero-desc { font-size: 16px; margin-bottom: 25px; color: #ccc; }
 
-    @media(max-width: 768px){
-      header{ padding: 15px 20px; }
-      .container{ margin-top: 80px; }
-      .search-section h1{ font-size: 30px; }
+    .search-box {
+      display: flex;
+      gap: 8px;
+      background: rgba(0,0,0,0.6);
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.2);
     }
+
+    .search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      outline: none;
+      padding: 8px;
+    }
+
+    .btn-play {
+      background-color: var(--netflix-red);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn-play:hover { transform: scale(1.05); }
+
+    .main-container { padding: 20px 4%; margin-top: -80px; position: relative; z-index: 5; }
+    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: #e5e5e5; }
+
+    .results-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+
+    .movie-card {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #1a1a1a;
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    .movie-card:hover {
+      transform: scale(1.1) translateY(-5px);
+      z-index: 10;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+    }
+
+    .movie-card-info {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(to top, rgba(0,0,0,1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .movie-card:hover .movie-card-info { opacity: 1; }
+    .movie-title { font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .movie-meta { font-size: 10px; color: #46d369; margin-top: 4px; }
+
+    #player-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .player-header { padding: 15px 4%; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.5); }
+    .btn-back { background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; }
+
+    #video-container { flex: 1; display: flex; align-items: center; justify-content: center; }
+    video { width: 100%; height: 100%; max-height: 100vh; outline: none; }
+
+    .netflix-loader {
+      position: fixed;
+      inset: 0;
+      background: var(--netflix-dark);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .loader-circle {
+      width: 50px;
+      height: 50px;
+      border: 3px solid #333;
+      border-top-color: var(--netflix-red);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="logo" onclick="location.reload()">PUREFLIX</div>
-</header>
-
-<div id="loading-overlay">
-  <div class="spinner"></div>
-  <p id="loading-text" style="font-weight: 600; font-size: 18px;">Extraindo da Biblioteca...</p>
+<div id="loader" class="netflix-loader">
+  <div class="loader-circle"></div>
 </div>
 
-<div class="container">
-  
-  <section class="search-section">
-    <h1>Bibliotecas Integradas</h1>
-    <p style="color: #888;">Pesquisando em HDRTorrent, Blogs de Cinema e Fontes Globais.</p>
+<header id="navbar">
+  <div class="logo" onclick="location.reload()">PureFlix</div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Otimizado para você.</h1>
+    <p class="hero-desc">Streaming fluido, busca instantânea e performance de elite.</p>
     
-    <div class="input-group">
-      <div class="search-container">
-        <input type="text" id="search-input" placeholder="O que você quer assistir hoje?" onkeypress="if(event.key==='Enter') searchTorrents()" />
-        <button id="search-btn" onclick="searchTorrents()">Buscar</button>
-      </div>
-      
-      <div class="search-container">
-        <input type="text" id="magnet-input" placeholder="Ou cole o magnet link aqui..." />
-        <button class="secondary" onclick="playWithBridge(document.getElementById('magnet-input').value, 'Link Manual')">Abrir Link</button>
-      </div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Título, gênero ou artista..." onkeypress="if(event.key==='Enter') searchMovies()" />
+      <button class="btn-play" onclick="searchMovies()">Buscar</button>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div id="results-grid" class="results-grid"></div>
+<div class="main-container">
+  <div id="results-section" style="display: none;">
+    <h2 class="section-title">Encontrados para você</h2>
+    <div id="results-grid" class="results-row"></div>
+  </div>
 
-  <section id="player-section">
-    <div class="player-wrapper" id="video-container"></div>
-    <div class="status-bar">
-      <div class="info-row">
-        <span id="status-text" style="color: #2ecc71; font-weight: bold;">✓ Streaming Ativo</span>
-        <span id="stream-info">Ponte Turbo Ativada</span>
-      </div>
-      <div id="file-name" style="font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Arquivo: Carregando...</div>
-      <div style="margin-top: 15px; display: flex; gap: 10px;">
-        <button onclick="document.querySelector('video, audio')?.requestFullscreen()" style="padding: 8px 15px; font-size: 12px;">Tela Cheia</button>
-        <button onclick="location.reload()" style="padding: 8px 15px; font-size: 12px; background: #333;">Fechar Player</button>
-      </div>
-    </div>
-  </section>
+  <h2 class="section-title">Em alta</h2>
+  <div class="results-row" id="trending-row">
+    <!-- Placeholder cards -->
+    <div class="movie-card"><div style="height:100%; background:#222;"></div></div>
+    <div class="movie-card"><div style="height:100%; background:#222;"></div></div>
+    <div class="movie-card"><div style="height:100%; background:#222;"></div></div>
+    <div class="movie-card"><div style="height:100%; background:#222;"></div></div>
+    <div class="movie-card"><div style="height:100%; background:#222;"></div></div>
+  </div>
+</div>
 
+<div id="player-overlay">
+  <div class="player-header">
+    <button class="btn-back" onclick="closePlayer()">←</button>
+    <div id="playing-title" style="font-weight: bold;">Carregando...</div>
+  </div>
+  <div id="video-container"></div>
 </div>
 
 <script>
   const BRIDGE_URL = 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer';
 
-  async function searchTorrents() {
+  // Otimização de Scroll do Header (Throttling)
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const now = Date.now();
+    if (now - lastScroll < 50) return;
+    lastScroll = now;
+    
+    const header = document.getElementById('navbar');
+    if (window.scrollY > 50) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+  });
+
+  async function searchMovies() {
     const query = document.getElementById('search-input').value.trim();
     if (!query) return;
 
-    const btn = document.getElementById('search-btn');
+    showLoader(true);
     const grid = document.getElementById('results-grid');
-    
-    btn.disabled = true;
-    btn.innerText = 'Buscando...';
     grid.innerHTML = '';
-    grid.style.display = 'grid';
-    document.getElementById('player-section').style.display = 'none';
 
     try {
       const response = await fetch(`${BRIDGE_URL}/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
 
+      document.getElementById('results-section').style.display = 'block';
+      
       if (!data || data.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">Nenhum resultado encontrado.</p>';
+        grid.innerHTML = '<p style="padding: 20px; color: #888;">Nenhum resultado encontrado.</p>';
       } else {
-        data.forEach((item, index) => {
-          const magnet = item.info_hash ? `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(item.name)}` : item.magnet;
+        // DocumentFragment para otimizar inserção no DOM
+        const fragment = document.createDocumentFragment();
+        
+        data.slice(0, 18).forEach(item => {
+          const magnet = `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(item.name)}`;
           const card = document.createElement('div');
-          card.className = 'result-card';
-          card.onclick = () => playWithBridge(magnet, item.name);
+          card.className = 'movie-card';
+          card.onclick = () => playMovie(magnet, item.name);
           
-          const sizeGB = (item.size / 1024 / 1024 / 1024).toFixed(2);
-          const sourceClass = item.source === 'Biblioteca' ? 'source-badge' : 'source-badge best-badge';
+          const sizeGB = (item.size / 1024 / 1024 / 1024).toFixed(1);
           
           card.innerHTML = `
-            <div class="${sourceClass}">${item.source}</div>
-            <div class="result-title">${item.name}</div>
-            <div class="result-meta">
-              <span>${sizeGB} GB</span>
-              <span class="seeders">Seeds: ${item.seeders}</span>
+            <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#1a1a1a; font-size:10px; text-align:center; padding:10px; color:#555;">
+              ${item.name}
+            </div>
+            <div class="movie-card-info">
+              <div class="movie-title">${item.name}</div>
+              <div class="movie-meta">${item.seeders} Seeds • ${sizeGB} GB</div>
             </div>
           `;
-          grid.appendChild(card);
+          fragment.appendChild(card);
         });
+        grid.appendChild(fragment);
       }
-    } catch (error) {
-      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #e50914;">Erro na busca.</p>';
+      window.scrollTo({ top: 500, behavior: 'smooth' });
+    } catch (e) {
+      console.error(e);
     } finally {
-      btn.disabled = false;
-      btn.innerText = 'Buscar';
-      grid.scrollIntoView({ behavior: 'smooth' });
+      showLoader(false);
     }
   }
 
-  function playWithBridge(magnet, name) {
-    if(!magnet) return alert('Magnet link inválido.');
-    document.getElementById('loading-overlay').style.display = 'flex';
-    document.getElementById('results-grid').style.display = 'none';
-    document.getElementById('file-name').innerText = 'Arquivo: ' + name;
+  function playMovie(magnet, name) {
+    showLoader(true);
+    document.getElementById('playing-title').innerText = name;
     
     const streamUrl = `${BRIDGE_URL}/stream?magnet=${encodeURIComponent(magnet)}`;
     const container = document.getElementById('video-container');
@@ -198,7 +299,7 @@
     const video = document.createElement('video');
     video.controls = true;
     video.autoplay = true;
-    video.style.width = '100%';
+    video.playsInline = true;
     
     const source = document.createElement('source');
     source.src = streamUrl;
@@ -206,15 +307,25 @@
     container.appendChild(video);
 
     video.oncanplay = () => {
-      document.getElementById('loading-overlay').style.display = 'none';
-      document.getElementById('player-section').style.display = 'block';
-      document.getElementById('player-section').scrollIntoView({ behavior: 'smooth' });
+      showLoader(false);
+      document.getElementById('player-overlay').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
     };
 
     video.onerror = () => {
-      document.getElementById('loading-overlay').style.display = 'none';
+      showLoader(false);
       alert('Erro ao carregar o vídeo.');
     };
+  }
+
+  function closePlayer() {
+    document.getElementById('player-overlay').style.display = 'none';
+    document.getElementById('video-container').innerHTML = '';
+    document.body.style.overflow = 'auto';
+  }
+
+  function showLoader(show) {
+    document.getElementById('loader').style.display = show ? 'flex' : 'none';
   }
 </script>
 
