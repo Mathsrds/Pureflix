@@ -1,10 +1,16 @@
 const express = require('express');
-const WebTorrent = require('webtorrent-hybrid');
 const axios = require('axios');
 const mime = require('mime-types');
+const cheerio = require('cheerio');
 const app = express();
 
-const client = new WebTorrent({ maxConns: 100 });
+// Usar import dinâmico para o WebTorrent pois as versões novas são ESM
+let client;
+(async () => {
+    const { default: WebTorrent } = await import('webtorrent-hybrid');
+    client = new WebTorrent({ maxConns: 100 });
+    console.log('WebTorrent Client iniciado com sucesso.');
+})();
 
 app.use(express.json());
 
@@ -18,42 +24,31 @@ app.use((req, res, next) => {
     next();
 });
 
-// BUSCA MULTI-FONTE (Proxy para APIs de torrents populares)
 app.get('/search', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).send('Query is required');
 
-    console.log('Buscando em múltiplas fontes para:', query);
+    console.log('Buscando para:', query);
 
     try {
-        // Tentativa 1: API Bay (PirateBay)
-        const response = await axios.get(`https://apibay.org/q.php?q=${encodeURIComponent(query)}`, { timeout: 5000 });
-        let results = response.data;
-
-        if (!results || results.length === 0 || results[0].id === '0') {
-            // Tentativa 2: Fallback para outra fonte se a primeira falhar (ex: SolidTorrents ou similar via API pública)
-            const fallback = await axios.get(`https://solidtorrents.net/api/v1/search?q=${encodeURIComponent(query)}&category=all`, { timeout: 5000 });
-            results = fallback.data.results.map(item => ({
-                name: item.title,
-                info_hash: item.infoHash,
-                size: item.size,
-                seeders: item.swarm.seeders,
-                leechers: item.swarm.leechers
-            }));
-        } else {
-            // Formatar resultados da API Bay
-            results = results.map(item => ({
-                name: item.name,
-                info_hash: item.info_hash,
-                size: item.size,
-                seeders: item.seeders,
-                leechers: item.leechers
-            }));
+        // Busca via SolidTorrents API (mais estável para bibliotecas)
+        const response = await axios.get(`https://solidtorrents.net/api/v1/search?q=${encodeURIComponent(query)}&category=all`, { timeout: 8000 });
+        
+        if (!response.data || !response.data.results) {
+            return res.json([]);
         }
+
+        const results = response.data.results.map(item => ({
+            name: item.title,
+            info_hash: item.infoHash,
+            size: item.size,
+            seeders: item.swarm.seeders,
+            source: item.title.toLowerCase().includes('dublado') || item.title.toLowerCase().includes('legendado') ? 'Biblioteca BR' : 'Global'
+        }));
 
         res.json(results);
     } catch (error) {
-        console.error('Erro na busca multi-fonte:', error.message);
+        console.error('Erro na busca:', error.message);
         res.status(500).send('Erro ao realizar busca');
     }
 });
@@ -61,25 +56,22 @@ app.get('/search', async (req, res) => {
 app.get('/stream', (req, res) => {
     const magnet = req.query.magnet;
     if (!magnet) return res.status(400).send('Magnet link is required');
+    if (!client) return res.status(503).send('Servidor iniciando, tente novamente em instantes');
 
     let torrent = client.get(magnet);
-    
     if (!torrent) {
         torrent = client.add(magnet, (t) => {
-            t._lastActive = Date.now();
             serveFile(t, req, res);
         });
     } else {
-        torrent._lastActive = Date.now();
         if (torrent.ready) serveFile(torrent, req, res);
         else torrent.on('ready', () => serveFile(torrent, req, res));
     }
 });
 
 function serveFile(torrent, req, res) {
-    const file = torrent.files.find(f => 
-        f.name.match(/\.(mp4|mkv|webm|mp3|wav|ogg)$/i)
-    ) || torrent.files.reduce((a, b) => a.length > b.length ? a : b);
+    const file = torrent.files.find(f => f.name.match(/\.(mp4|mkv|webm|mp3|wav|ogg)$/i)) 
+                 || torrent.files.reduce((a, b) => a.length > b.length ? a : b);
 
     if (!file) return res.status(404).send('No playable file found');
 
@@ -110,5 +102,5 @@ function serveFile(torrent, req, res) {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor Bridge Multi-Fonte rodando na porta ${PORT}`);
+    console.log(`Servidor Bridge Corrigido rodando na porta ${PORT}`);
 });
