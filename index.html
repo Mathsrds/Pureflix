@@ -1,230 +1,70 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workshop de Negócios Musicais</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background-color: #f8f9fa;
-            color: #333; 
-        }
-        header {
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
-            padding: 1.5em 0;
-            color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        header .navbar-brand {
-            font-size: 1.8em;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        .section-title {
-            text-align: center;
-            margin: 2em 0 1em;
-            font-weight: 600;
-            color: #ff4500;
-            text-transform: uppercase;
-        }
-        .tab-content {
-            padding: 30px;
-            border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        .benefits, .details {
-            background: #ffefec;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 1em;
-        }
-        .benefits h4, .details h4 {
-            color: #ff4500;
-        }
-        .btn-primary {
-            background-color: #ff4500;
-            border-color: #ff4500;
-        }
-        .btn-primary:hover {
-            background-color: #e63900;
-            border-color: #e63900;
-        }
-        footer {
-            background: #ff4500;
-            color: #fff;
-            padding: 1.5em 0;
-            text-align: center;
-        }
-        .interactive-card:hover {
-            transform: scale(1.05);
-            transition: all 0.3s ease;
-        }
-        .embed-responsive {
-            margin-bottom: 30px;
-        }
-        .embed-responsive iframe {
-            border-radius: 10px;
-        }
-    </style>
-</head>
-<body>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PureFlix</title>
 
-    <!-- Header -->
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">🎵 Negócios Musicais</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link text-white" href="#video-section">Sobre</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#cursos">Cursos</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
 
-<!-- Video Section -->
-<section id="video-section" class="container mt-4">
-    <h2 class="section-title">Conheça o Workshop</h2>
-    <div class="embed-responsive embed-responsive-16by9 mb-3">
-        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/hC76coDnk90" allowfullscreen></iframe>
-    </div>
-    <p>Este é um conteúdo exclusivo para profissionais da música ou pessoas que querem entender como funciona o mercado da música no Brasil e no mundo... Trata-se de um workshop onde nós vamos te passar os segredos do mercado do entretenimento. O conteúdo em questão é voltado para todos os que almejam uma carreira, seja este um cantor, compositor, músico de banda, empresário ou até mesmo promotor de eventos.</p>
-    <a href="https://go.hotmart.com/C96595988V" class="btn btn-primary btn-lg d-block text-center mt-3" target="_blank">Quero saber mais</a>
-</section>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Novo Video Section (O objetivo do workshop) -->
-<section id="objetivo-video" class="container mt-4">
-    <h2 class="section-title">O Objetivo do Workshop</h2>
-    <div class="embed-responsive embed-responsive-16by9 mb-3">
-        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/V8tS-bUKT7I" allowfullscreen></iframe>
-    </div>
-</section>
+  <style>
 
-<!-- Tabs Section -->
-<section class="container mt-5">
-    <h2 class="section-title">Conteúdo do Curso</h2>
-    <ul class="nav nav-tabs" id="courseTabs" role="tablist">
-        <li class="nav-item"><a class="nav-link active" id="cronograma-tab" data-toggle="tab" href="#cronograma" role="tab">Cronograma</a></li>
-        <li class="nav-item"><a class="nav-link" id="negocios-tab" data-toggle="tab" href="#negocios" role="tab">Negócios com a Música</a></li>
-        <li class="nav-item"><a class="nav-link" id="espiritualidade-tab" data-toggle="tab" href="#espiritualidade" role="tab">Música e Espiritualidade</a></li>
-        <li class="nav-item"><a class="nav-link" id="planoacao-tab" data-toggle="tab" href="#planoacao" role="tab">Plano de Ação</a></li>
-        <li class="nav-item"><a class="nav-link" id="lives-tab" data-toggle="tab" href="#lives" role="tab">Lives e Entrevistas</a></li>
-    </ul>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
 
-    <div class="tab-content mt-4" id="courseTabsContent">
-        <div class="tab-pane fade show active" id="cronograma" role="tabpanel" aria-labelledby="cronograma-tab">
-            <h3>Cronograma</h3>
-            <p>Descrição detalhada do cronograma...</p>
-        </div>
-        <div class="tab-pane fade" id="negocios" role="tabpanel" aria-labelledby="negocios-tab">
-            <h3>Music Business - Negócios com a Música</h3>
-            
-                <ol>
-                    <li>0 - Introdução sobre o Negócio com a Música</li>
-                    <li>1 - Trabalhando a sua imagem</li>
-                  <li>2 - SISRC - Programa para gerar ISRC de um fonograma</li>
-                    <li>3 - Estratégia Artística para sua Carreira na Música</li>
-                    <li>4 - Anitta e o Negócio com a Música - Publicidade</li>
-                    <li>5 - Conteúdo instrospectivo e conteúdo Extrovertido</li>
-                    <li>6 - Desvendando os segredos dos negócios na música</li>
-                    <li>7 - O Mercado Financeiro a sua relação com a Música</li>
-                    <li>8 - Carreira Artística e Projetos Visuais</li>
-                    <li>9 - Esse cantor não está conseguindo vender seus CDs ou lucrar com suas músicas</li>
-                    <li>10 - Aula sobre Mindset</li>
-                    <li>11 - A música não vai sair de você</li>
-                    <li>12 - Relações comerciais na área da música</li>
-                    <li>13 - Qualidade de música; o que podemos pensar sobre?</li>
-                    <li>14 - Tendência e padrões que viralizam no mercado da música - 2022</li>
-                    <li>15 - Negócios na música e os relacionamentos com pessoas</li>
-                    <li>16 - Projetos de incentivo à cultura e música</li>
-                    <li>17 - Abrindo nossa mente sobre o conceito de um projeto visual</li>
-                    <li>18 - Segredos obscuros do mercado de músicas autorais</li>
-                    <li>19 - O mundo da música que nunca te explicaram</li>
-                    <li>20 - A principal ferramenta para seguir uma carreira - Redes Sociais (Parte 1/2)</li>
-                    <li>21 - Marketing e Música - O que você deve saber</li>
-                    <li>22 - Revelando os segredos do mundo de produções que ninguém te ensina!!!</li>
-            </ol>
-        </div>
-        <div class="tab-pane fade" id="espiritualidade" role="tabpanel" aria-labelledby="espiritualidade-tab">
-            <h3>Música, Psique e Espiritualidade</h3>
-            <ul>
-                    <li>1 - Introdução do módulo sobre música e espiritualidade</li>
-                    <li>2 - O beat na sua música</li>
-                    <li>3 - Músicos das densas frequências</li>
-                    <li>4 - Zona de conforto, desânimo e coisas mais</li>
-                    <li>5 - Reiki, música e cura</li>
-                    <li>6 - Música é Onda e Energia</li>
-                    <li>7 - Os segredos ocultos do mundo da música perante a espiritualidade</li>
-                    <li>8 - A permissão da espiritualidade na sua carreira artística</li>
-                </ul>
-        </div>
-        <div class="tab-pane fade" id="planoacao" role="tabpanel" aria-labelledby="planoacao-tab">
-            <h3>Plano de Ação</h3>
-            <ul>
-                    <li>1 - Introdução ao seu plano de ação</li>
-                    <li>2 - Investindo em sua carreira através de um orçamento</li>
-                    <li>3 - Eu vou te provar a importância do projeto com nossos Membros</li>
-                    <li>4 - A melhor estratégia artística que você deve seguir em sua carreira</li>
-                </ul>
-        </div>
-        <div class="tab-pane fade" id="lives" role="tabpanel" aria-labelledby="lives-tab">
-            <h3>Lives e Entrevistas</h3>
-            <ul>
-                    <li>Introdução - Módulo sobre conteúdos diversos</li>
-                    <li>O repertório autoral de um artista faz toda a diferença</li>
-                   <li>Nada substitui o seu talento</li>
-                    <li>Erros que nós artistas e compositores cometemos</li>
-                    <li>Papo de músicos [Live com D'Oliver]</li>
-                    <li>Músicas Autorais</li>
-                    <li>Live da discórdia</li>
-                    <li>Música - Um dos maiores mercados do mundo! [Live]</li>
-                    <li>Mercado musical em tempos de pandemia</li>
-                    <li>Você desistiu do seu sonho com a música?</li>
-                    <li>Beatles e a história dos 432 Hz nas músicas</li>
-                    <li>Bate papo sobre Guias e Produções Musicais</li>
-                    <li>Fazer música é pensar no futuro!</li>
-                    <li>A falta de interesse dos artistas brasileiros</li>
-                    <li>Como trabalhar corretamente com música</li>
-                    <li>Ele mudou a música Brasileira para sempre - Entrevista com Sergio Carrer, O Feio</li>
-                </ul>
-        </div>
-    </div>
-</section>
+    body{
+      background:#0b0b0b;
+      color:white;
+      font-family:'Poppins', sans-serif;
+      overflow-x:hidden;
+    }
 
-<!-- Benefits and Details -->
-<section class="container mt-4 d-flex justify-content-between">
-    <div class="benefits col-md-6">
-        <h4>Vantagens</h4>
-        <p>Transforme-se em um empreendedor da música...</p>
-    </div>
-    <div class="details col-md-5">
-        <h4>Detalhes</h4>
-        <ul>
-            <li>Garantia de 7 dias</li>
-            <li>Estude do seu jeito e em qualquer dispositivo</li>
-            <li>Para quem é este produto? Músicos, cantores, compositores, empresários, DJs, artistas.</li>
-        </ul>
-    </div>
-</section>
+    header{
+      width:100%;
+      padding:20px 50px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:1000;
+      background:linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    }
 
-<!-- Footer -->
-<footer class="footer mt-5">
-    <p>&copy; 2024 Workshop de Negócios Musicais. Todos os direitos reservados.</p>
-</footer>
+    .logo{
+      font-size:34px;
+      font-weight:700;
+      color:#e50914;
+      letter-spacing:2px;
+    }
 
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
+    .hero{
+      height:100vh;
+      background:
+      linear-gradient(to top, #0b0b0b 5%, rgba(0,0,0,0.2)),
+      url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1920&auto=format&fit=crop') center/cover;
+
+      display:flex;
+      align-items:center;
+      padding:0 70px;
+    }
+
+    .hero-content{
+      max-width:700px;
+    }
+
+    .hero h1{
+      font-size:70px;
+      margin-bottom:20px;
+      line-height:1;
+    }
+
+    .hero p{
+      font-size:18px;
 </html>
