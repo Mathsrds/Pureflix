@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PureFlix Ultra - Busca Multi-Fonte</title>
+  <title>PureFlix Ultra - Bibliotecas Integradas</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -48,10 +48,11 @@
       transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; position: relative;
     }
     .result-card:hover{ border-color: #e50914; background: #222; transform: scale(1.02); }
-    .result-card.best-match{ border: 2px solid #e50914; background: #1a0a0a; }
-    .best-badge{ position: absolute; top: -10px; right: 10px; background: #e50914; color: white; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+    
+    .source-badge{ position: absolute; top: 10px; right: 10px; background: #2980b9; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+    .best-badge{ background: #e50914; margin-right: 5px; }
 
-    .result-title{ font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #fff; line-height: 1.4; }
+    .result-title{ font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #fff; line-height: 1.4; padding-right: 60px; }
     .result-meta{ font-size: 12px; color: #888; display: flex; justify-content: space-between; align-items: center; }
     .seeders{ color: #2ecc71; font-weight: bold; }
 
@@ -91,27 +92,23 @@
 
 <div id="loading-overlay">
   <div class="spinner"></div>
-  <p id="loading-text" style="font-weight: 600; font-size: 18px;">Conectando à Ponte Turbo...</p>
+  <p id="loading-text" style="font-weight: 600; font-size: 18px;">Extraindo da Biblioteca...</p>
 </div>
 
 <div class="container">
   
   <section class="search-section">
-    <h1>Busca Multi-Fonte</h1>
-    <p style="color: #888;">Pesquisamos nos melhores sites de torrent para você.</p>
+    <h1>Bibliotecas Integradas</h1>
+    <p style="color: #888;">Pesquisando em HDRTorrent, Blogs de Cinema e Fontes Globais.</p>
     
     <div class="input-group">
-      <!-- CAMPO DE BUSCA -->
       <div class="search-container">
-        <input type="text" id="search-input" placeholder="Digite o nome do filme, série ou música..." onkeypress="if(event.key==='Enter') searchTorrents()" />
+        <input type="text" id="search-input" placeholder="O que você quer assistir hoje?" onkeypress="if(event.key==='Enter') searchTorrents()" />
         <button id="search-btn" onclick="searchTorrents()">Buscar</button>
       </div>
       
-      <div style="color: #444; font-size: 12px;">OU COLE UM LINK MAGNET MANUAL ABAIXO</div>
-
-      <!-- CAMPO MAGNET MANUAL RESTAURADO -->
       <div class="search-container">
-        <input type="text" id="magnet-input" placeholder="Cole o magnet link aqui..." />
+        <input type="text" id="magnet-input" placeholder="Ou cole o magnet link aqui..." />
         <button class="secondary" onclick="playWithBridge(document.getElementById('magnet-input').value, 'Link Manual')">Abrir Link</button>
       </div>
     </div>
@@ -153,27 +150,23 @@
     document.getElementById('player-section').style.display = 'none';
 
     try {
-      // Busca Multi-Fonte via Ponte
       const response = await fetch(`${BRIDGE_URL}/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
 
       if (!data || data.length === 0) {
         grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">Nenhum resultado encontrado.</p>';
       } else {
-        // Filtrar e ordenar por seeds
-        const validResults = data.filter(item => parseInt(item.seeders) > 0);
-        validResults.sort((a, b) => parseInt(b.seeders) - parseInt(a.seeders));
-
-        validResults.slice(0, 15).forEach((item, index) => {
+        data.forEach((item, index) => {
           const magnet = item.info_hash ? `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(item.name)}` : item.magnet;
           const card = document.createElement('div');
-          card.className = 'result-card' + (index === 0 ? ' best-match' : '');
+          card.className = 'result-card';
           card.onclick = () => playWithBridge(magnet, item.name);
           
           const sizeGB = (item.size / 1024 / 1024 / 1024).toFixed(2);
+          const sourceClass = item.source === 'Biblioteca' ? 'source-badge' : 'source-badge best-badge';
           
           card.innerHTML = `
-            ${index === 0 ? '<div class="best-badge">MELHOR OPÇÃO</div>' : ''}
+            <div class="${sourceClass}">${item.source}</div>
             <div class="result-title">${item.name}</div>
             <div class="result-meta">
               <span>${sizeGB} GB</span>
@@ -184,7 +177,7 @@
         });
       }
     } catch (error) {
-      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #e50914;">Erro na busca. O servidor da ponte pode estar instável.</p>';
+      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #e50914;">Erro na busca.</p>';
     } finally {
       btn.disabled = false;
       btn.innerText = 'Buscar';
@@ -194,7 +187,6 @@
 
   function playWithBridge(magnet, name) {
     if(!magnet) return alert('Magnet link inválido.');
-    
     document.getElementById('loading-overlay').style.display = 'flex';
     document.getElementById('results-grid').style.display = 'none';
     document.getElementById('file-name').innerText = 'Arquivo: ' + name;
@@ -221,7 +213,7 @@
 
     video.onerror = () => {
       document.getElementById('loading-overlay').style.display = 'none';
-      alert('Erro ao carregar o vídeo. Tente outro resultado.');
+      alert('Erro ao carregar o vídeo.');
     };
   }
 </script>
