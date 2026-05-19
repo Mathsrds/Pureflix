@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PureFlix Ultra - Busca & Streaming</title>
+  <title>PureFlix Ultra - Busca Multi-Fonte</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -14,7 +13,7 @@
     
     header{ 
       width:100%; padding:15px 50px; display:flex; justify-content:space-between; align-items:center; 
-      position:fixed; top:0; left:0; z-index:1000; background:rgba(0,0,0,0.9); border-bottom: 1px solid #222;
+      position:fixed; top:0; left:0; z-index:1000; background:rgba(0,0,0,0.95); border-bottom: 1px solid #222;
     }
     .logo{ font-size:28px; font-weight:700; color:#e50914; letter-spacing:2px; cursor: pointer; }
 
@@ -22,7 +21,9 @@
 
     .search-section{ text-align: center; margin-bottom: 40px; }
     .search-section h1{ font-size: 42px; margin-bottom: 10px; }
-    .search-container{ display: flex; gap: 10px; max-width: 700px; margin: 20px auto; }
+    
+    .input-group{ max-width: 700px; margin: 20px auto; display: flex; flex-direction: column; gap: 15px; }
+    .search-container{ display: flex; gap: 10px; }
     
     input{ 
       flex:1; padding:15px; border:none; border-radius:8px; background:#1e1e1e; 
@@ -35,20 +36,23 @@
       color:white; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; 
     }
     button:hover{ background:#ff1f29; transform: translateY(-2px); }
-    button:disabled{ background: #555; cursor: not-allowed; }
+    button.secondary{ background: #333; }
 
     /* Resultados da Busca */
     .results-grid{ 
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
       gap: 20px; margin-top: 30px; display: none;
     }
     .result-card{ 
       background: #181818; border-radius: 12px; padding: 20px; border: 1px solid #333;
-      transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
+      transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; position: relative;
     }
-    .result-card:hover{ border-color: #e50914; background: #222; }
-    .result-title{ font-size: 16px; font-weight: 600; margin-bottom: 10px; color: #fff; line-height: 1.4; }
-    .result-meta{ font-size: 13px; color: #888; display: flex; justify-content: space-between; }
+    .result-card:hover{ border-color: #e50914; background: #222; transform: scale(1.02); }
+    .result-card.best-match{ border: 2px solid #e50914; background: #1a0a0a; }
+    .best-badge{ position: absolute; top: -10px; right: 10px; background: #e50914; color: white; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+
+    .result-title{ font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #fff; line-height: 1.4; }
+    .result-meta{ font-size: 12px; color: #888; display: flex; justify-content: space-between; align-items: center; }
     .seeders{ color: #2ecc71; font-weight: bold; }
 
     /* Player Section */
@@ -57,23 +61,19 @@
       background: #000; border-radius: 15px; overflow: hidden; 
       box-shadow: 0 10px 50px rgba(0,0,0,0.8); position: relative;
     }
-    video, audio{ width: 100%; max-height: 75vh; display: block; }
+    video, audio{ width: 100%; max-height: 70vh; display: block; background: #000; }
     
     .status-bar{ 
       background: #181818; padding: 15px 20px; border-radius: 0 0 15px 15px; 
       border: 1px solid #333; border-top: none;
     }
-    .progress-container{ width: 100%; height: 6px; background: #333; border-radius: 3px; margin: 10px 0; overflow: hidden; position: relative; }
-    .progress-fill{ height: 100%; width: 0%; background: #e50914; position: absolute; z-index: 2; transition: 0.3s; }
-    .buffer-fill{ height: 100%; width: 0%; background: rgba(255,255,255,0.2); position: absolute; z-index: 1; transition: 0.3s; }
-
-    .info-row{ display: flex; justify-content: space-between; font-size: 13px; color: #aaa; }
+    .info-row{ display: flex; justify-content: space-between; font-size: 13px; color: #aaa; margin-bottom: 5px; }
 
     #loading-overlay{
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000;
-      display: none; align-items: center; justify-content: center; flex-direction: column;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
+      display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px;
     }
-    .spinner{ width: 50px; height: 50px; border: 5px solid #333; border-top-color: #e50914; border-radius: 50%; animation: spin 1s linear infinite; }
+    .spinner{ width: 50px; height: 50px; border: 5px solid #333; border-top-color: #e50914; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
     @keyframes spin{ to{ transform: rotate(360deg); } }
 
     @media(max-width: 768px){
@@ -91,26 +91,29 @@
 
 <div id="loading-overlay">
   <div class="spinner"></div>
-  <p style="margin-top: 15px; font-weight: 600;">Conectando ao Torrent...</p>
+  <p id="loading-text" style="font-weight: 600; font-size: 18px;">Conectando à Ponte Turbo...</p>
 </div>
 
 <div class="container">
   
   <section class="search-section">
-    <h1>O que vamos assistir?</h1>
-    <p style="color: #888;">Busque por filmes, séries ou músicas e assista instantaneamente.</p>
+    <h1>Busca Multi-Fonte</h1>
+    <p style="color: #888;">Pesquisamos nos melhores sites de torrent para você.</p>
     
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Ex: Deadpool, Matrix, Linkin Park..." onkeypress="if(event.key==='Enter') searchTorrents()" />
-      <button id="search-btn" onclick="searchTorrents()">Buscar</button>
-    </div>
-    
-    <div style="margin-top: 10px; font-size: 12px; color: #555;">
-      Ou cole um magnet link diretamente abaixo
-    </div>
-    <div class="search-container" style="margin-top: 10px;">
-      <input type="text" id="magnet-input" placeholder="Cole o magnet link aqui..." />
-      <button onclick="playMagnet(document.getElementById('magnet-input').value)">Abrir Link</button>
+    <div class="input-group">
+      <!-- CAMPO DE BUSCA -->
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Digite o nome do filme, série ou música..." onkeypress="if(event.key==='Enter') searchTorrents()" />
+        <button id="search-btn" onclick="searchTorrents()">Buscar</button>
+      </div>
+      
+      <div style="color: #444; font-size: 12px;">OU COLE UM LINK MAGNET MANUAL ABAIXO</div>
+
+      <!-- CAMPO MAGNET MANUAL RESTAURADO -->
+      <div class="search-container">
+        <input type="text" id="magnet-input" placeholder="Cole o magnet link aqui..." />
+        <button class="secondary" onclick="playWithBridge(document.getElementById('magnet-input').value, 'Link Manual')">Abrir Link</button>
+      </div>
     </div>
   </section>
 
@@ -120,17 +123,10 @@
     <div class="player-wrapper" id="video-container"></div>
     <div class="status-bar">
       <div class="info-row">
-        <span id="status-text">Aguardando...</span>
-        <span id="download-speed">0 MB/s</span>
+        <span id="status-text" style="color: #2ecc71; font-weight: bold;">✓ Streaming Ativo</span>
+        <span id="stream-info">Ponte Turbo Ativada</span>
       </div>
-      <div class="progress-container">
-        <div class="buffer-fill" id="buffer-fill"></div>
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
-      <div class="info-row">
-        <span id="file-name">Arquivo: -</span>
-        <span id="peers-count">Seeds: 0</span>
-      </div>
+      <div id="file-name" style="font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Arquivo: Carregando...</div>
       <div style="margin-top: 15px; display: flex; gap: 10px;">
         <button onclick="document.querySelector('video, audio')?.requestFullscreen()" style="padding: 8px 15px; font-size: 12px;">Tela Cheia</button>
         <button onclick="location.reload()" style="padding: 8px 15px; font-size: 12px; background: #333;">Fechar Player</button>
@@ -141,20 +137,8 @@
 </div>
 
 <script>
-  // CONFIGURAÇÃO DE CONECTIVIDADE (WEBTRACKERS)
-  // O navegador não suporta trackers UDP. Precisamos forçar trackers WebSocket (WSS).
-  const WEB_TRACKERS = [
-    'wss://tracker.btorrent.xyz',
-    'wss://tracker.openwebtorrent.com',
-    'wss://tracker.files.fm:7073/announce',
-    'wss://tracker.gbitt.info:443/announce',
-    'wss://tracker.webtorrent.dev'
-  ];
+  const BRIDGE_URL = 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer';
 
-  let client = new WebTorrent();
-  let currentTorrent = null;
-
-  // FUNÇÃO DE BUSCA
   async function searchTorrents() {
     const query = document.getElementById('search-input').value.trim();
     if (!query) return;
@@ -169,23 +153,27 @@
     document.getElementById('player-section').style.display = 'none';
 
     try {
-      // Usando uma API de busca de torrents (exemplo usando apibay do PirateBay ou similar)
-      const response = await fetch(`https://apibay.org/q.php?q=${encodeURIComponent(query)}`);
+      // Busca Multi-Fonte via Ponte
+      const response = await fetch(`${BRIDGE_URL}/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
 
-      if (!data || data.length === 0 || data[0].id === '0') {
+      if (!data || data.length === 0) {
         grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">Nenhum resultado encontrado.</p>';
       } else {
-        data.slice(0, 12).forEach(item => {
-          const magnet = `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(item.name)}&tr=${encodeURIComponent(WEB_TRACKERS.join('&tr='))}`;
-          
+        // Filtrar e ordenar por seeds
+        const validResults = data.filter(item => parseInt(item.seeders) > 0);
+        validResults.sort((a, b) => parseInt(b.seeders) - parseInt(a.seeders));
+
+        validResults.slice(0, 15).forEach((item, index) => {
+          const magnet = item.info_hash ? `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(item.name)}` : item.magnet;
           const card = document.createElement('div');
-          card.className = 'result-card';
-          card.onclick = () => playMagnet(magnet);
+          card.className = 'result-card' + (index === 0 ? ' best-match' : '');
+          card.onclick = () => playWithBridge(magnet, item.name);
           
           const sizeGB = (item.size / 1024 / 1024 / 1024).toFixed(2);
           
           card.innerHTML = `
+            ${index === 0 ? '<div class="best-badge">MELHOR OPÇÃO</div>' : ''}
             <div class="result-title">${item.name}</div>
             <div class="result-meta">
               <span>${sizeGB} GB</span>
@@ -196,8 +184,7 @@
         });
       }
     } catch (error) {
-      console.error(error);
-      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #e50914;">Erro ao conectar com o servidor de busca.</p>';
+      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #e50914;">Erro na busca. O servidor da ponte pode estar instável.</p>';
     } finally {
       btn.disabled = false;
       btn.innerText = 'Buscar';
@@ -205,82 +192,37 @@
     }
   }
 
-  // FUNÇÃO DE REPRODUÇÃO
-  function playMagnet(magnet) {
-    if (!magnet) return alert('Magnet link inválido.');
-
-    // Adicionar trackers WSS ao magnet se não existirem para garantir conexão no navegador
-    if (!magnet.includes('wss://')) {
-      magnet += '&tr=' + WEB_TRACKERS.map(encodeURIComponent).join('&tr=');
-    }
-
-    document.getElementById('loading-overlay').style.display = 'flex';
+  function playWithBridge(magnet, name) {
+    if(!magnet) return alert('Magnet link inválido.');
     
-    if (currentTorrent) {
-      client.remove(currentTorrent.infoHash, () => startTorrent(magnet));
-    } else {
-      startTorrent(magnet);
-    }
-  }
+    document.getElementById('loading-overlay').style.display = 'flex';
+    document.getElementById('results-grid').style.display = 'none';
+    document.getElementById('file-name').innerText = 'Arquivo: ' + name;
+    
+    const streamUrl = `${BRIDGE_URL}/stream?magnet=${encodeURIComponent(magnet)}`;
+    const container = document.getElementById('video-container');
+    container.innerHTML = '';
 
-  function startTorrent(magnet) {
-    client.add(magnet, { announce: WEB_TRACKERS }, torrent => {
-      currentTorrent = torrent;
-      
-      // Encontrar arquivo de mídia
-      const file = torrent.files.find(f => {
-        const n = f.name.toLowerCase();
-        return n.endsWith('.mp4') || n.endsWith('.mkv') || n.endsWith('.webm') || n.endsWith('.mp3');
-      });
+    const video = document.createElement('video');
+    video.controls = true;
+    video.autoplay = true;
+    video.style.width = '100%';
+    
+    const source = document.createElement('source');
+    source.src = streamUrl;
+    video.appendChild(source);
+    container.appendChild(video);
 
-      if (!file) {
-        document.getElementById('loading-overlay').style.display = 'none';
-        alert('Nenhum arquivo de vídeo ou áudio compatível encontrado neste torrent.');
-        return;
-      }
-
-      document.getElementById('file-name').innerText = 'Arquivo: ' + file.name;
-      document.getElementById('results-grid').style.display = 'none';
+    video.oncanplay = () => {
+      document.getElementById('loading-overlay').style.display = 'none';
       document.getElementById('player-section').style.display = 'block';
-      
-      const container = document.getElementById('video-container');
-      container.innerHTML = '';
+      document.getElementById('player-section').scrollIntoView({ behavior: 'smooth' });
+    };
 
-      // Renderizar com buffer agressivo
-      file.renderTo(container, { autoplay: true, controls: true }, (err, elem) => {
-        document.getElementById('loading-overlay').style.display = 'none';
-        if (err) return console.error(err);
-
-        document.getElementById('player-section').scrollIntoView({ behavior: 'smooth' });
-
-        // Monitoramento de progresso
-        torrent.on('download', () => {
-          const speed = (torrent.downloadSpeed / 1024 / 1024).toFixed(2);
-          document.getElementById('download-speed').innerText = `${speed} MB/s`;
-          document.getElementById('peers-count').innerText = `Seeds: ${torrent.numPeers}`;
-          document.getElementById('buffer-fill').style.width = (torrent.progress * 100) + '%';
-          
-          if (torrent.numPeers === 0) {
-            document.getElementById('status-text').innerText = 'Buscando Seeds (Pode demorar no navegador)...';
-          } else {
-            document.getElementById('status-text').innerText = 'Streaming Ativo';
-          }
-        });
-
-        elem.ontimeupdate = () => {
-          const p = (elem.currentTime / elem.duration * 100).toFixed(1);
-          document.getElementById('progress-fill').style.width = p + '%';
-        };
-      });
-    });
-
-    // Timeout de segurança se não encontrar seeds
-    setTimeout(() => {
-      if (currentTorrent && currentTorrent.numPeers === 0) {
-        document.getElementById('loading-overlay').style.display = 'none';
-        document.getElementById('status-text').innerText = 'Conexão lenta: Tentando encontrar WebPeers...';
-      }
-    }, 10000);
+    video.onerror = () => {
+      document.getElementById('loading-overlay').style.display = 'none';
+      alert('Erro ao carregar o vídeo. Tente outro resultado.');
+    };
   }
 </script>
 
