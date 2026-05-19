@@ -1,5 +1,460 @@
 <!DOCTYPE html>
-          'Reproduzindo agora.';
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PureFlix</title>
+
+  <!-- CORREÇÃO 1: A tag <script src="..."> com conteúdo inline é inválida.
+       Scripts externos não executam código inline dentro da mesma tag.
+       O código do loading-screen foi movido para um <script> separado no final do <body>. -->
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+
+  <script>
+    window.addEventListener('error', function(e){
+      console.error('Erro global:', e.message);
+    });
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      background:#0b0b0b;
+      color:white;
+      font-family:'Poppins', sans-serif;
+      overflow-x:hidden;
+    }
+
+    header{
+      width:100%;
+      padding:20px 50px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:1000;
+      background:linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    }
+
+    .logo{
+      font-size:34px;
+      font-weight:700;
+      color:#e50914;
+      letter-spacing:2px;
+    }
+
+    .hero{
+      height:100vh;
+      background:
+        linear-gradient(to top, #0b0b0b 5%, rgba(0,0,0,0.4)),
+        url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1920&auto=format&fit=crop') center/cover;
+      background-color:#111;
+      display:flex;
+      align-items:center;
+      padding:0 70px;
+    }
+
+    .hero-content{
+      max-width:700px;
+    }
+
+    .hero h1{
+      font-size:70px;
+      margin-bottom:20px;
+      line-height:1;
+    }
+
+    .hero p{
+      font-size:18px;
+      color:#ddd;
+      margin-bottom:25px;
+    }
+
+    .search-box{
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    input{
+      flex:1;
+      min-width:280px;
+      padding:18px;
+      border:none;
+      border-radius:10px;
+      background:#1e1e1e;
+      color:white;
+      font-size:16px;
+      outline:none;
+    }
+
+    button{
+      padding:18px 25px;
+      border:none;
+      border-radius:10px;
+      background:#e50914;
+      color:white;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    button:hover{
+      transform:scale(1.05);
+      background:#ff1f29;
+    }
+
+    .main-content{
+      padding:40px 60px;
+    }
+
+    .section-title{
+      font-size:28px;
+      margin-bottom:25px;
+    }
+
+    #video-container{
+      width:100%;
+      margin-top:30px;
+      border-radius:18px;
+      overflow:hidden;
+      background:black;
+      box-shadow:0 0 25px rgba(0,0,0,0.5);
+    }
+
+    video{
+      width:100%;
+      max-height:80vh;
+      background:black;
+    }
+
+    .status{
+      margin-top:15px;
+      color:#aaa;
+      font-size:15px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:25px;
+      margin-top:30px;
+    }
+
+    .card{
+      position:relative;
+      border-radius:15px;
+      overflow:hidden;
+      cursor:pointer;
+      transition:0.4s;
+      background:#151515;
+    }
+
+    .card:hover{
+      transform:translateY(-8px) scale(1.03);
+    }
+
+    .card img{
+      width:100%;
+      height:320px;
+      object-fit:cover;
+    }
+
+    .card-content{
+      padding:15px;
+    }
+
+    .card-title{
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:8px;
+    }
+
+    .card-desc{
+      color:#bbb;
+      font-size:14px;
+    }
+
+    .controls{
+      margin-top:20px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .progress-bar{
+      width:100%;
+      height:8px;
+      background:#222;
+      border-radius:50px;
+      overflow:hidden;
+      margin-top:15px;
+    }
+
+    .progress{
+      height:100%;
+      width:0%;
+      background:#e50914;
+      transition:0.2s;
+    }
+
+    footer{
+      text-align:center;
+      padding:40px 20px;
+      color:#666;
+    }
+
+    @media(max-width:768px){
+
+      .hero{
+        padding:0 25px;
+      }
+
+      .hero h1{
+        font-size:45px;
+      }
+
+      .main-content{
+        padding:30px 20px;
+      }
+
+      header{
+        padding:20px;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="loading-screen" style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;font-size:28px;font-weight:700;color:#e50914;">
+  PUREFLIX
+</div>
+
+<header>
+  <div class="logo">PUREFLIX</div>
+</header>
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <h1>Streaming Torrent sem baixar</h1>
+
+    <p>
+      Cole um link magnet e assista instantaneamente no navegador.
+    </p>
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="magnet"
+        placeholder="Cole aqui o magnet link..."
+      />
+
+      <button onclick="playTorrent()">
+        Assistir
+      </button>
+
+    </div>
+
+    <div class="controls">
+      <button onclick="toggleMute()">Som</button>
+      <button onclick="toggleFullscreen()">Tela cheia</button>
+      <button onclick="clearPlayer()">Limpar</button>
+    </div>
+
+    <div class="status" id="status">
+      Aguardando magnet link...
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="main-content">
+
+  <h2 class="section-title">Player</h2>
+
+  <div id="video-container"></div>
+
+  <h2 class="section-title" style="margin-top:60px;">
+    Catálogo Visual
+  </h2>
+
+  <div class="cards">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200&auto=format&fit=crop" alt="Filmes">
+      <div class="card-content">
+        <div class="card-title">Filmes</div>
+        <div class="card-desc">Assista diretamente do navegador.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1200&auto=format&fit=crop" alt="Séries">
+      <div class="card-content">
+        <div class="card-title">Séries</div>
+        <div class="card-desc">Streaming via WebTorrent.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1200&auto=format&fit=crop" alt="Anime">
+      <div class="card-content">
+        <div class="card-title">Anime</div>
+        <div class="card-desc">Compatível com MP4 e WebM.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=1200&auto=format&fit=crop" alt="4K Streaming">
+      <div class="card-content">
+        <div class="card-title">4K Streaming</div>
+        <div class="card-desc">Velocidade depende dos seeders.</div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<footer>
+  PureFlix &copy; 2026 - Streaming via WebTorrent
+</footer>
+
+<script>
+
+  // CORREÇÃO 2: Lógica do loading-screen movida para cá,
+  // pois o elemento #loading-screen só existe após o HTML ser carregado.
+  window.addEventListener('load', () => {
+    const loading = document.getElementById('loading-screen');
+    if(loading){
+      setTimeout(() => {
+        loading.style.display = 'none';
+      }, 1000);
+    }
+  });
+
+  // CORREÇÃO 3: Verificação de disponibilidade do WebTorrent antes de instanciar.
+  // Se o CDN falhar ao carregar, o código não quebra a página inteira.
+  let client = null;
+
+  if(typeof WebTorrent !== 'undefined'){
+    client = new WebTorrent();
+
+    client.on('error', err => {
+      console.error(err);
+      document.getElementById('status').innerText = 'Erro no WebTorrent.';
+    });
+  } else {
+    console.warn('WebTorrent não foi carregado.');
+    document.getElementById('status').innerText =
+      'Erro: WebTorrent não disponível. Verifique sua conexão.';
+  }
+
+  let currentVideo = null;
+  let currentTorrent = null;
+
+  function playTorrent(){
+
+    if(!client){
+      alert('WebTorrent não está disponível.');
+      return;
+    }
+
+    const magnetURI = document.getElementById('magnet').value.trim();
+
+    if(!magnetURI){
+      alert('Cole um magnet link.');
+      return;
+    }
+
+    document.getElementById('status').innerText = 'Conectando aos peers...';
+
+    // CORREÇÃO 4: Uso correto de client.remove() — deve receber o infoHash
+    // e aguardar o callback antes de adicionar novo torrent, evitando conflitos.
+    if(currentTorrent){
+      client.remove(currentTorrent.infoHash, () => {
+        currentTorrent = null;
+        addTorrent(magnetURI);
+      });
+    } else {
+      addTorrent(magnetURI);
+    }
+
+  }
+
+  function addTorrent(magnetURI){
+
+    client.add(magnetURI, torrent => {
+
+      currentTorrent = torrent;
+
+      torrent.on('download', () => {
+
+        const progress = (torrent.progress * 100).toFixed(1);
+
+        document.getElementById('progress').style.width = progress + '%';
+
+        document.getElementById('status').innerText =
+          `Baixado: ${progress}% | Seeds: ${torrent.numPeers}`;
+
+      });
+
+      // CORREÇÃO 5: Busca por mais extensões de vídeo compatíveis com navegadores.
+      const file = torrent.files.find(f =>
+        f.name.toLowerCase().endsWith('.mp4') ||
+        f.name.toLowerCase().endsWith('.webm') ||
+        f.name.toLowerCase().endsWith('.mkv') ||
+        f.name.toLowerCase().endsWith('.ogg')
+      );
+
+      if(!file){
+        document.getElementById('status').innerText =
+          'Nenhum vídeo compatível encontrado.';
+        return;
+      }
+
+      const container = document.getElementById('video-container');
+      container.innerHTML = '';
+
+      file.renderTo(container, {
+        autoplay: true,
+        controls: true
+      }, (err, elem) => {
+
+        if(err){
+          console.error(err);
+          document.getElementById('status').innerText =
+            'Erro ao reproduzir o vídeo.';
+          return;
+        }
+
+        currentVideo = elem;
+
+        document.getElementById('status').innerText = 'Reproduzindo agora.';
+
+        // Rola a página até o player automaticamente
+        container.scrollIntoView({ behavior: 'smooth' });
 
         saveHistory(magnetURI);
 
@@ -24,31 +479,30 @@
     const video = document.querySelector('video');
 
     if(video){
-
-      if(video.requestFullscreen){
+      if(document.fullscreenElement){
+        document.exitFullscreen();
+      } else if(video.requestFullscreen){
         video.requestFullscreen();
+      } else if(video.webkitRequestFullscreen){
+        // CORREÇÃO 6: Suporte a Safari (prefixo webkit)
+        video.webkitRequestFullscreen();
       }
-
     }
 
   }
 
-  client.on('error', err => {
-    console.error(err);
-
-    document.getElementById('status').innerText =
-      'Erro no WebTorrent.';
-  });
-
   function clearPlayer(){
 
-    const container = document.getElementById('video-container');
+    if(currentTorrent){
+      client.remove(currentTorrent.infoHash, () => {
+        currentTorrent = null;
+      });
+    }
 
+    const container = document.getElementById('video-container');
     container.innerHTML = '';
 
-    document.getElementById('status').innerText =
-      'Player limpo.';
-
+    document.getElementById('status').innerText = 'Player limpo.';
     document.getElementById('progress').style.width = '0%';
 
   }
@@ -59,7 +513,7 @@
 
     history.unshift(magnet);
 
-    history = [...new Set(history)].slice(0,10);
+    history = [...new Set(history)].slice(0, 10);
 
     localStorage.setItem('pureflixHistory', JSON.stringify(history));
 
