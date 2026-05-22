@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>PureFlix - Filmes, Séries e TV</title>
+  <title>PureFlix - Certified Edition</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,33 +23,26 @@
       color: white; 
       font-family: 'Roboto', sans-serif; 
       overflow-x: hidden;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     header {
       position: fixed;
       top: 0;
       width: 100%;
-      padding: 15px 4%;
+      padding: 12px 4%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
-      transition: background 0.3s;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
     }
 
-    header.scrolled { background-color: var(--netflix-dark); }
-
-    .logo {
-      color: var(--netflix-red);
-      font-size: 24px;
-      font-weight: 900;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
+    .logo { color: var(--netflix-red); font-size: 22px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
 
     .hero {
-      height: 60vh;
+      height: 45vh;
       position: relative;
       background: linear-gradient(to right, rgba(0,0,0,0.9) 20%, transparent 80%),
                   url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
@@ -58,72 +51,46 @@
       padding: 0 4%;
     }
 
-    .hero-content { max-width: 500px; z-index: 2; }
-    .hero-title { font-size: clamp(28px, 6vw, 48px); font-weight: 900; margin-bottom: 15px; }
-
     .search-box {
       display: flex;
       gap: 8px;
-      background: rgba(0,0,0,0.7);
-      padding: 6px;
+      background: rgba(0,0,0,0.8);
+      padding: 5px;
       border-radius: 4px;
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.2);
+      width: 100%;
+      max-width: 450px;
     }
 
-    .search-box input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 16px;
-      outline: none;
-      padding: 10px;
-    }
+    .search-box input { flex: 1; background: transparent; border: none; color: white; font-size: 15px; outline: none; padding: 8px; }
+    .btn-search { background-color: var(--netflix-red); color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; }
 
-    .btn-search {
-      background-color: var(--netflix-red);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 4px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-
-    .main-container { padding: 20px 4%; margin-top: -40px; position: relative; z-index: 5; }
-    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: #e5e5e5; }
+    .main-container { padding: 15px 4%; margin-top: -30px; position: relative; z-index: 5; }
+    .section-title { font-size: 17px; font-weight: 700; margin-bottom: 12px; color: #e5e5e5; }
 
     .results-row {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-      margin-bottom: 40px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 30px;
     }
 
     .movie-card {
       position: relative;
       aspect-ratio: 2/3;
       background: #1a1a1a;
-      border-radius: 4px;
+      border-radius: 3px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.2s ease-out;
     }
 
-    .movie-card:hover { transform: scale(1.05); z-index: 10; }
+    .movie-card:active { transform: scale(0.95); }
+    .movie-card:hover { transform: scale(1.04); z-index: 10; }
 
-    .movie-card-info {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      padding: 10px;
-      background: linear-gradient(to top, rgba(0,0,0,1), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
+    .movie-card-info { position: absolute; bottom: 0; width: 100%; padding: 8px; background: linear-gradient(to top, rgba(0,0,0,1), transparent); opacity: 0; transition: opacity 0.2s; }
     .movie-card:hover .movie-card-info { opacity: 1; }
-    .movie-title { font-size: 11px; font-weight: bold; line-height: 1.2; }
+    .movie-title { font-size: 10px; font-weight: bold; line-height: 1.2; }
 
     #player-overlay {
       position: fixed;
@@ -132,32 +99,26 @@
       z-index: 9999;
       display: none;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
     }
 
-    .btn-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: white;
-      font-size: 30px;
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 10000;
+    .player-header {
+      padding: 8px 4%;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
+      background: rgba(0,0,0,0.95);
+      z-index: 10001;
     }
 
-    .btn-close:hover { background: var(--netflix-red); }
+    .btn-close { background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 5px; }
 
-    #video-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-    video { width: 100%; height: 100%; object-fit: contain; }
+    .player-options { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-option { background: #222; color: white; border: none; padding: 5px 10px; border-radius: 3px; font-size: 10px; cursor: pointer; font-weight: bold; }
+    .btn-option.active { background: var(--netflix-red); }
+    .btn-option.external { background: #ff8800; }
+
+    #video-container { flex: 1; width: 100%; height: 100%; background: black; position: relative; }
+    iframe, video { width: 100%; height: 100%; border: none; }
 
     .netflix-loader {
       position: fixed;
@@ -169,16 +130,14 @@
       z-index: 11000;
     }
 
-    .loader-circle {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #333;
-      border-top-color: var(--netflix-red);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
+    .loader-circle { width: 35px; height: 35px; border: 3px solid #333; border-top-color: var(--netflix-red); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 480px) {
+      .results-row { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+      .hero { height: 40vh; }
+      .btn-option { padding: 4px 8px; font-size: 9px; }
+    }
   </style>
 </head>
 <body>
@@ -193,7 +152,7 @@
 
 <section class="hero">
   <div class="hero-content">
-    <h1 class="hero-title">Tudo em um só lugar.</h1>
+    <h1 class="hero-title">Certified Edition</h1>
     <div class="search-box">
       <input type="text" id="search-input" placeholder="Filmes, Séries, TV e Talk Shows..." onkeypress="if(event.key==='Enter') searchMovies()" />
       <button class="btn-search" onclick="searchMovies()">Buscar</button>
@@ -203,64 +162,53 @@
 
 <div class="main-container">
   <div id="results-section" style="display: none;">
-    <h2 class="section-title">Resultados</h2>
+    <h2 class="section-title">Resultados da Busca</h2>
     <div id="results-grid" class="results-row"></div>
   </div>
 
-  <h2 class="section-title">Tendências de Hoje</h2>
+  <h2 class="section-title">Tendências Certificadas</h2>
   <div class="results-row" id="trending-grid"></div>
 </div>
 
 <div id="player-overlay">
-  <button class="btn-close" onclick="closePlayer()">×</button>
+  <div class="player-header">
+    <button class="btn-close" onclick="closePlayer()">×</button>
+    <div class="player-options">
+      <button id="btn-webtor" class="btn-option active" onclick="switchPlayer('webtor')">Webtor (Nuvem)</button>
+      <button id="btn-bridge" class="btn-option" onclick="switchPlayer('bridge')">Ponte Turbo</button>
+      <button id="btn-vlc" class="btn-option external">VLC</button>
+      <button id="btn-stremio" class="btn-option external" style="background:#6a5acd">Stremio</button>
+    </div>
+  </div>
   <div id="video-container"></div>
 </div>
 
 <script>
   const BRIDGE_URL = 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer';
+  let currentMagnet = '';
 
-  window.addEventListener('scroll', () => {
-    const header = document.getElementById('navbar');
-    if (window.scrollY > 50) header.classList.add('scrolled');
-    else header.classList.remove('scrolled');
-  });
-
-  window.onload = () => {
-    loadTrending();
-  };
+  window.onload = () => loadTrending();
 
   async function loadTrending() {
     try {
       const response = await fetch(`${BRIDGE_URL}/search?q=2024+trending`);
       const data = await response.json();
-      if (data && data.length > 0) {
-        renderResults(data.slice(0, 12), document.getElementById('trending-grid'));
-      }
-    } catch (e) {
-      console.error('Erro ao carregar tendências');
-    }
+      if (data && data.length > 0) renderResults(data.slice(0, 12), document.getElementById('trending-grid'));
+    } catch (e) {}
   }
 
   async function searchMovies() {
     const query = document.getElementById('search-input').value.trim();
     if (!query) return;
-
     showLoader(true);
-    const grid = document.getElementById('results-grid');
-    grid.innerHTML = '';
-
     try {
       const response = await fetch(`${BRIDGE_URL}/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
-
       document.getElementById('results-section').style.display = 'block';
-      renderResults(data, grid);
-      window.scrollTo({ top: 350, behavior: 'smooth' });
-    } catch (e) {
-      alert('Erro na busca.');
-    } finally {
-      showLoader(false);
-    }
+      renderResults(data, document.getElementById('results-grid'));
+      window.scrollTo({ top: 250, behavior: 'smooth' });
+    } catch (e) { alert('Erro na busca.'); }
+    finally { showLoader(false); }
   }
 
   function renderResults(data, container) {
@@ -268,77 +216,65 @@
     data.forEach(item => {
       const name = item.name.toLowerCase();
       
-      // Filtro para excluir softwares e arquivos não-vídeo
-      const excludedExtensions = ['.exe', '.iso', '.zip', '.rar', '.msi', '.dmg', '.apk'];
-      if (excludedExtensions.some(ext => name.endsWith(ext))) return;
+      // Filtro Rigoroso: Excluir softwares e arquivos não-vídeo
+      const excluded = ['.exe', '.iso', '.zip', '.rar', '.msi', '.dmg', '.apk', '.bin', '.7z'];
+      if (excluded.some(ext => name.endsWith(ext))) return;
 
       const magnet = `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(item.name)}`;
       const card = document.createElement('div');
       card.className = 'movie-card';
-      card.onclick = () => playMovie(magnet, item.name);
-      
+      card.onclick = () => openPlayer(magnet, item.name);
       card.innerHTML = `
-        <div style="height:100%; display:flex; align-items:center; justify-content:center; background:#222; padding:10px; text-align:center; font-size:11px; color:#aaa;">
-          ${item.name}
-        </div>
+        <div style="height:100%; display:flex; align-items:center; justify-content:center; background:#222; padding:10px; text-align:center; font-size:10px; color:#888;">${item.name}</div>
         <div class="movie-card-info">
           <div class="movie-title">${item.name}</div>
-          <div style="font-size:9px; color:#46d369; margin-top:4px;">${item.seeders} Seeds</div>
+          <div style="font-size:9px; color:#46d369; margin-top:3px;">${item.seeders} Seeds</div>
         </div>
       `;
       container.appendChild(card);
     });
   }
 
-  function playMovie(magnet, name) {
-    showLoader(true);
-    const streamUrl = `${BRIDGE_URL}/stream?magnet=${encodeURIComponent(magnet)}`;
+  function openPlayer(magnet, name) {
+    currentMagnet = magnet;
+    document.getElementById('player-overlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    document.getElementById('btn-vlc').onclick = () => window.location.href = magnet;
+    document.getElementById('btn-stremio').onclick = () => window.location.href = magnet.replace('magnet:', 'stremio:');
+    
+    switchPlayer('webtor');
+  }
+
+  function switchPlayer(type) {
     const container = document.getElementById('video-container');
     container.innerHTML = '';
-
-    const video = document.createElement('video');
-    video.controls = true;
-    video.autoplay = true;
-    video.playsInline = true;
-    video.setAttribute('webkit-playsinline', 'true');
     
-    const source = document.createElement('source');
-    source.src = streamUrl;
-    video.appendChild(source);
-    container.appendChild(video);
+    document.getElementById('btn-webtor').classList.toggle('active', type === 'webtor');
+    document.getElementById('btn-bridge').classList.toggle('active', type === 'bridge');
 
-    video.oncanplay = () => {
-      showLoader(false);
-      document.getElementById('player-overlay').style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    };
-
-    video.onerror = () => {
-      showLoader(false);
-      alert('Erro ao carregar o vídeo. Tente outro link.');
-    };
+    if (type === 'webtor') {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://webtor.io/show?magnet=${encodeURIComponent(currentMagnet)}`;
+      iframe.allowFullscreen = true;
+      container.appendChild(iframe);
+    } else {
+      const video = document.createElement('video');
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.src = `${BRIDGE_URL}/stream?magnet=${encodeURIComponent(currentMagnet)}`;
+      container.appendChild(video);
+    }
   }
 
   function closePlayer() {
-    const overlay = document.getElementById('player-overlay');
-    const container = document.getElementById('video-container');
-    
-    const video = container.querySelector('video');
-    if (video) {
-      video.pause();
-      video.removeAttribute('src');
-      video.load();
-    }
-    
-    container.innerHTML = '';
-    overlay.style.display = 'none';
+    document.getElementById('video-container').innerHTML = '';
+    document.getElementById('player-overlay').style.display = 'none';
     document.body.style.overflow = 'auto';
-    window.focus();
   }
 
-  function showLoader(show) {
-    document.getElementById('loader').style.display = show ? 'flex' : 'none';
-  }
+  function showLoader(show) { document.getElementById('loader').style.display = show ? 'flex' : 'none'; }
 </script>
 
 </body>
