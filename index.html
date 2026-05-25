@@ -24,7 +24,7 @@
     ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
-    /* LOADING PREMIUM */
+    /* LOADING */
     #premium-loader { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
     .spinner { width: 50px; height: 50px; border: 5px solid #222; border-top-color: var(--red); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -46,7 +46,7 @@
     #search-input { flex: 1; background: #222; border: 1px solid #444; border-radius: 4px; padding: 12px; color: white; font-size: 15px; outline: none; }
     #search-btn { background: var(--red); color: white; border: none; padding: 0 25px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-    /* HERO NETFLIX */
+    /* HERO */
     .hero { height: 75vh; position: relative; background: center/cover no-repeat; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; }
     .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--black) 5%, transparent 50%), linear-gradient(to right, rgba(0,0,0,0.8) 0%, transparent 60%); }
     .hero-content { max-width: 650px; position: relative; z-index: 1; }
@@ -78,11 +78,11 @@
     .arrow-left { left: -4%; }
     .arrow-right { right: -4%; }
 
-    /* GRID DE PESQUISA */
+    /* GRID */
     #page-grid-view { display: none; padding: 90px 4% 50px; }
     .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
 
-    /* PÁGINA DO PLAYER EXCLUSIVO */
+    /* PLAYER PÁGINA */
     #page-details { position: fixed; inset: 0; background: var(--black); z-index: 2000; display: none; overflow-y: auto; padding-top: 68px; }
     .details-hero { width: 100%; height: 400px; position: relative; background: center/cover no-repeat; }
     .details-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--black) 10%, transparent 100%); }
@@ -103,7 +103,7 @@
     .btn-fav { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #444; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
     .btn-fav.active { color: var(--red); background: rgba(229,9,20,0.1); border-color: var(--red); }
 
-    /* PLAYER CONTROLS */
+    /* CONTROLES PLAYER */
     .player-section { background: #111; padding: 20px; border-radius: 6px; border: 1px solid #222; }
     .player-header { display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .selector-group { display: flex; gap: 15px; flex-wrap: wrap; }
@@ -153,7 +153,7 @@
 <div id="page-home">
   <section class="hero" id="hero-banner">
     <div class="hero-content">
-      <span class="hero-badge"><i class="fas fa-fire"></i> Populares no Brasil</span>
+      <span class="hero-badge"><i class="fas fa-fire"></i> Conteúdo em Português</span>
       <h1 class="hero-title" id="hero-title">Carregando catálogo...</h1>
       <p class="hero-desc" id="hero-desc"></p>
       <div class="hero-btns">
@@ -204,7 +204,7 @@
             <select id="select-episode" onchange="loadCurrentSelectedStream()"></select>
           </div>
           <div class="selector-item">
-            <label>Áudio</label>
+            <label>Áudio Preferencial</label>
             <select id="select-audio" onchange="loadCurrentSelectedStream()">
               <option value="dub">Dublado / PT-BR</option>
               <option value="leg">Original / Legendado</option>
@@ -213,8 +213,8 @@
           <div class="selector-item">
             <label>Servidor</label>
             <select id="select-server" onchange="loadCurrentSelectedStream()">
-              <option value="vidsrc_to">VidSrc.to (Principal)</option>
-              <option value="superembed">SuperEmbed (BR)</option>
+              <option value="superembed">SuperEmbed (BR - Dublagem Focada)</option>
+              <option value="vidsrc_to">VidSrc.to (Internacional)</option>
               <option value="vidsrc_me">VidSrc.me</option>
               <option value="vidsrc_xyz">VidSrc.xyz</option>
             </select>
@@ -225,7 +225,7 @@
         <div id="player-error-fallback">
           <i class="fas fa-sync-alt fa-spin" style="font-size:35px; color:var(--red); margin-bottom:15px"></i>
           <h3>Alternando Rota Automática</h3>
-          <p style="color:#aaa; font-size:13px; margin-top:5px;">O servidor atual caiu. Reestabilizando sinal...</p>
+          <p style="color:#aaa; font-size:13px; margin-top:5px;">Buscando rota estável de transmissão...</p>
         </div>
         <iframe id="det-frame" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-same-origin allow-scripts"></iframe>
       </div>
@@ -235,26 +235,25 @@
 
 <script>
   // =========================================================================================
-  // URL DO SEU SERVIDOR BRIDGE. 
-  // Se estiver rodando o Node.js no seu computador localmente, mude para: 'http://localhost:3000'
+  // Troque para 'http://localhost:3000' se você for iniciar o Node local no terminal do seu PC
   // =========================================================================================
   const BRIDGE_URL = 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer'; 
 
   const CATEGORIES = [
     { title: "Continuar Assistindo", endpoint: "continue-watching", type: "custom" },
-    { title: "Lançamentos Imperdíveis", endpoint: "tmdb/movie/now_playing" },
-    { title: "Filmes de Ação", endpoint: "discover/movie?with_genres=28" },
-    { title: "Séries em Alta", endpoint: "tmdb/tv/popular" },
-    { title: "Comédias para Rir Muito", endpoint: "discover/movie?with_genres=35" },
-    { title: "Animes e Animações", endpoint: "discover/movie?with_genres=16" },
-    { title: "Terror e Suspense", endpoint: "discover/movie?with_genres=27,53" },
-    { title: "Documentários", endpoint: "discover/movie?with_genres=99" }
+    { title: "Lançamentos Imperdíveis", endpoint: "api/list/movie/now_playing" },
+    { title: "Filmes de Ação", endpoint: "api/discover/movie?with_genres=28" },
+    { title: "Séries em Alta", endpoint: "api/list/tv/popular" },
+    { title: "Comédias para Rir Muito", endpoint: "api/discover/movie?with_genres=35" },
+    { title: "Animes e Animações", endpoint: "api/discover/movie?with_genres=16" },
+    { title: "Terror e Suspense", endpoint: "api/discover/movie?with_genres=27,53" },
+    { title: "Documentários", endpoint: "api/discover/movie?with_genres=99" }
   ];
 
   let currentMediaId = null;
   let currentMediaType = 'movie';
   let currentServerIndex = 0;
-  const SERVERS_ORDER = ['vidsrc_to', 'superembed', 'vidsrc_me', 'vidsrc_xyz'];
+  const SERVERS_ORDER = ['superembed', 'vidsrc_to', 'vidsrc_me', 'vidsrc_xyz'];
 
   const storage = {
     get: (key) => JSON.parse(localStorage.getItem(`pureflix_${key}`)) || [],
@@ -268,7 +267,7 @@
       await loadHeroBanner();
       await buildHomeCarousels();
     } catch (e) {
-      console.error("Erro ao carregar layout principal:", e);
+      console.error("Erro ao renderizar Pureflix:", e);
     } finally {
       document.getElementById('premium-loader').style.opacity = '0';
       setTimeout(() => document.getElementById('premium-loader').style.display = 'none', 500);
@@ -289,7 +288,7 @@
 
   async function loadHeroBanner() {
     try {
-      const res = await fetch(`${BRIDGE_URL}/tmdb/movie/popular`);
+      const res = await fetch(`${BRIDGE_URL}/api/list/movie/popular`);
       const list = await res.json();
       if(list && list.length > 0) {
         const item = list[0];
@@ -300,7 +299,7 @@
         document.getElementById('hero-play-btn').onclick = action;
         document.getElementById('hero-info-btn').onclick = action;
       }
-    } catch(e) { console.error("Erro no Hero Banner:", e); }
+    } catch(e) { console.error(e); }
   }
 
   async function buildHomeCarousels() {
@@ -346,9 +345,8 @@
   async function fetchCategoryData(endpoint) {
     try {
       const res = await fetch(`${BRIDGE_URL}/${endpoint}`);
-      if (!res.ok) throw new Error("Erro na rede");
       return await res.json();
-    } catch(e) { console.error("Falha na API: ", endpoint); return []; }
+    } catch(e) { return []; }
   }
 
   function scrollCarousel(id, dir) {
@@ -370,9 +368,9 @@
     const g = document.getElementById('page-grid-view'); g.style.display = 'block';
     document.getElementById('grid-view-title').innerText = `Busca: "${q}"`;
     try {
-      const res = await fetch(`${BRIDGE_URL}/search?q=${encodeURIComponent(q)}`);
+      const res = await fetch(`${BRIDGE_URL}/api/search?q=${encodeURIComponent(q)}`);
       renderGridItems(await res.json());
-    } catch(e) { console.error("Erro na busca:", e); }
+    } catch(e) { console.error(e); }
   }
 
   function renderGridItems(items) {
@@ -391,7 +389,7 @@
     document.getElementById('page-home').style.display = 'none';
     const g = document.getElementById('page-grid-view'); g.style.display = 'block';
     document.getElementById('grid-view-title').innerText = type === 'movie' ? 'Filmes Populares' : 'Séries Populares';
-    renderGridItems(await fetchCategoryData(`tmdb/${type}/popular`));
+    renderGridItems(await fetchCategoryData(`api/list/${type}/popular`));
   }
 
   async function openPlayerView(id, type) {
@@ -399,10 +397,10 @@
     document.getElementById('page-details').style.display = 'block';
     document.getElementById('player-error-fallback').style.display = 'none';
     try {
-      const res = await fetch(`${BRIDGE_URL}/tmdb/${type}/${id}`);
+      const res = await fetch(`${BRIDGE_URL}/api/details/${type}/${id}`);
       const data = await res.json();
       document.getElementById('det-title').innerText = data.title || data.name;
-      document.getElementById('det-synopsis').innerText = data.overview || "Sinopse em português pendente.";
+      document.getElementById('det-synopsis').innerText = data.overview || "Sinopse em português pendente no catálogo.";
       document.getElementById('det-year').innerText = (data.release_date || data.first_air_date || '----').split('-')[0];
       document.getElementById('det-rating').innerText = `⭐ ${(data.vote_average || 0).toFixed(1)}`;
       document.getElementById('det-type-badge').innerText = type === 'tv' ? 'Série' : 'Filme';
@@ -421,7 +419,7 @@
         document.getElementById('wrapper-episode').style.display = 'none';
         loadCurrentSelectedStream();
       }
-    } catch(e) { console.error("Erro ao carregar player:", e); }
+    } catch(e) { console.error(e); }
   }
 
   function buildSeasonDropdown(seasons) {
@@ -459,62 +457,4 @@
     }
     let url = '';
     if(currentMediaType === 'movie') {
-      if(server === 'vidsrc_to')   url = `https://vidsrc.to/embed/movie/${currentMediaId}`;
-      if(server === 'superembed') url = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
-      if(server === 'vidsrc_me')   url = `https://vidsrc.me/embed/movie?tmdb=${currentMediaId}`;
-      if(server === 'vidsrc_xyz')  url = `https://vidsrc.xyz/embed/movie/${currentMediaId}`;
-    } else {
-      if(server === 'vidsrc_to')   url = `https://vidsrc.to/embed/tv/${currentMediaId}/${s}/${e}`;
-      if(server === 'superembed') url = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${s}&e=${e}`;
-      if(server === 'vidsrc_me')   url = `https://vidsrc.me/embed/tv?tmdb=${currentMediaId}&sea=${s}&epi=${e}`;
-      if(server === 'vidsrc_xyz')  url = `https://vidsrc.xyz/embed/tv?tmdb=${currentMediaId}&season=${s}&episode=${e}`;
-    }
-    if(audio === 'dub' && server === 'superembed') url += '&lang=pt';
-    iframe.src = url;
-
-    iframe.onerror = () => { tryNextServerFallback(); };
-  }
-
-  function tryNextServerFallback() {
-    currentServerIndex++; if(currentServerIndex >= SERVERS_ORDER.length) currentServerIndex = 0;
-    document.getElementById('select-server').value = SERVERS_ORDER[currentServerIndex];
-    document.getElementById('player-error-fallback').style.display = 'flex';
-    setTimeout(() => { loadCurrentSelectedStream(); }, 2500);
-  }
-
-  function toggleFavoriteCurrent() {
-    let favs = storage.get('favorites'); const idx = favs.findIndex(f => f.id == currentMediaId);
-    if(idx > -1) { favs.splice(idx, 1); } else {
-      favs.push({ id: currentMediaId, media_type: currentMediaType, title: document.getElementById('det-title').innerText, backdrop_path: document.getElementById('det-backdrop').style.backgroundImage.replace('url("https://image.tmdb.org/t/p/w1280', '').replace('")', '') });
-    }
-    storage.set('favorites', favs); updateFavoriteBadgeState(currentMediaId); buildHomeCarousels();
-  }
-
-  function updateFavoriteBadgeState(id) {
-    const isFav = storage.get('favorites').some(f => f.id == id); const btn = document.getElementById('btn-add-fav');
-    if(!btn) return; btn.classList.toggle('active', isFav); btn.innerHTML = isFav ? '<i class="fas fa-check"></i>' : '<i class="fas fa-plus"></i>';
-  }
-
-  function addToHistory(item, type) {
-    let hist = storage.get('history').filter(h => h.id != item.id);
-    hist.unshift({ id: item.id, media_type: type, title: item.title || item.name, backdrop_path: item.backdrop_path });
-    if(hist.length > 15) hist.pop(); storage.set('history', hist);
-  }
-
-  function showFavorites() {
-    document.getElementById('page-home').style.display = 'none';
-    const g = document.getElementById('page-grid-view'); g.style.display = 'block';
-    document.getElementById('grid-view-title').innerText = 'Minha Lista / Favoritos';
-    renderGridItems(storage.get('favorites'));
-  }
-
-  function switchTab(tab) {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    if(event && event.target) event.target.classList.add('active');
-    if(tab === 'home') { document.getElementById('page-grid-view').style.display = 'none'; document.getElementById('page-home').style.display = 'block'; buildHomeCarousels(); }
-  }
-
-  function closeDetails() { window.location.hash = ''; document.getElementById('page-home').style.opacity = '1'; document.getElementById('page-details').style.display = 'none'; document.getElementById('det-frame').src = ''; }
-</script>
-</body>
-</html>
+      if(server === 'superembed')
