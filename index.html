@@ -28,6 +28,7 @@
     #premium-loader { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
     .spinner { width: 50px; height: 50px; border: 5px solid #222; border-top-color: var(--red); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    #loader-error-msg { color: #888; font-size: 13px; margin-top: 15px; display: none; text-align: center; max-width: 80%; line-height: 1.4; }
 
     /* HEADER */
     header { position: fixed; top: 0; width: 100%; padding: 0 4%; height: 68px; display: flex; align-items: center; z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); transition: background 0.4s; }
@@ -130,14 +131,18 @@
 </head>
 <body>
 
-<div id="premium-loader"><div class="logo" style="margin-bottom:20px;">PUREFLIX</div><div class="spinner"></div></div>
+<div id="premium-loader">
+  <div class="logo" style="margin-bottom:20px;">PUREFLIX</div>
+  <div class="spinner"></div>
+  <div id="loader-error-msg">Conectando ao servidor seguro... Se demorar, verifique se o seu backend está ativo e rodando com suporte a HTTPS/SSL.</div>
+</div>
 
 <header id="navbar">
   <div class="logo" onclick="window.location.hash=''">PUREFLIX</div>
   <nav>
     <a href="#" class="nav-item active" onclick="switchTab('home')">Início</a>
-    <a href="#" class="nav-item" onclick="filterStatic('movie')">Filmes</a>
-    <a href="#" class="nav-item" onclick="filterStatic('tv')">Séries</a>
+    <a href="#" class="nav-item" onclick="filterStatic('movie')">Filmes BR</a>
+    <a href="#" class="nav-item" onclick="filterStatic('tv')">Séries BR</a>
     <a href="#" class="nav-item" onclick="showFavorites()">Minha Lista</a>
   </nav>
   <div class="header-right">
@@ -146,14 +151,14 @@
 </header>
 
 <div id="search-bar">
-  <input id="search-input" type="text" placeholder="Pesquisar filmes, séries ou animes...">
+  <input id="search-input" type="text" placeholder="Pesquisar filmes, séries ou animes dublados...">
   <button id="search-btn" onclick="executeSearch()"><i class="fas fa-search"></i></button>
 </div>
 
 <div id="page-home">
   <section class="hero" id="hero-banner">
     <div class="hero-content">
-      <span class="hero-badge"><i class="fas fa-fire"></i> Conteúdo em Português</span>
+      <span class="hero-badge"><i class="fas fa-check-circle"></i> Catálogo Dublado & Nacional</span>
       <h1 class="hero-title" id="hero-title">Carregando catálogo...</h1>
       <p class="hero-desc" id="hero-desc"></p>
       <div class="hero-btns">
@@ -181,7 +186,7 @@
         <div class="details-meta">
           <span id="det-rating" class="meta-rating">⭐ 0.0</span>
           <span id="det-year" class="meta-year">0000</span>
-          <span class="meta-hd">1080p</span>
+          <span class="meta-hd">ÁUDIO BR</span>
           <span id="det-type-badge" class="meta-hd"></span>
         </div>
         <p id="det-synopsis" class="details-synopsis">Sinopse...</p>
@@ -204,17 +209,17 @@
             <select id="select-episode" onchange="loadCurrentSelectedStream()"></select>
           </div>
           <div class="selector-item">
-            <label>Áudio Preferencial</label>
+            <label>Idioma / Áudio</label>
             <select id="select-audio" onchange="loadCurrentSelectedStream()">
-              <option value="dub">Dublado / PT-BR</option>
-              <option value="leg">Original / Legendado</option>
+              <option value="dub">Dublado (PT-BR) Primário</option>
+              <option value="leg">Original Legendado</option>
             </select>
           </div>
           <div class="selector-item">
-            <label>Servidor</label>
+            <label>Servidor de Transmissão</label>
             <select id="select-server" onchange="loadCurrentSelectedStream()">
-              <option value="superembed">SuperEmbed (BR - Dublagem Focada)</option>
-              <option value="vidsrc_to">VidSrc.to (Internacional)</option>
+              <option value="superembed">SuperEmbed BR (Auto-Dublado)</option>
+              <option value="vidsrc_to">VidSrc.to</option>
               <option value="vidsrc_me">VidSrc.me</option>
               <option value="vidsrc_xyz">VidSrc.xyz</option>
             </select>
@@ -225,7 +230,7 @@
         <div id="player-error-fallback">
           <i class="fas fa-sync-alt fa-spin" style="font-size:35px; color:var(--red); margin-bottom:15px"></i>
           <h3>Alternando Rota Automática</h3>
-          <p style="color:#aaa; font-size:13px; margin-top:5px;">Buscando rota estável de transmissão...</p>
+          <p style="color:#aaa; font-size:13px; margin-top:5px;">Sincronizando áudio em português...</p>
         </div>
         <iframe id="det-frame" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-same-origin allow-scripts"></iframe>
       </div>
@@ -234,20 +239,19 @@
 </div>
 
 <script>
-  // =========================================================================================
-  // Troque para 'http://localhost:3000' se você for iniciar o Node local no terminal do seu PC
-  // =========================================================================================
-  const BRIDGE_URL = 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer'; 
+  // Alerta de segurança HTTPS automático para o GitHub Pages
+  const BRIDGE_URL = window.location.hostname.includes('github.io') 
+    ? 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer'  // Troque para a URL de produção segura gerada pelo seu cloud/codespace (obrigatório https://)
+    : 'http://localhost:3000';                                         // Se testar fora do GitHub, usa o local
 
   const CATEGORIES = [
     { title: "Continuar Assistindo", endpoint: "continue-watching", type: "custom" },
-    { title: "Lançamentos Imperdíveis", endpoint: "api/list/movie/now_playing" },
-    { title: "Filmes de Ação", endpoint: "api/discover/movie?with_genres=28" },
-    { title: "Séries em Alta", endpoint: "api/list/tv/popular" },
-    { title: "Comédias para Rir Muito", endpoint: "api/discover/movie?with_genres=35" },
+    { title: "Lançamentos com Dublagem BR", endpoint: "api/list/movie/now_playing" },
+    { title: "Filmes de Ação e Aventura", endpoint: "api/discover/movie?with_genres=28" },
+    { title: "Séries em Alta no Brasil", endpoint: "api/list/tv/popular" },
+    { title: "Comédia Nacional e Dublada", endpoint: "api/discover/movie?with_genres=35" },
     { title: "Animes e Animações", endpoint: "api/discover/movie?with_genres=16" },
-    { title: "Terror e Suspense", endpoint: "api/discover/movie?with_genres=27,53" },
-    { title: "Documentários", endpoint: "api/discover/movie?with_genres=99" }
+    { title: "Terror e Suspense", endpoint: "api/discover/movie?with_genres=27,53" }
   ];
 
   let currentMediaId = null;
@@ -263,11 +267,17 @@
   window.onscroll = () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40); };
 
   window.onload = async () => {
+    // Alerta visual se travar por falta de servidor ativo
+    setTimeout(() => {
+       const loaderErr = document.getElementById('loader-error-msg');
+       if(loaderErr) loaderErr.style.display = 'block';
+    }, 4000);
+
     try {
       await loadHeroBanner();
       await buildHomeCarousels();
     } catch (e) {
-      console.error("Erro ao renderizar Pureflix:", e);
+      console.error("Erro na comunicação com o backend:", e);
     } finally {
       document.getElementById('premium-loader').style.opacity = '0';
       setTimeout(() => document.getElementById('premium-loader').style.display = 'none', 500);
@@ -294,7 +304,7 @@
         const item = list[0];
         document.getElementById('hero-banner').style.backgroundImage = `url(https://image.tmdb.org/t/p/w1280${item.backdrop_path})`;
         document.getElementById('hero-title').innerText = item.title || item.name;
-        document.getElementById('hero-desc').innerText = item.overview || "Sinopse não disponível em português.";
+        document.getElementById('hero-desc').innerText = item.overview || "Sinopse em português pendente.";
         const action = () => window.location.hash = `#movie/${item.id}/movie`;
         document.getElementById('hero-play-btn').onclick = action;
         document.getElementById('hero-info-btn').onclick = action;
@@ -375,12 +385,12 @@
 
   function renderGridItems(items) {
     const grid = document.getElementById('grid-view-content'); grid.innerHTML = '';
-    if(!items || items.length === 0) { grid.innerHTML = '<p style="color:#aaa;">Nenhum conteúdo encontrado.</p>'; return; }
+    if(!items || items.length === 0) { grid.innerHTML = '<p style="color:#aaa; padding: 20px;">Nenhum conteúdo encontrado para esta pesquisa.</p>'; return; }
     items.forEach(item => {
       const card = document.createElement('div'); card.className = 'movie-card'; card.style.flex = "initial";
       card.onclick = () => window.location.hash = `#movie/${item.id}/${item.media_type || 'movie'}`;
       const img = item.backdrop_path ? `https://image.tmdb.org/t/p/w500${item.backdrop_path}` : `https://image.tmdb.org/t/p/w500${item.poster_path}`;
-      card.innerHTML = `<img src="${img || 'https://via.placeholder.com/500x280?text=Sem+Capa'}"><div class="card-info">${item.title || item.name}</div>`;
+      card.innerHTML = `<img src="${img || 'https://via.placeholder.com/500x280?text=Sem+Imagem'}"><div class="card-info">${item.title || item.name}</div>`;
       grid.appendChild(card);
     });
   }
@@ -388,7 +398,7 @@
   async function filterStatic(type) {
     document.getElementById('page-home').style.display = 'none';
     const g = document.getElementById('page-grid-view'); g.style.display = 'block';
-    document.getElementById('grid-view-title').innerText = type === 'movie' ? 'Filmes Populares' : 'Séries Populares';
+    document.getElementById('grid-view-title').innerText = type === 'movie' ? 'Filmes Populares no Brasil' : 'Séries Populares no Brasil';
     renderGridItems(await fetchCategoryData(`api/list/${type}/popular`));
   }
 
@@ -400,11 +410,11 @@
       const res = await fetch(`${BRIDGE_URL}/api/details/${type}/${id}`);
       const data = await res.json();
       document.getElementById('det-title').innerText = data.title || data.name;
-      document.getElementById('det-synopsis').innerText = data.overview || "Sinopse em português pendente no catálogo.";
+      document.getElementById('det-synopsis').innerText = data.overview || "Sinopse em português não enviada pelo TMDB.";
       document.getElementById('det-year').innerText = (data.release_date || data.first_air_date || '----').split('-')[0];
       document.getElementById('det-rating').innerText = `⭐ ${(data.vote_average || 0).toFixed(1)}`;
       document.getElementById('det-type-badge').innerText = type === 'tv' ? 'Série' : 'Filme';
-      document.getElementById('det-poster').src = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+      document.getElementById('det-poster').src = data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : 'https://via.placeholder.com/500x750?text=Sem+Poster';
       document.getElementById('det-backdrop').style.backgroundImage = `url(https://image.tmdb.org/t/p/w1280${data.backdrop_path})`;
       
       updateFavoriteBadgeState(id);
@@ -468,7 +478,6 @@
       if(server === 'vidsrc_xyz')  url = `https://vidsrc.xyz/embed/tv?tmdb=${currentMediaId}&season=${s}&episode=${e}`;
     }
     
-    // Injeta o comando para puxar áudio em Português se o servidor principal (SuperEmbed) estiver ativo
     if(server === 'superembed') {
        url += audio === 'dub' ? '&lang=pt' : '&lang=en';
     }
