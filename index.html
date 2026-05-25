@@ -3,366 +3,667 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>PureFlix - App Edition</title>
-
-  <!-- PWA Meta Tags -->
-  <meta name="theme-color" content="#141414">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="data:application/manifest+json,{"name":"PureFlix","short_name":"PureFlix","start_url":".","display":"standalone","background_color":"#141414","theme_color":"#e50914"}">
+  <title>Pureflix - Portal de Filmes e Séries</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
     :root {
-      --netflix-red: #e50914;
-      --netflix-black: #141414;
-      --netflix-dark: #000000;
+      --red:   #e50914;
+      --black: #141414;
+      --dark:  #0a0a0a;
+      --white: #ffffff;
+      --gray:  #e5e5e5;
+      --dim:   #999;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
-    body { 
-      background-color: var(--netflix-black); 
-      color: white; 
-      font-family: 'Roboto', sans-serif; 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Roboto', sans-serif;
       overflow-x: hidden;
     }
 
+    /* ── HEADER ── */
     header {
       position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 12px 4%;
+      top: 0; width: 100%;
+      padding: 0 4%;
+      height: 68px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
-      transition: background 0.3s;
+      background: linear-gradient(to bottom, rgba(0,0,0,.85), transparent);
+      transition: background .4s;
+    }
+    header.scrolled { background: var(--black); border-bottom: 1px solid #2a2a2a; }
+
+    .logo {
+      color: var(--red);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      margin-right: 40px;
     }
 
-    .logo { color: var(--netflix-red); font-size: 22px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+    nav { display: flex; gap: 22px; height: 100%; align-items: center; }
+    .nav-item {
+      position: relative; height: 100%;
+      display: flex; align-items: center;
+      cursor: pointer;
+      color: var(--gray);
+      font-size: 14px;
+      transition: color .2s;
+    }
+    .nav-item:hover { color: white; }
 
+    .dropdown {
+      position: absolute;
+      top: 68px; left: 0;
+      background: rgba(10,10,10,.97);
+      border: 1px solid #2a2a2a;
+      width: 190px;
+      display: none;
+      flex-direction: column;
+      padding: 8px 0;
+      box-shadow: 0 12px 28px rgba(0,0,0,.6);
+    }
+    .nav-item:hover .dropdown { display: flex; }
+    .dropdown a {
+      padding: 10px 20px;
+      color: #bbb;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background .15s;
+    }
+    .dropdown a:hover { background: #1e1e1e; color: white; }
+
+    .header-right { display: flex; align-items: center; gap: 18px; margin-left: auto; }
+    .header-right i { font-size: 17px; cursor: pointer; color: var(--gray); transition: color .2s; }
+    .header-right i:hover { color: white; }
+
+    /* ── SEARCH BAR ── */
+    #search-bar {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: rgba(10,10,10,.97);
+      padding: 18px 4%;
+      z-index: 999;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    #search-bar.open { display: flex; gap: 12px; }
+    #search-input {
+      flex: 1;
+      background: #1e1e1e;
+      border: 1px solid #3a3a3a;
+      border-radius: 4px;
+      padding: 10px 16px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+    #search-input:focus { border-color: #555; }
+    #search-btn {
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* ── HERO ── */
     .hero {
-      height: 50vh;
+      height: 80vh;
       position: relative;
-      background: linear-gradient(to right, rgba(0,0,0,0.9) 20%, transparent 80%),
-                  url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
+      background:
+        linear-gradient(to top,  var(--black) 0%, transparent 25%),
+        linear-gradient(to right, rgba(0,0,0,.7) 0%, transparent 55%),
+        url('https://image.tmdb.org/t/p/w1280/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 0 4%;
     }
-
-    .search-box {
-      display: flex;
-      gap: 8px;
-      background: rgba(0,0,0,0.8);
-      padding: 5px;
-      border-radius: 4px;
-      border: 1px solid rgba(255,255,255,0.2);
-      width: 100%;
-      max-width: 450px;
-      margin-top: 20px;
-    }
-
-    .search-box input { flex: 1; background: transparent; border: none; color: white; font-size: 15px; outline: none; padding: 8px; }
-    .btn-search { background-color: var(--netflix-red); color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; }
-
-    .filters-bar {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-      overflow-x: auto;
-      padding-bottom: 5px;
-      scrollbar-width: none;
-    }
-    .filters-bar::-webkit-scrollbar { display: none; }
-    .filter-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+    .hero-content { max-width: 560px; }
+    .hero-badge {
+      display: inline-block;
+      background: var(--red);
       color: white;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      cursor: pointer;
-      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      border-radius: 2px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
     }
-    .filter-btn.active { background: white; color: black; border-color: white; }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 64px; letter-spacing: 2px; line-height: 1; margin-bottom: 14px; }
+    .hero-desc { font-size: 16px; color: #ccc; line-height: 1.6; }
+    .hero-btns { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-play {
+      background: white; color: black;
+      border: none; padding: 12px 28px;
+      border-radius: 4px; font-size: 16px;
+      font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      transition: background .2s;
+    }
+    .btn-play:hover { background: #ddd; }
+    .btn-info {
+      background: rgba(109,109,110,.7);
+      color: white;
+      border: none; padding: 12px 28px;
+      border-radius: 4px; font-size: 16px;
+      font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+    }
 
-    .main-container { padding: 20px 4%; margin-top: -40px; position: relative; z-index: 5; }
-    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: #e5e5e5; display: flex; justify-content: space-between; align-items: center; }
+    /* ── GRID ── */
+    .main-container { padding: 0 4% 60px; margin-top: -120px; position: relative; z-index: 10; }
+    .section-title { font-size: 20px; font-weight: 700; margin: 48px 0 14px; }
 
-    .results-row {
+    .movie-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
       gap: 12px;
-      margin-bottom: 40px;
     }
 
     .movie-card {
-      position: relative;
       aspect-ratio: 2/3;
-      background: #1a1a1a;
+      background: #1e1e1e;
       border-radius: 4px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.3s;
+      transition: transform .3s, box-shadow .3s;
+      position: relative;
+    }
+    .movie-card:hover { transform: scale(1.06); z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+    .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-info {
+      position: absolute; bottom: 0; width: 100%;
+      padding: 30px 10px 10px;
+      background: linear-gradient(transparent, rgba(0,0,0,.95));
+      font-size: 12px; font-weight: 700;
+      text-align: center;
+    }
+    .card-rating {
+      font-size: 11px;
+      color: #46d369;
+      font-weight: 700;
+      margin-top: 3px;
     }
 
-    .movie-card:hover { transform: scale(1.05); z-index: 10; }
-    .movie-card-info { position: absolute; bottom: 0; width: 100%; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,1), transparent); opacity: 0; transition: opacity 0.3s; }
-    .movie-card:hover .movie-card-info { opacity: 1; }
-    .movie-title { font-size: 11px; font-weight: bold; }
+    /* ── SKELETON LOADER ── */
+    .skeleton {
+      background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-    .btn-add-list {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      border: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      font-size: 16px;
-      cursor: pointer;
+    /* ── DETAILS PAGE ── */
+    #page-details {
+      position: fixed; inset: 0;
+      background: var(--black);
+      z-index: 2000;
+      display: none;
+      overflow-y: auto;
+      padding-top: 68px;
+    }
+
+    .details-hero {
+      width: 100%; height: 380px;
+      position: relative;
+      background: center/cover no-repeat;
+    }
+    .details-hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, var(--black) 0%, transparent 55%);
+    }
+
+    .details-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 4% 60px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s;
+      gap: 40px;
     }
-    .movie-card:hover .btn-add-list { opacity: 1; }
-    .btn-add-list.in-list { color: var(--netflix-red); opacity: 1; }
+    .details-poster {
+      width: 240px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.6);
+      margin-top: -110px;
+      position: relative;
+      z-index: 10;
+    }
+    .details-poster img { width: 100%; display: block; }
 
-    #player-overlay {
-      position: fixed;
-      inset: 0;
+    .details-info { flex: 1; padding-top: 10px; }
+    .details-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .details-meta {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .meta-tag {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      padding: 4px 10px;
+      border-radius: 3px;
+      color: #ccc;
+    }
+    .meta-rating { color: #46d369; font-weight: 700; }
+    .details-genres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .genre-tag {
+      background: rgba(229,9,20,.15);
+      border: 1px solid rgba(229,9,20,.3);
+      color: #ff6b6b;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .details-synopsis { font-size: 15px; line-height: 1.7; color: #bbb; margin-bottom: 30px; }
+
+    /* ── PLAYER ── */
+    .player-box {
+      width: 100%;
+      aspect-ratio: 16/9;
       background: #000;
-      z-index: 9999;
-      display: none;
-      flex-direction: column;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 20px;
+      position: relative;
     }
+    .player-box iframe { width: 100%; height: 100%; border: none; }
 
-    .player-header {
-      padding: 10px 4%;
+    .player-fallback-btns {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0,0,0,0.9);
-      z-index: 10001;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
     }
-
-    .btn-close { background: transparent; border: none; color: white; font-size: 30px; cursor: pointer; }
-
-    .player-options { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btn-option { background: #333; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
-    .btn-option.active { background: var(--netflix-red); }
-
-    #video-container { flex: 1; width: 100%; height: 100%; background: black; }
-    iframe { width: 100%; height: 100%; border: none; }
-
-    .netflix-loader {
-      position: fixed;
-      inset: 0;
-      background: var(--netflix-dark);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 11000;
+    .server-btn {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      color: #ccc;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all .2s;
     }
+    .server-btn:hover, .server-btn.active { background: var(--red); border-color: var(--red); color: white; }
 
-    .loader-circle { width: 40px; height: 40px; border: 3px solid #333; border-top-color: var(--netflix-red); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .player-loading {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px;
+      background: #000;
+      font-size: 14px;
+      color: #666;
+    }
+    .player-loading i { font-size: 36px; color: var(--red); animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    @media (max-width: 480px) {
-      .results-row { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-      .hero { height: 40vh; }
+    .btn-close-page {
+      position: fixed; top: 18px; right: 4%;
+      font-size: 26px; cursor: pointer;
+      z-index: 2100;
+      width: 40px; height: 40px;
+      background: rgba(0,0,0,.6);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .btn-close-page:hover { background: rgba(229,9,20,.7); }
+
+    /* ── ERRO / EMPTY ── */
+    .msg-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--dim);
+      font-size: 15px;
+    }
+    .msg-empty i { font-size: 40px; margin-bottom: 14px; display: block; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .details-container { flex-direction: column; }
+      .details-poster { width: 160px; margin: 0 auto -30px; }
+      .hero-title { font-size: 42px; }
+      .details-title { font-size: 34px; }
     }
   </style>
 </head>
 <body>
 
-<div id="loader" class="netflix-loader">
-  <div class="loader-circle"></div>
-</div>
-
 <header id="navbar">
-  <div class="logo" onclick="location.reload()">PureFlix</div>
+  <div class="logo" onclick="navigate('')">PUREFLIX</div>
+  <nav>
+    <div class="nav-item" onclick="navigate('')">Início</div>
+    <div class="nav-item">
+      Filmes <i class="fas fa-caret-down" style="margin-left:5px"></i>
+      <div class="dropdown">
+        <a href="#" onclick="searchCategory('ação','movie')">Ação</a>
+        <a href="#" onclick="searchCategory('comédia','movie')">Comédia</a>
+        <a href="#" onclick="searchCategory('terror','movie')">Terror</a>
+        <a href="#" onclick="searchCategory('ficção científica','movie')">Ficção Científica</a>
+        <a href="#" onclick="searchCategory('drama','movie')">Drama</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      Séries <i class="fas fa-caret-down" style="margin-left:5px"></i>
+      <div class="dropdown">
+        <a href="#" onclick="searchCategory('ação','tv')">Ação</a>
+        <a href="#" onclick="searchCategory('drama','tv')">Drama</a>
+        <a href="#" onclick="searchCategory('comédia','tv')">Comédia</a>
+      </div>
+    </div>
+    <div class="nav-item" onclick="searchCategory('popular 2024','movie')">Bombando</div>
+  </nav>
+  <div class="header-right">
+    <i class="fas fa-search" onclick="toggleSearch()"></i>
+    <i class="fas fa-bell"></i>
+    <div style="width:30px;height:30px;background:var(--red);border-radius:4px"></div>
+  </div>
 </header>
 
-<section class="hero">
-  <h1 style="font-size: 32px; font-weight: 900;">App Edition</h1>
-  <div class="search-box">
-    <input type="text" id="search-input" placeholder="Filmes, Séries, TV..." onkeypress="if(event.key==='Enter') searchMovies()" />
-    <button class="btn-search" onclick="searchMovies()">Buscar</button>
-  </div>
-  <div class="filters-bar">
-    <button class="filter-btn active" onclick="applyFilter('all', this)">Tudo</button>
-    <button class="filter-btn" onclick="applyFilter('4k', this)">4K Ultra HD</button>
-    <button class="filter-btn" onclick="applyFilter('1080p', this)">1080p Full HD</button>
-    <button class="filter-btn" onclick="applyFilter('dublado', this)">Dublado</button>
-    <button class="filter-btn" onclick="applyFilter('2024', this)">Lançamentos</button>
-    <button class="filter-btn" onclick="applyFilter('action', this)">Ação</button>
-    <button class="filter-btn" onclick="applyFilter('comedy', this)">Comédia</button>
-  </div>
-</section>
-
-<div class="main-container">
-  <!-- Minha Lista -->
-  <div id="my-list-section" style="display: none;">
-    <h2 class="section-title">Minha Lista</h2>
-    <div id="my-list-grid" class="results-row"></div>
-  </div>
-
-  <!-- Resultados da Busca -->
-  <div id="results-section" style="display: none;">
-    <h2 class="section-title">Resultados</h2>
-    <div id="results-grid" class="results-row"></div>
-  </div>
-
-  <!-- Tendências -->
-  <h2 class="section-title">Tendências de Hoje</h2>
-  <div class="results-row" id="trending-grid"></div>
+<!-- Search Bar -->
+<div id="search-bar">
+  <input id="search-input" type="text" placeholder="Buscar filmes e séries..." onkeydown="if(event.key==='Enter')doSearch()">
+  <button id="search-btn" onclick="doSearch()"><i class="fas fa-search"></i> Buscar</button>
 </div>
 
-<div id="player-overlay">
-  <div class="player-header">
-    <button class="btn-close" onclick="closePlayer()">×</button>
-    <div class="player-options">
-      <button id="btn-webtor" class="btn-option active" onclick="switchPlayer('webtor')">Webtor (Nuvem)</button>
-      <button id="btn-bridge" class="btn-option" onclick="switchPlayer('bridge')">Ponte Turbo</button>
-      <button id="btn-vlc" class="btn-option" style="background:#ff8800">VLC</button>
+<!-- Home Page -->
+<div id="page-home">
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-badge">⭐ Em Destaque</span>
+      <h1 class="hero-title">Duna: Parte 2</h1>
+      <p class="hero-desc">Paul Atreides une-se a Chani e aos Fremen em uma guerra de vingança contra os conspiradores que destruíram sua família.</p>
+      <div class="hero-btns">
+        <button class="btn-play" onclick="openById(693134,'movie','Duna: Parte 2')">
+          <i class="fas fa-play"></i> Assistir Agora
+        </button>
+        <button class="btn-info" onclick="openById(693134,'movie','Duna: Parte 2')">
+          <i class="fas fa-info-circle"></i> Mais Informações
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="main-container">
+    <h2 class="section-title" id="grid-title">Lançamentos em Destaque</h2>
+    <div class="movie-grid" id="home-grid"></div>
+  </div>
+</div>
+
+<!-- Details Page -->
+<div id="page-details">
+  <div class="btn-close-page" onclick="navigate('')"><i class="fas fa-times"></i></div>
+  <div class="details-hero" id="det-backdrop"></div>
+  <div class="details-container">
+    <div class="details-poster">
+      <img id="det-poster" src="" alt="">
+    </div>
+    <div class="details-info">
+      <h1 id="det-title" class="details-title"></h1>
+      <div class="details-meta" id="det-meta"></div>
+      <div class="details-genres" id="det-genres"></div>
+      <p id="det-synopsis" class="details-synopsis"></p>
+
+      <!-- Player com fallback de servidores -->
+      <p style="font-size:13px;color:#666;margin-bottom:8px">
+        <i class="fas fa-server"></i> Trocar servidor se não carregar:
+      </p>
+      <div class="player-fallback-btns" id="server-btns"></div>
+
+      <div class="player-box">
+        <div class="player-loading" id="player-loading">
+          <i class="fas fa-circle-notch"></i>
+          <span>Carregando player...</span>
+        </div>
+        <iframe id="det-frame" allowfullscreen
+          onload="document.getElementById('player-loading').style.display='none'">
+        </iframe>
+      </div>
     </div>
   </div>
-  <div id="video-container"></div>
 </div>
 
 <script>
-  const BRIDGE_URL = 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer';
-  let currentMagnet = '';
-  let myList = JSON.parse(localStorage.getItem('pureflix_list')) || [];
+  // ✅ Altere para o endereço onde o bridge.js estiver rodando
+  const BRIDGE = 'http://localhost:3000';
 
-  window.onload = () => {
-    loadTrending();
-    updateMyListUI();
+  // ✅ Servidores de embed — recebem TMDB ID real
+  function getServers(tmdbId, type) {
+    const t = type === 'tv' ? 'tv' : 'movie';
+    return [
+      { label: 'Servidor 1',  url: `https://vidsrc.to/embed/${t}/${tmdbId}` },
+      { label: 'Servidor 2',  url: `https://vidsrc.me/embed/${t}?tmdb=${tmdbId}` },
+      { label: 'Servidor 3',  url: `https://vidsrc.xyz/embed/${t}?tmdb=${tmdbId}` },
+      { label: 'Servidor 4',  url: `https://superembed.stream/embed?tmdb=${tmdbId}&type=${t}` },
+    ];
+  }
+
+  let currentTmdbId   = null;
+  let currentType     = 'movie';
+
+  // ── Navegação ──
+  window.onscroll = () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
   };
 
-  async function loadTrending() {
+  function navigate(path) {
+    window.location.hash = path ? `#${path}` : '';
+  }
+
+  window.onhashchange = () => {
+    const hash = window.location.hash;
+    if (hash.startsWith('#movie/')) {
+      const [id, type] = hash.replace('#movie/', '').split('/');
+      loadDetails(Number(id), type || 'movie');
+    } else {
+      showHome();
+    }
+  };
+
+  window.onload = () => {
+    loadHome();
+    window.onhashchange();
+  };
+
+  // ── Search ──
+  function toggleSearch() {
+    const bar = document.getElementById('search-bar');
+    bar.classList.toggle('open');
+    if (bar.classList.contains('open')) {
+      document.getElementById('search-input').focus();
+    }
+  }
+
+  async function doSearch() {
+    const q = document.getElementById('search-input').value.trim();
+    if (!q) return;
+    document.getElementById('search-bar').classList.remove('open');
+    document.getElementById('grid-title').innerText = `Resultados para: "${q}"`;
+    showHome();
+    await loadGrid(q, 'movie');
+  }
+
+  async function searchCategory(q, type) {
+    document.getElementById('grid-title').innerText = `Categoria: ${q.toUpperCase()}`;
+    showHome();
+    await loadGrid(q, type);
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  }
+
+  // ── Home / Grid ──
+  async function loadHome() {
+    document.getElementById('grid-title').innerText = 'Lançamentos em Destaque';
+    await loadGrid('popular 2024', 'movie');
+  }
+
+  async function loadGrid(query, type) {
+    const grid = document.getElementById('home-grid');
+
+    // Skeleton loader
+    grid.innerHTML = Array(12).fill(0).map(() =>
+      `<div class="movie-card skeleton"></div>`
+    ).join('');
+
     try {
-      const response = await fetch(`${BRIDGE_URL}/search?q=2024+trending`);
-      const data = await response.json();
-      if (data && data.length > 0) renderResults(data.slice(0, 12), document.getElementById('trending-grid'));
-    } catch (e) {}
+      const res  = await fetch(`${BRIDGE}/search?q=${encodeURIComponent(query)}&type=${type}`);
+      const data = await res.json();
+      renderGrid(data, grid, type);
+    } catch (e) {
+      grid.innerHTML = `<div class="msg-empty" style="grid-column:1/-1">
+        <i class="fas fa-exclamation-triangle"></i>
+        Não foi possível conectar ao servidor bridge.<br>
+        Verifique se o <code>bridge.js</code> está rodando.
+      </div>`;
+    }
   }
 
-  async function searchMovies() {
-    const query = document.getElementById('search-input').value.trim();
-    if (!query) return;
-    showLoader(true);
-    try {
-      const response = await fetch(`${BRIDGE_URL}/search?q=${encodeURIComponent(query)}`);
-      const data = await response.json();
-      document.getElementById('results-section').style.display = 'block';
-      renderResults(data, document.getElementById('results-grid'));
-      window.scrollTo({ top: 350, behavior: 'smooth' });
-    } catch (e) { alert('Erro na busca.'); }
-    finally { showLoader(false); }
-  }
-
-  function applyFilter(type, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('search-input').value = type === 'all' ? '' : type;
-    searchMovies();
-  }
-
-  function renderResults(data, container) {
+  function renderGrid(data, container, type) {
+    if (!data || data.length === 0) {
+      container.innerHTML = `<div class="msg-empty" style="grid-column:1/-1">
+        <i class="fas fa-film"></i>Nenhum resultado encontrado.
+      </div>`;
+      return;
+    }
     container.innerHTML = '';
     data.forEach(item => {
-      const magnet = `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(item.name)}`;
-      const isInList = myList.some(m => m.info_hash === item.info_hash);
-      
       const card = document.createElement('div');
       card.className = 'movie-card';
+      card.onclick = () => openById(item.id, type, item.name);
+
+      const poster = item.poster
+        || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(item.name)}&backgroundColor=e50914`;
+
       card.innerHTML = `
-        <div onclick="openPlayer('${magnet}', '${item.name}')" style="height:100%; display:flex; align-items:center; justify-content:center; background:#222; padding:10px; text-align:center; font-size:11px; color:#aaa;">${item.name}</div>
-        <button class="btn-add-list ${isInList ? 'in-list' : ''}" onclick="toggleMyList(event, ${JSON.stringify(item).replace(/"/g, '&quot;')})">${isInList ? '✓' : '+'}</button>
-        <div class="movie-card-info" onclick="openPlayer('${magnet}', '${item.name}')">
-          <div class="movie-title">${item.name}</div>
-          <div style="font-size:9px; color:#46d369; margin-top:4px;">${item.seeders} Seeds</div>
-        </div>
-      `;
+        <img src="${poster}" alt="${item.name}" loading="lazy"
+          onerror="this.src='https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(item.name)}&backgroundColor=e50914'">
+        <div class="card-info">
+          ${item.name}
+          <div class="card-rating">⭐ ${item.rating} · ${item.year}</div>
+        </div>`;
       container.appendChild(card);
     });
   }
 
-  function toggleMyList(event, item) {
-    event.stopPropagation();
-    const index = myList.findIndex(m => m.info_hash === item.info_hash);
-    if (index > -1) {
-      myList.splice(index, 1);
-    } else {
-      myList.unshift(item);
+  // ── Details ──
+  function openById(id, type, name) {
+    window.location.hash = `#movie/${id}/${type}`;
+  }
+
+  async function loadDetails(id, type) {
+    document.getElementById('page-home').style.display    = 'none';
+    document.getElementById('page-details').style.display = 'block';
+    document.getElementById('player-loading').style.display = 'flex';
+    document.getElementById('det-frame').src = '';
+
+    // Placeholder enquanto carrega
+    document.getElementById('det-title').innerText = 'Carregando...';
+    document.getElementById('det-synopsis').innerText = '';
+    document.getElementById('det-meta').innerHTML = '';
+    document.getElementById('det-genres').innerHTML = '';
+    document.getElementById('server-btns').innerHTML = '';
+
+    currentTmdbId = id;
+    currentType   = type;
+
+    try {
+      const res  = await fetch(`${BRIDGE}/movie/${id}?type=${type}`);
+      const movie = await res.json();
+
+      // Preenche detalhes
+      document.getElementById('det-title').innerText    = movie.name;
+      document.getElementById('det-synopsis').innerText = movie.synopsis;
+
+      if (movie.backdrop) {
+        document.getElementById('det-backdrop').style.backgroundImage = `url('${movie.backdrop}')`;
+      }
+      if (movie.poster) {
+        document.getElementById('det-poster').src = movie.poster;
+      }
+
+      document.getElementById('det-meta').innerHTML = `
+        <span class="meta-tag">${movie.year}</span>
+        <span class="meta-tag meta-rating">⭐ ${movie.rating}</span>
+        ${movie.runtime ? `<span class="meta-tag">${movie.runtime} min</span>` : ''}
+        <span class="meta-tag">HD 1080p</span>
+        <span class="meta-tag">Dublado / Leg.</span>
+      `;
+
+      if (movie.genres && movie.genres.length) {
+        document.getElementById('det-genres').innerHTML =
+          movie.genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
+      }
+
+      // ✅ Monta botões de servidor com TMDB ID real
+      buildServerButtons(id, type);
+
+      // ✅ Carrega o primeiro servidor automaticamente
+      loadServer(0, id, type);
+
+    } catch (e) {
+      document.getElementById('det-title').innerText =
+        'Erro ao carregar. Verifique se o bridge.js está rodando.';
     }
-    localStorage.setItem('pureflix_list', JSON.stringify(myList));
-    updateMyListUI();
-    
-    // Atualizar ícone no card clicado
-    event.target.classList.toggle('in-list');
-    event.target.innerText = event.target.classList.contains('in-list') ? '✓' : '+';
   }
 
-  function updateMyListUI() {
-    const section = document.getElementById('my-list-section');
-    const grid = document.getElementById('my-list-grid');
-    if (myList.length > 0) {
-      section.style.display = 'block';
-      renderResults(myList, grid);
-    } else {
-      section.style.display = 'none';
-    }
+  function buildServerButtons(tmdbId, type) {
+    const servers = getServers(tmdbId, type);
+    const btns    = document.getElementById('server-btns');
+    btns.innerHTML = '';
+    servers.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.className  = 'server-btn' + (i === 0 ? ' active' : '');
+      btn.innerText  = s.label;
+      btn.onclick    = () => {
+        document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadServer(i, tmdbId, type);
+      };
+      btns.appendChild(btn);
+    });
   }
 
-  function openPlayer(magnet, name) {
-    currentMagnet = magnet;
-    document.getElementById('player-overlay').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    document.getElementById('btn-vlc').onclick = () => window.location.href = magnet;
-    switchPlayer('webtor');
+  function loadServer(index, tmdbId, type) {
+    const servers = getServers(tmdbId, type);
+    const frame   = document.getElementById('det-frame');
+    document.getElementById('player-loading').style.display = 'flex';
+    // ✅ TMDB ID numérico real vai para o embed — não mais o título
+    frame.src = servers[index].url;
   }
 
-  function switchPlayer(type) {
-    const container = document.getElementById('video-container');
-    container.innerHTML = '';
-    document.getElementById('btn-webtor').classList.toggle('active', type === 'webtor');
-    document.getElementById('btn-bridge').classList.toggle('active', type === 'bridge');
-
-    if (type === 'webtor') {
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://webtor.io/show?magnet=${encodeURIComponent(currentMagnet)}`;
-      iframe.allowFullscreen = true;
-      container.appendChild(iframe);
-    } else {
-      const video = document.createElement('video');
-      video.controls = true;
-      video.autoplay = true;
-      video.src = `${BRIDGE_URL}/stream?magnet=${encodeURIComponent(currentMagnet)}`;
-      container.appendChild(video);
-    }
+  function showHome() {
+    document.getElementById('page-home').style.display    = 'block';
+    document.getElementById('page-details').style.display = 'none';
+    document.getElementById('det-frame').src = '';
   }
-
-  function closePlayer() {
-    document.getElementById('video-container').innerHTML = '';
-    document.getElementById('player-overlay').style.display = 'none';
-    document.body.style.overflow = 'auto';
-  }
-
-  function showLoader(show) { document.getElementById('loader').style.display = show ? 'flex' : 'none'; }
 </script>
 
 </body>
