@@ -1,4 +1,4 @@
-const BRIDGE_URL = 'COLOQUE_AQUI_SEU_BACKEND';
+const BRIDGE_URL = 'pureflix2-production.up.railway.app';
 
 const grid = document.getElementById('movie-grid');
 
