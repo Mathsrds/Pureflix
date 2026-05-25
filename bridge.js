@@ -1,55 +1,50 @@
 require('dotenv').config();
-    } catch (error) {
-        console.error('Erro Search:', error.message);
 
-        res.status(500).json({
-            error: 'Erro na busca'
-        });
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+const compression = require('compression');
+const helmet = require('helmet');
+const NodeCache = require('node-cache');
+
+const app = express();
+
+const cache = new NodeCache({
+  stdTTL: 3600
+});
+
+app.use(cors());
+app.use(compression());
+app.use(helmet());
+
+const api = axios.create({
+  timeout: 15000,
+  headers: {
+    Authorization: `Bearer ${process.env.TMDB_TOKEN}`
+  }
+});
+
+app.get('/trending', async(req,res)=>{
+  try {
+
+    if(cache.has('trending')) {
+      return res.json(cache.get('trending'));
     }
+
+    const response = await api.get(
+      'https://api.themoviedb.org/3/trending/all/day?language=pt-BR'
+    );
+
+    cache.set('trending', response.data.results);
+
+    res.json(response.data.results);
+
+  } catch(err) {
+    console.error(err.message);
+    res.status(500).json([]);
+  }
 });
 
-// =========================
-// TRENDING
-// =========================
-app.get('/trending', async (req, res) => {
-    try {
-        const cacheKey = 'trending_day';
-
-        if (cache.has(cacheKey)) {
-            return res.json(cache.get(cacheKey));
-        }
-
-        const response = await api.get(`${TMDB_BASE}/trending/all/day`, {
-            headers: {
-                Authorization: `Bearer ${TMDB_TOKEN}`
-            },
-            params: {
-                language: 'pt-BR'
-            }
-        });
-
-        cache.set(cacheKey, response.data.results, 1800);
-
-        res.json(response.data.results);
-    } catch (error) {
-        console.error('Erro Trending:', error.message);
-
-        res.status(500).json([]);
-    }
-});
-
-// =========================
-// FALLBACK 404
-// =========================
-app.use((req, res) => {
-    res.status(404).json({
-        error: 'Rota não encontrada'
-    });
-});
-
-// =========================
-// START SERVER
-// =========================
-app.listen(PORT, () => {
-    console.log(`Servidor Pureflix Ultra Pro rodando na porta ${PORT}`);
+app.listen(process.env.PORT || 3000, ()=>{
+  console.log('Bridge online');
 });

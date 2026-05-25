@@ -1,296 +1,63 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Pureflix - Portal de Filmes e Séries</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pureflix Premium</title>
+  <link rel="stylesheet" href="assets/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    :root {
-      --red:   #e50914;
-      --black: #141414;
-      --dark:  #0a0a0a;
-      --white: #ffffff;
-      --gray:  #e5e5e5;
-      --dim:   #999;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--black); color: var(--white); font-family: 'Roboto', sans-serif; overflow-x: hidden; }
-
-    /* HEADER */
-    header {
-      position: fixed; top: 0; width: 100%;
-      padding: 0 4%; height: 68px;
-      display: flex; align-items: center;
-      z-index: 1000;
-      background: linear-gradient(to bottom, rgba(0,0,0,.85), transparent);
-      transition: background .4s;
-    }
-    header.scrolled { background: var(--black); border-bottom: 1px solid #2a2a2a; }
-    .logo { color: var(--red); font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; cursor: pointer; margin-right: 40px; }
-    
-    nav { display: flex; gap: 22px; height: 100%; align-items: center; }
-    .nav-item { position: relative; height: 100%; display: flex; align-items: center; cursor: pointer; color: var(--gray); font-size: 14px; transition: color .2s; }
-    .nav-item:hover { color: white; }
-
-    /* Menu Suspenso (Dropdown) */
-    .dropdown { 
-      position: absolute; top: 68px; left: 0; 
-      background: rgba(10,10,10,.97); border: 1px solid #2a2a2a; 
-      width: 200px; display: none; flex-direction: column; 
-      padding: 8px 0; box-shadow: 0 12px 28px rgba(0,0,0,.6); 
-    }
-    .nav-item:hover .dropdown { display: flex; }
-    .dropdown a { padding: 10px 20px; color: #bbb; text-decoration: none; font-size: 13px; transition: background .15s; }
-    .dropdown a:hover { background: #1e1e1e; color: white; }
-
-    .header-right { display: flex; align-items: center; gap: 18px; margin-left: auto; }
-    .header-right i { font-size: 17px; cursor: pointer; color: var(--gray); transition: color .2s; }
-    .header-right i:hover { color: white; }
-
-    /* SEARCH */
-    #search-bar { display: none; position: fixed; top: 68px; left: 0; right: 0; background: rgba(10,10,10,.97); padding: 18px 4%; z-index: 999; border-bottom: 1px solid #2a2a2a; }
-    #search-bar.open { display: flex; gap: 12px; }
-    #search-input { flex: 1; background: #1e1e1e; border: 1px solid #3a3a3a; border-radius: 4px; padding: 10px 16px; color: white; font-size: 15px; outline: none; }
-    #search-btn { background: var(--red); color: white; border: none; padding: 10px 22px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; }
-
-    /* HERO */
-    .hero { height: 80vh; position: relative; background: center/cover no-repeat; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; transition: background 0.5s; }
-    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--black) 0%, transparent 25%), linear-gradient(to right, rgba(0,0,0,.7) 0%, transparent 55%); }
-    .hero-content { max-width: 560px; position: relative; z-index: 1; }
-    .hero-badge { display: inline-block; background: var(--red); color: white; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; text-transform: uppercase; }
-    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 64px; letter-spacing: 2px; line-height: 1; margin-bottom: 14px; }
-    .hero-desc { font-size: 16px; color: #ccc; line-height: 1.6; }
-    .hero-btns { display: flex; gap: 12px; margin-top: 24px; }
-    .btn-play { background: white; color: black; border: none; padding: 12px 28px; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-    .btn-info { background: rgba(109,109,110,.7); color: white; border: none; padding: 12px 28px; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-
-    /* GRID */
-    .main-container { padding: 0 4% 60px; margin-top: -120px; position: relative; z-index: 10; }
-    .section-title { font-size: 20px; font-weight: 700; margin: 48px 0 14px; }
-    .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
-    .movie-card { aspect-ratio: 2/3; background: #1e1e1e; border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform .3s; position: relative; }
-    .movie-card:hover { transform: scale(1.06); z-index: 10; }
-    .movie-card img { width: 100%; height: 100%; object-fit: cover; }
-    .card-info { position: absolute; bottom: 0; width: 100%; padding: 30px 10px 10px; background: linear-gradient(transparent, rgba(0,0,0,.95)); font-size: 12px; font-weight: 700; text-align: center; }
-
-    /* DETAILS */
-    #page-details { position: fixed; inset: 0; background: var(--black); z-index: 2000; display: none; overflow-y: auto; padding-top: 68px; }
-    .details-hero { width: 100%; height: 400px; position: relative; background: center/cover no-repeat; }
-    .details-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--black) 0%, transparent 55%); }
-    .details-container { max-width: 1100px; margin: 0 auto; padding: 30px 4% 60px; display: flex; gap: 40px; }
-    .details-poster { width: 240px; flex-shrink: 0; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.6); margin-top: -110px; position: relative; z-index: 10; }
-    .details-poster img { width: 100%; }
-    .details-info { flex: 1; }
-    .details-title { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 2px; margin-bottom: 12px; }
-    .details-meta { display: flex; gap: 20px; color: #46d369; font-weight: bold; margin-bottom: 20px; }
-    .details-synopsis { font-size: 16px; line-height: 1.7; color: #bbb; margin-bottom: 30px; }
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 6px; overflow: hidden; margin-top: 20px; }
-    iframe { width: 100%; height: 100%; border: none; }
-    .btn-close-page { position: fixed; top: 18px; right: 4%; font-size: 24px; cursor: pointer; z-index: 2100; color: white; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-
-    @media (max-width: 768px) {
-      .details-container { flex-direction: column; align-items: center; text-align: center; }
-      .details-poster { width: 180px; margin-top: -50px; }
-      .hero-title { font-size: 42px; }
-      nav { display: none; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
 <header id="navbar">
-  <div class="logo" onclick="navigate('')">PUREFLIX</div>
+  <div class="logo">PUREFLIX</div>
+
   <nav>
-    <div class="nav-item" onclick="navigate('')">Início</div>
-    <div class="nav-item">
-      Filmes <i class="fas fa-caret-down" style="margin-left:5px"></i>
-      <div class="dropdown">
-        <a href="#" onclick="loadCategory(28, 'Filmes de Ação');return false">Ação</a>
-        <a href="#" onclick="loadCategory(35, 'Comédia');return false">Comédia</a>
-        <a href="#" onclick="loadCategory(27, 'Terror');return false">Terror</a>
-        <a href="#" onclick="loadCategory(878, 'Ficção Científica');return false">Ficção Científica</a>
-        <a href="#" onclick="loadCategory(18, 'Drama');return false">Drama</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      Séries <i class="fas fa-caret-down" style="margin-left:5px"></i>
-      <div class="dropdown">
-        <a href="#" onclick="loadCategory(10759, 'Séries de Ação');return false">Ação</a>
-        <a href="#" onclick="loadCategory(18, 'Séries de Drama');return false">Drama</a>
-        <a href="#" onclick="loadCategory(35, 'Séries de Comédia');return false">Comédia</a>
-      </div>
-    </div>
-    <div class="nav-item" onclick="loadTrending()">Bombando</div>
+    <a href="#">Início</a>
+    <a href="#">Filmes</a>
+    <a href="#">Séries</a>
+    <a href="#">Bombando</a>
   </nav>
+
   <div class="header-right">
-    <i class="fas fa-search" onclick="toggleSearch()"></i>
+    <i class="fas fa-search"></i>
     <i class="fas fa-bell"></i>
-    <div style="width:30px;height:30px;background:var(--red);border-radius:4px"></div>
+    <div class="avatar"></div>
   </div>
 </header>
 
-<div id="search-bar">
-  <input id="search-input" type="text" placeholder="Buscar filmes e séries..." onkeydown="if(event.key==='Enter')doSearch()">
-  <button id="search-btn" onclick="doSearch()"><i class="fas fa-search"></i> Buscar</button>
-</div>
+<section class="hero" id="hero-banner">
+  <div class="overlay"></div>
 
-<div id="page-home">
-  <section class="hero" id="hero-banner">
-    <div class="hero-content">
-      <span class="hero-badge">⭐ Em Destaque</span>
-      <h1 class="hero-title" id="hero-title">Carregando...</h1>
-      <p class="hero-desc" id="hero-desc"></p>
-      <div class="hero-btns">
-        <button class="btn-play" id="hero-play-btn"><i class="fas fa-play"></i> Assistir Agora</button>
-        <button class="btn-info" id="hero-info-btn"><i class="fas fa-info-circle"></i> Mais Informações</button>
-      </div>
+  <div class="hero-content">
+    <span class="hero-badge">EM DESTAQUE</span>
+    <h1 id="hero-title">Carregando...</h1>
+    <p id="hero-desc"></p>
+
+    <div class="hero-buttons">
+      <button class="play-btn">
+        <i class="fas fa-play"></i>
+        Assistir
+      </button>
+
+      <button class="info-btn">
+        <i class="fas fa-info-circle"></i>
+        Informações
+      </button>
     </div>
+  </div>
+</section>
+
+<main>
+  <section>
+    <h2>Lançamentos</h2>
+    <div class="movie-grid" id="movie-grid"></div>
   </section>
-  <div class="main-container">
-    <h2 class="section-title" id="grid-title">Lançamentos em Destaque</h2>
-    <div class="movie-grid" id="home-grid"></div>
-  </div>
-</div>
+</main>
 
-<div id="page-details">
-  <div class="btn-close-page" onclick="navigate('')"><i class="fas fa-times"></i></div>
-  <div class="details-hero" id="det-backdrop"></div>
-  <div class="details-container">
-    <div class="details-poster"><img id="det-poster" src="" alt=""></div>
-    <div class="details-info">
-      <h1 id="det-title" class="details-title"></h1>
-      <div class="details-meta">
-        <span id="det-year"></span>
-        <span id="det-rating"></span>
-        <span>HD 1080p</span>
-      </div>
-      <p id="det-synopsis" class="details-synopsis"></p>
-      <div class="player-box">
-        <iframe id="det-frame" allowfullscreen></iframe>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  const BRIDGE_URL = 'https://3000-i4ey8w62o2n6d0gznpsvz-9b402bb6.us2.manus.computer';
-
-  window.onscroll = () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-  };
-
-  function navigate(path) { window.location.hash = path ? `#${path}` : ''; }
-
-  window.onhashchange = () => {
-    const hash = window.location.hash;
-    if (hash.startsWith('#movie/')) {
-      const parts = hash.replace('#movie/', '').split('/');
-      showDetails(parts[0], parts[1] || 'movie');
-    } else {
-      showHome();
-    }
-  };
-
-  window.onload = () => {
-    loadTrending();
-    window.onhashchange();
-  };
-
-  function toggleSearch() {
-    document.getElementById('search-bar').classList.toggle('open');
-    document.getElementById('search-input').focus();
-  }
-
-  async function doSearch() {
-    const q = document.getElementById('search-input').value;
-    if (!q) return;
-    document.getElementById('grid-title').innerText = `Resultados para: ${q}`;
-    const res = await fetch(`${BRIDGE_URL}/search?q=${encodeURIComponent(q)}`);
-    const data = await res.json();
-    renderGrid(data);
-    document.getElementById('search-bar').classList.remove('open');
-    window.scrollTo({ top: 400, behavior: 'smooth' });
-  }
-
-  async function loadTrending() {
-    const res = await fetch(`${BRIDGE_URL}/trending`);
-    const data = await res.json();
-    if (data.length > 0) {
-      const top = data[0];
-      document.getElementById('hero-banner').style.backgroundImage = `url(https://image.tmdb.org/t/p/w1280${top.backdrop_path})`;
-      document.getElementById('hero-title').innerText = top.title || top.name;
-      document.getElementById('hero-desc').innerText = top.overview.substring(0, 180) + '...';
-      document.getElementById('hero-play-btn').onclick = () => openDetails(top.id, top.media_type);
-      document.getElementById('hero-info-btn').onclick = () => openDetails(top.id, top.media_type);
-    }
-    renderGrid(data.map(i => ({
-      id: i.id,
-      name: i.title || i.name,
-      type: i.media_type,
-      poster: i.poster_path ? `https://image.tmdb.org/t/p/w500${i.poster_path}` : null
-    })));
-  }
-
-  async function loadCategory(id, name) {
-    document.getElementById('grid-title').innerText = name;
-    const res = await fetch(`${BRIDGE_URL}/tmdb/discover/movie?with_genres=${id}`);
-    const data = await res.json();
-    renderGrid(data.results.map(i => ({
-      id: i.id,
-      name: i.title,
-      type: 'movie',
-      poster: i.poster_path ? `https://image.tmdb.org/t/p/w500${i.poster_path}` : null
-    })));
-    window.scrollTo({ top: 400, behavior: 'smooth' });
-  }
-
-  function renderGrid(items) {
-    const grid = document.getElementById('home-grid');
-    grid.innerHTML = '';
-    items.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'movie-card';
-      card.onclick = () => openDetails(item.id, item.type);
-      card.innerHTML = `
-        <img src="${item.poster || 'https://via.placeholder.com/500x750?text=Sem+Capa'}" alt="${item.name}">
-        <div class="card-info">${item.name}</div>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  function openDetails(id, type) {
-    window.location.hash = `#movie/${id}/${type}`;
-  }
-
-  async function showDetails(id, type) {
-    document.getElementById('page-home').style.display = 'none';
-    document.getElementById('page-details').style.display = 'block';
-    
-    const res = await fetch(`${BRIDGE_URL}/tmdb/${type}/${id}`);
-    const data = await res.json();
-    
-    document.getElementById('det-title').innerText = data.title || data.name;
-    document.getElementById('det-poster').src = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
-    document.getElementById('det-backdrop').style.backgroundImage = `url(https://image.tmdb.org/t/p/w1280${data.backdrop_path})`;
-    document.getElementById('det-synopsis').innerText = data.overview;
-    document.getElementById('det-year').innerText = (data.release_date || data.first_air_date || '').split('-')[0];
-    document.getElementById('det-rating').innerText = `⭐ ${data.vote_average.toFixed(1)}`;
-    
-    const t = type === 'tv' ? 'tv' : 'movie';
-    document.getElementById('det-frame').src = `https://vidsrc.to/embed/${t}/${id}`;
-  }
-
-  function showHome() {
-    document.getElementById('page-home').style.display = 'block';
-    document.getElementById('page-details').style.display = 'none';
-    document.getElementById('det-frame').src = '';
-  }
-</script>
-
+<script src="assets/js/app.js"></script>
 </body>
 </html>
