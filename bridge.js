@@ -6,13 +6,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// SUAS CHAVES DO TMDB CONFIGURADAS
+// CONFIGURAÇÃO DE CHAVES
 const TMDB_API_KEY = '59ff19f0c822abdfb0c3b41bfd6b92b0';
-const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
+const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZEY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-// Parâmetros para trazer dados traduzidos e focar no mercado do Brasil (BR)
+// Força o TMDB a entregar metadados brasileiros (títulos, capas locais e sinopses)
 const DEFAULT_PARAMS = {
     api_key: TMDB_API_KEY,
     language: 'pt-BR',
@@ -27,7 +27,7 @@ const AXIOS_CONFIG = {
     }
 };
 
-// 1. ROTAS DE LISTAS GERAIS (Populares, Lançamentos)
+// 1. LISTAGENS INICIAIS (Populares, Tendências, Em Cartaz)
 app.get('/api/list/:type/:action', async (req, res) => {
     try {
         const { type, action } = req.params;
@@ -36,16 +36,16 @@ app.get('/api/list/:type/:action', async (req, res) => {
             ...AXIOS_CONFIG
         });
         
-        // Filtra apenas para garantir que o filme tenha uma imagem válida (evita carrossel quebrado)
+        // Remove lixo ou mídias que faltam imagens no TMDB
         const filtered = response.data.results?.filter(item => item.backdrop_path || item.poster_path) || [];
         res.json(filtered);
     } catch (error) {
-        console.error(`Erro em /api/list/${req.params.type}/${req.params.action}:`, error.message);
-        res.status(500).json({ error: "Erro ao carregar listas do TMDB" });
+        console.error(`Erro ao processar lista: ${error.message}`);
+        res.status(500).json({ error: "Falha na resposta do catálogo" });
     }
 });
 
-// 2. DISCOVER POR GÊNERO (Filtros das categorias do carrossel)
+// 2. DESCOBERTA INTELIGENTE POR GÊNERO (Focado em dublados e mercado BR)
 app.get('/api/discover/:type', async (req, res) => {
     try {
         const { type } = req.params;
@@ -53,7 +53,8 @@ app.get('/api/discover/:type', async (req, res) => {
             params: {
                 ...DEFAULT_PARAMS,
                 watch_region: 'BR',
-                ...req.query // Recebe o id do gênero dinamicamente do front
+                sort_by: 'popularity.desc',
+                ...req.query // Pega filtros extras de gênero passados pelo front
             },
             ...AXIOS_CONFIG
         });
@@ -61,12 +62,12 @@ app.get('/api/discover/:type', async (req, res) => {
         const filtered = response.data.results?.filter(item => item.backdrop_path || item.poster_path) || [];
         res.json(filtered);
     } catch (error) {
-        console.error("Erro no discover:", error.message);
-        res.status(500).json({ error: "Erro ao descobrir conteúdos" });
+        console.error(`Erro no modulo discover: ${error.message}`);
+        res.status(500).json({ error: "Falha ao mapear gêneros" });
     }
 });
 
-// 3. DETALHES DA MÍDIA ESPECÍFICA (Para abrir o Player)
+// 3. CAPTURA DE METADADOS DA MÍDIA ESPECÍFICA
 app.get('/api/details/:type/:id', async (req, res) => {
     try {
         const { type, id } = req.params;
@@ -76,12 +77,12 @@ app.get('/api/details/:type/:id', async (req, res) => {
         });
         res.json(response.data);
     } catch (error) {
-        console.error(`Erro ao buscar detalhes da mídia ${req.params.id}:`, error.message);
-        res.status(500).json({ error: "Erro ao carregar metadados do filme/série" });
+        console.error(`Erro nos detalhes da mídia ${id}: ${error.message}`);
+        res.status(500).json({ error: "Erro ao requisitar metadados" });
     }
 });
 
-// 4. SISTEMA DE BUSCA MULTI
+// 4. PESQUISA MULTI-GÊNERO
 app.get('/api/search', async (req, res) => {
     try {
         const query = req.query.q;
@@ -97,10 +98,10 @@ app.get('/api/search', async (req, res) => {
         );
         res.json(filtered);
     } catch (error) {
-        console.error("Erro na busca:", error.message);
-        res.status(500).json({ error: "Erro ao executar busca" });
+        console.error(`Erro na busca: ${error.message}`);
+        res.status(500).json({ error: "Erro no serviço de pesquisas" });
     }
 });
 
 const PORT = 3000;
-app.listen(PORT, () => console.log(`✓ Backend Pureflix operacional na porta ${PORT}`));
+app.listen(PORT, () => console.log(`✓ Servidor Pureflix sincronizado com TMDB-BR na porta ${PORT}`));
