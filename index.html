@@ -20,6 +20,11 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--black); color: var(--white); font-family: 'Roboto', sans-serif; overflow-x: hidden; }
 
+    /* LOADING SCREEN */
+    #loading-screen { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
+    .spinner { width: 45px; height: 45px; border: 4px solid #222; border-top-color: var(--red); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 15px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     /* HEADER */
     header {
       position: fixed; top: 0; width: 100%;
@@ -30,14 +35,23 @@
       transition: background .4s;
     }
     header.scrolled { background: var(--black); border-bottom: 1px solid #2a2a2a; }
-    .logo { color: var(--red); font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; cursor: pointer; margin-right: 40px; }
+    .logo { color: var(--red); font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; cursor: pointer; margin-right: 40px; }
+    
     nav { display: flex; gap: 22px; height: 100%; align-items: center; }
     .nav-item { position: relative; height: 100%; display: flex; align-items: center; cursor: pointer; color: var(--gray); font-size: 14px; transition: color .2s; }
     .nav-item:hover { color: white; }
-    .dropdown { position: absolute; top: 68px; left: 0; background: rgba(10,10,10,.97); border: 1px solid #2a2a2a; width: 190px; display: none; flex-direction: column; padding: 8px 0; box-shadow: 0 12px 28px rgba(0,0,0,.6); }
+
+    /* Menu Suspenso (Dropdown) */
+    .dropdown { 
+      position: absolute; top: 68px; left: 0; 
+      background: rgba(10,10,10,.97); border: 1px solid #2a2a2a; 
+      width: 220px; display: none; flex-direction: column; 
+      padding: 8px 0; box-shadow: 0 12px 28px rgba(0,0,0,.6); 
+    }
     .nav-item:hover .dropdown { display: flex; }
     .dropdown a { padding: 10px 20px; color: #bbb; text-decoration: none; font-size: 13px; transition: background .15s; }
     .dropdown a:hover { background: #1e1e1e; color: white; }
+
     .header-right { display: flex; align-items: center; gap: 18px; margin-left: auto; }
     .header-right i { font-size: 17px; cursor: pointer; color: var(--gray); transition: color .2s; }
     .header-right i:hover { color: white; }
@@ -46,95 +60,84 @@
     #search-bar { display: none; position: fixed; top: 68px; left: 0; right: 0; background: rgba(10,10,10,.97); padding: 18px 4%; z-index: 999; border-bottom: 1px solid #2a2a2a; }
     #search-bar.open { display: flex; gap: 12px; }
     #search-input { flex: 1; background: #1e1e1e; border: 1px solid #3a3a3a; border-radius: 4px; padding: 10px 16px; color: white; font-size: 15px; outline: none; }
-    #search-input:focus { border-color: #555; }
     #search-btn { background: var(--red); color: white; border: none; padding: 10px 22px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; }
 
     /* HERO */
-    .hero { height: 80vh; position: relative; background: linear-gradient(to top, var(--black) 0%, transparent 25%), linear-gradient(to right, rgba(0,0,0,.7) 0%, transparent 55%), url('https://image.tmdb.org/t/p/w1280/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg') center/cover no-repeat; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; }
-    .hero-content { max-width: 560px; }
+    .hero { height: 80vh; position: relative; background: center/cover no-repeat; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; transition: background 0.5s; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--black) 0%, transparent 25%), linear-gradient(to right, rgba(0,0,0,.7) 0%, transparent 55%); }
+    .hero-content { max-width: 560px; position: relative; z-index: 1; }
     .hero-badge { display: inline-block; background: var(--red); color: white; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; text-transform: uppercase; }
     .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 64px; letter-spacing: 2px; line-height: 1; margin-bottom: 14px; }
     .hero-desc { font-size: 16px; color: #ccc; line-height: 1.6; }
     .hero-btns { display: flex; gap: 12px; margin-top: 24px; }
-    .btn-play { background: white; color: black; border: none; padding: 12px 28px; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background .2s; }
-    .btn-play:hover { background: #ddd; }
+    .btn-play { background: white; color: black; border: none; padding: 12px 28px; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .btn-info { background: rgba(109,109,110,.7); color: white; border: none; padding: 12px 28px; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
     /* GRID */
     .main-container { padding: 0 4% 60px; margin-top: -120px; position: relative; z-index: 10; }
     .section-title { font-size: 20px; font-weight: 700; margin: 48px 0 14px; }
     .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
-    .movie-card { aspect-ratio: 2/3; background: #1e1e1e; border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform .3s, box-shadow .3s; position: relative; }
-    .movie-card:hover { transform: scale(1.06); z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
-    .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .movie-card { aspect-ratio: 2/3; background: #1e1e1e; border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform .3s; position: relative; }
+    .movie-card:hover { transform: scale(1.06); z-index: 10; }
+    .movie-card img { width: 100%; height: 100%; object-fit: cover; }
     .card-info { position: absolute; bottom: 0; width: 100%; padding: 30px 10px 10px; background: linear-gradient(transparent, rgba(0,0,0,.95)); font-size: 12px; font-weight: 700; text-align: center; }
-    .card-rating { font-size: 11px; color: #46d369; font-weight: 700; margin-top: 3px; }
-    .skeleton { background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 4px; }
-    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     /* DETAILS */
     #page-details { position: fixed; inset: 0; background: var(--black); z-index: 2000; display: none; overflow-y: auto; padding-top: 68px; }
-    .details-hero { width: 100%; height: 380px; position: relative; background: center/cover no-repeat; }
+    .details-hero { width: 100%; height: 400px; position: relative; background: center/cover no-repeat; }
     .details-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--black) 0%, transparent 55%); }
     .details-container { max-width: 1100px; margin: 0 auto; padding: 30px 4% 60px; display: flex; gap: 40px; }
     .details-poster { width: 240px; flex-shrink: 0; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.6); margin-top: -110px; position: relative; z-index: 10; }
-    .details-poster img { width: 100%; display: block; }
-    .details-info { flex: 1; padding-top: 10px; }
+    .details-poster img { width: 100%; }
+    .details-info { flex: 1; }
     .details-title { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 2px; margin-bottom: 12px; }
-    .details-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; font-size: 14px; }
-    .meta-tag { background: #1e1e1e; border: 1px solid #333; padding: 4px 10px; border-radius: 3px; color: #ccc; }
-    .meta-rating { color: #46d369; font-weight: 700; }
-    .details-genres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .genre-tag { background: rgba(229,9,20,.15); border: 1px solid rgba(229,9,20,.3); color: #ff6b6b; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-    .details-synopsis { font-size: 15px; line-height: 1.7; color: #bbb; margin-bottom: 30px; }
-
-    /* PLAYER */
-    .player-label { font-size: 13px; color: #666; margin-bottom: 8px; }
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 6px; overflow: hidden; margin-top: 20px; position: relative; }
-    .player-box iframe { width: 100%; height: 100%; border: none; }
-    .player-fallback-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
-    .server-btn { background: #1e1e1e; border: 1px solid #333; color: #ccc; padding: 8px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: all .2s; }
-    .server-btn:hover, .server-btn.active { background: var(--red); border-color: var(--red); color: white; }
-    .player-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #000; font-size: 14px; color: #666; }
-    .player-loading i { font-size: 36px; color: var(--red); animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .btn-close-page { position: fixed; top: 18px; right: 4%; font-size: 22px; cursor: pointer; z-index: 2100; width: 40px; height: 40px; background: rgba(0,0,0,.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background .2s; }
-    .btn-close-page:hover { background: rgba(229,9,20,.7); }
-    .msg-empty { text-align: center; padding: 60px 20px; color: var(--dim); font-size: 15px; }
-    .msg-empty i { font-size: 40px; margin-bottom: 14px; display: block; }
+    .details-meta { display: flex; gap: 20px; color: #46d369; font-weight: bold; margin-bottom: 20px; }
+    .details-synopsis { font-size: 16px; line-height: 1.7; color: #bbb; margin-bottom: 30px; }
+    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 6px; overflow: hidden; margin-top: 20px; }
+    iframe { width: 100%; height: 100%; border: none; }
+    .btn-close-page { position: fixed; top: 18px; right: 4%; font-size: 24px; cursor: pointer; z-index: 2100; color: white; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
     @media (max-width: 768px) {
-      .details-container { flex-direction: column; }
-      .details-poster { width: 160px; margin: 0 auto -30px; }
+      .details-container { flex-direction: column; align-items: center; text-align: center; }
+      .details-poster { width: 180px; margin-top: -50px; }
       .hero-title { font-size: 42px; }
-      .details-title { font-size: 34px; }
       nav { display: none; }
     }
   </style>
 </head>
 <body>
 
+<div id="loading-screen">
+  <div class="logo" style="margin-bottom:10px; font-size:42px;">PUREFLIX</div>
+  <div class="spinner"></div>
+  <p style="color:#666; font-size:13px;">Sincronizando Catálogo TMDB BR...</p>
+</div>
+
 <header id="navbar">
   <div class="logo" onclick="navigate('')">PUREFLIX</div>
   <nav>
     <div class="nav-item" onclick="navigate('')">Início</div>
+    
     <div class="nav-item">
       Filmes <i class="fas fa-caret-down" style="margin-left:5px"></i>
       <div class="dropdown">
-        <a href="#" onclick="searchCategory('ação','movie');return false">Ação</a>
-        <a href="#" onclick="searchCategory('comédia','movie');return false">Comédia</a>
-        <a href="#" onclick="searchCategory('terror','movie');return false">Terror</a>
-        <a href="#" onclick="searchCategory('ficção científica','movie');return false">Ficção Científica</a>
-        <a href="#" onclick="searchCategory('drama','movie');return false">Drama</a>
+        <a href="#" onclick="loadCategory('movie', 28, 'Filmes de Ação');return false">Ação</a>
+        <a href="#" onclick="loadCategory('movie', 35, 'Comédia');return false">Comédia</a>
+        <a href="#" onclick="loadCategory('movie', 27, 'Terror');return false">Terror</a>
+        <a href="#" onclick="loadCategory('movie', 878, 'Ficção Científica');return false">Ficção Científica</a>
+        <a href="#" onclick="loadCategory('movie', 18, 'Drama');return false">Drama</a>
+        <a href="#" onclick="loadCategory('movie', 16, 'Animações / Desenhos');return false">Animações</a>
+        <a href="#" onclick="loadCategory('movie', 53, 'Suspense');return false">Suspense</a>
       </div>
     </div>
+
     <div class="nav-item">
       Séries <i class="fas fa-caret-down" style="margin-left:5px"></i>
       <div class="dropdown">
-        <a href="#" onclick="searchCategory('ação','tv');return false">Ação</a>
-        <a href="#" onclick="searchCategory('drama','tv');return false">Drama</a>
-        <a href="#" onclick="searchCategory('comédia','tv');return false">Comédia</a>
+        <a href="#" onclick="loadCategory('tv', 10759, 'Séries de Ação e Aventura');return false">Ação & Aventura</a>
+        <a href="#" onclick="loadCategory('tv', 18, 'Séries de Drama');return false">Drama</a>
+        <a href="#" onclick="loadCategory('tv', 35, 'Séries de Comédia');return false">Comédia</a>
+        <a href="#" onclick="loadCategory('tv', 16, 'Animes & Animações');return false">Animes</a>
       </div>
     </div>
     <div class="nav-item" onclick="searchCategory('popular','movie')">Bombando</div>
