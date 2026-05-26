@@ -267,7 +267,7 @@ const SERVERS = [
   { label:'VidSrc.me', fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc.xyz',fn:(id,t,s,e)=>`https://vidsrc.xyz/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'SuperEmbed',fn:(id,t,s,e)=>`https://superembed.stream/embed?tmdb=${id}&type=${t}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'Embed.su',  fn:(id,t,s,e)=>`https://embed.su/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'Embed.su',  fn:(id,t,s,e)=>`https://cdn-embed.com/filme/{$id}` },
 ];
 
 // Seções do site
@@ -503,18 +503,6 @@ function nextServer(){
   toast(`Trocando para ${SERVERS[next].label}...`);
   loadServer(next);
 }
-<!-- Player de Filme (ID do IMDB) -->
-  <iframe src="https://cdn-embed.com/filme/{$id}" allow="autoplay;encrypted-media;picture-in-picture"
-  allowfullscreen frameborder="0" scrolling="no" style="width:100%;border:0;height:70vh"></iframe>
-    
-<!-- Player de Série (ID do TMDB) -->
-    <iframe src="https://cdn-embed.com/serie/{$id}" allow="autoplay;encrypted-media;picture-in-picture"
-allowfullscreen frameborder="0" scrolling="no" style="width:100%;border:0;height:70vh"></iframe>
-
-  <!-- Player de episódio (ID do TMDB) -->
-  <iframe src="https://cdn-embed.com/serie/{$id}/{$season}/{$episode" allow="autoplay;encrypted-media;picture-in-picture"
-  allowfullscreen frameborder="0" scrolling="no" style="width:100%;border:0;height:70vh"></iframe>
-  
 function onFrameLoad(){
   document.querySelector('.player-loader').style.display='none';
   clearTimeout(fallbackTimer);
