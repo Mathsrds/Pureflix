@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Pureflix Premium</title>
 
@@ -35,7 +35,7 @@ body{
   justify-content:space-between;
   padding:0 40px;
   z-index:9999;
-  background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);
+  background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent);
 }
 
 .logo{
@@ -184,6 +184,7 @@ main{
   border-radius:4px;
   font-size:11px;
   font-weight:bold;
+  z-index:5;
 }
 
 /* PLAYER */
@@ -327,6 +328,7 @@ main{
 
   <iframe
     id="player-frame"
+    allow="autoplay; fullscreen"
     allowfullscreen>
   </iframe>
 
@@ -339,7 +341,7 @@ main{
 /* ========================================= */
 
 const BRIDGE_URL =
-  'https://SEU_BACKEND.up.railway.app';
+'https://pureflix2-production.up.railway.app';
 
 /* ========================================= */
 /* SERVERS */
@@ -383,56 +385,48 @@ let curSrvIdx = 0;
 const SECTIONS_DEF = [
 
   {
-    id:'trending',
     title:'🔥 Em Alta',
     endpoint:'/trending/all/week',
     type:'movie'
   },
 
   {
-    id:'popular',
     title:'🎬 Filmes Populares',
     endpoint:'/movie/popular',
     type:'movie'
   },
 
   {
-    id:'top',
     title:'⭐ Top Filmes',
     endpoint:'/movie/top_rated',
     type:'movie'
   },
 
   {
-    id:'series',
     title:'📺 Séries',
     endpoint:'/tv/popular',
     type:'tv'
   },
 
   {
-    id:'animes',
     title:'🎌 Animes',
     endpoint:'/discover/tv?with_genres=16&with_origin_country=JP&sort_by=popularity.desc',
     type:'tv'
   },
 
   {
-    id:'animeold',
     title:'📼 Animes Clássicos',
     endpoint:'/discover/tv?with_genres=16&with_origin_country=JP&first_air_date.lte=2010-01-01',
     type:'tv'
   },
 
   {
-    id:'doramas',
     title:'🇰🇷 Doramas',
     endpoint:'/discover/tv?with_origin_country=KR',
     type:'tv'
   },
 
   {
-    id:'dub',
     title:'🎥 Filmes Dublados',
     endpoint:'/discover/movie?watch_region=BR&sort_by=popularity.desc',
     type:'movie'
@@ -446,7 +440,8 @@ const SECTIONS_DEF = [
 
 async function api(endpoint){
 
-  const cache = localStorage.getItem(endpoint);
+  const cache =
+    localStorage.getItem(endpoint);
 
   if(cache){
 
@@ -454,17 +449,23 @@ async function api(endpoint){
   }
 
   const res = await fetch(
+
     `${BRIDGE_URL}/tmdb${endpoint}${
       endpoint.includes('?') ? '&' : '?'
     }language=pt-BR&region=BR`
+
   );
 
   const data = await res.json();
 
-  localStorage.setItem(
-    endpoint,
-    JSON.stringify(data)
-  );
+  try{
+
+    localStorage.setItem(
+      endpoint,
+      JSON.stringify(data)
+    );
+
+  }catch(e){}
 
   return data;
 }
@@ -475,25 +476,39 @@ async function api(endpoint){
 
 async function loadHero(){
 
-  const data =
-    await api('/trending/all/week');
+  try{
 
-  const random =
-    data.results[
-      Math.floor(Math.random() * data.results.length)
-    ];
+    const data =
+      await api('/trending/all/week');
 
-  const hero =
-    document.getElementById('hero');
+    const valid =
+      data.results.filter(
+        i => i.backdrop_path || i.poster_path
+      );
 
-  hero.style.backgroundImage =
-    `url(https://image.tmdb.org/t/p/original${random.backdrop_path})`;
+    const random =
+      valid[
+        Math.floor(Math.random() * valid.length)
+      ];
 
-  document.getElementById('hero-title').innerText =
-    random.title || random.name;
+    const hero =
+      document.getElementById('hero');
 
-  document.getElementById('hero-description').innerText =
-    random.overview;
+    hero.style.backgroundImage =
+      `url(https://image.tmdb.org/t/p/original${
+        random.backdrop_path || random.poster_path
+      })`;
+
+    document.getElementById('hero-title').innerText =
+      random.title || random.name;
+
+    document.getElementById('hero-description').innerText =
+      random.overview || '';
+
+  }catch(err){
+
+    console.log(err);
+  }
 }
 
 /* ========================================= */
@@ -539,11 +554,13 @@ function getFavs(){
 
 function makeCarousel(section,items,type){
 
-  const sec = document.createElement('section');
+  const sec =
+    document.createElement('section');
 
   sec.className = 'row';
 
   sec.innerHTML = `
+
     <h2 class="row-title">
       ${section.title}
     </h2>
@@ -559,7 +576,12 @@ function makeCarousel(section,items,type){
 
           <div
             class="card"
-            onclick='openPlayer(${JSON.stringify(item)}, "${type}")'>
+
+            data-item='${encodeURIComponent(
+              JSON.stringify(item)
+            )}'
+
+            onclick='openPlayer(this,"${type}")'>
 
             ${genres.includes(16)
               ? '<div class="card-badge">ANIME</div>'
@@ -568,6 +590,9 @@ function makeCarousel(section,items,type){
 
             <img
               loading="lazy"
+
+              onerror="this.src='https://placehold.co/500x750/111/FFF?text=SEM+IMAGEM'"
+
               src="https://image.tmdb.org/t/p/w500${item.poster_path}">
 
             <div class="card-title">
@@ -580,6 +605,7 @@ function makeCarousel(section,items,type){
       }).join('')}
 
     </div>
+
   `;
 
   return sec;
@@ -596,28 +622,40 @@ async function loadRows(){
 
   for(const section of SECTIONS_DEF){
 
-    const skel = document.createElement('div');
+    const skel =
+      document.createElement('div');
 
     skel.className = 'cards';
 
     skel.innerHTML =
-      Array(10).fill('<div class="skel"></div>').join('');
+      Array(10)
+        .fill('<div class="skel"></div>')
+        .join('');
 
     container.appendChild(skel);
 
-    const data =
-      await api(section.endpoint);
+    try{
 
-    skel.remove();
+      const data =
+        await api(section.endpoint);
 
-    const row =
-      makeCarousel(
-        section,
-        data.results || [],
-        section.type
-      );
+      skel.remove();
 
-    container.appendChild(row);
+      const row =
+        makeCarousel(
+          section,
+          data.results || [],
+          section.type
+        );
+
+      container.appendChild(row);
+
+    }catch(err){
+
+      console.log(err);
+
+      skel.remove();
+    }
   }
 }
 
@@ -637,7 +675,14 @@ function loadServer(idx,id,type,season,episode){
       .fn(id,type,season,episode);
 }
 
-function openPlayer(item,type){
+function openPlayer(el,type){
+
+  const item =
+    JSON.parse(
+      decodeURIComponent(
+        el.dataset.item
+      )
+    );
 
   const modal =
     document.getElementById('playerModal');
@@ -699,6 +744,16 @@ function closePlayer(){
 
   modal.classList.add('hidden');
 }
+
+/* ========================================= */
+/* DEBUG */
+/* ========================================= */
+
+window.addEventListener('error',(e)=>{
+
+  console.log('ERRO:',e);
+
+});
 
 /* ========================================= */
 /* INIT */
