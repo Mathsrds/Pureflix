@@ -1,16 +1,15 @@
-# Pureflix Premium — HTML Completo
-
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+
 <title>Pureflix Premium</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
 <style>
+
 *{
   margin:0;
   padding:0;
@@ -21,7 +20,10 @@ body{
   background:#111;
   color:white;
   font-family:Roboto,sans-serif;
+  overflow-x:hidden;
 }
+
+/* NAVBAR */
 
 .navbar{
   position:fixed;
@@ -29,8 +31,8 @@ body{
   width:100%;
   height:70px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   padding:0 40px;
   z-index:9999;
   background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);
@@ -40,6 +42,7 @@ body{
   font-family:'Bebas Neue',sans-serif;
   color:#e50914;
   font-size:42px;
+  letter-spacing:2px;
 }
 
 nav{
@@ -50,7 +53,10 @@ nav{
 nav a{
   color:white;
   text-decoration:none;
+  font-size:15px;
 }
+
+/* HERO */
 
 .hero{
   height:85vh;
@@ -60,12 +66,14 @@ nav a{
   align-items:center;
   padding:0 60px;
   position:relative;
+  transition:background-image .5s ease;
 }
 
-.overlay{
+.hero-overlay{
   position:absolute;
   inset:0;
-  background:linear-gradient(to top,#111 0%,transparent 60%);
+  background:
+    linear-gradient(to top,#111 0%,transparent 60%);
 }
 
 .hero-content{
@@ -75,28 +83,31 @@ nav a{
 }
 
 .badge{
+  display:inline-block;
   background:#e50914;
   padding:6px 12px;
   border-radius:4px;
+  font-size:13px;
+  margin-bottom:14px;
 }
 
 .hero h1{
   font-size:72px;
-  margin:20px 0;
+  margin-bottom:20px;
 }
 
 .hero p{
-  line-height:1.6;
   color:#ddd;
+  line-height:1.6;
 }
 
-.buttons{
-  margin-top:20px;
+.hero-buttons{
+  margin-top:24px;
   display:flex;
   gap:12px;
 }
 
-.buttons button{
+.hero-buttons button{
   border:none;
   padding:14px 26px;
   border-radius:6px;
@@ -106,6 +117,7 @@ nav a{
 
 .play-btn{
   background:white;
+  color:black;
 }
 
 .info-btn{
@@ -113,15 +125,18 @@ nav a{
   color:white;
 }
 
+/* CONTENT */
+
 main{
   padding:20px 40px 60px;
 }
 
 .row{
-  margin-bottom:40px;
+  margin-bottom:42px;
 }
 
-.row h2{
+.row-title{
+  font-size:24px;
   margin-bottom:15px;
 }
 
@@ -138,13 +153,15 @@ main{
 }
 
 .card{
+  position:relative;
   min-width:180px;
-  cursor:pointer;
   transition:.3s;
+  cursor:pointer;
 }
 
 .card:hover{
-  transform:scale(1.07);
+  transform:scale(1.08);
+  z-index:3;
 }
 
 .card img{
@@ -157,11 +174,29 @@ main{
   font-size:14px;
 }
 
+.card-badge{
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:#e50914;
+  color:white;
+  padding:4px 8px;
+  border-radius:4px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+/* PLAYER */
+
 .player-modal{
   position:fixed;
   inset:0;
   background:black;
   z-index:99999;
+}
+
+.hidden{
+  display:none;
 }
 
 .player-modal iframe{
@@ -170,23 +205,52 @@ main{
   border:none;
 }
 
-.hidden{
-  display:none;
-}
-
 .close-player{
   position:absolute;
   top:20px;
   right:20px;
-  z-index:10;
-  border:none;
   width:40px;
   height:40px;
+  border:none;
   border-radius:50%;
   background:red;
   color:white;
+  z-index:10;
   cursor:pointer;
 }
+
+/* SKELETON */
+
+.skel{
+  min-width:180px;
+  height:270px;
+  border-radius:10px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #1c1c1c 25%,
+      #2c2c2c 50%,
+      #1c1c1c 75%
+    );
+
+  background-size:200% 100%;
+
+  animation:shimmer 1.2s infinite;
+}
+
+@keyframes shimmer{
+
+  from{
+    background-position:200% 0;
+  }
+
+  to{
+    background-position:-200% 0;
+  }
+}
+
+/* MOBILE */
 
 @media(max-width:768px){
 
@@ -205,7 +269,12 @@ main{
   .card{
     min-width:140px;
   }
+
+  main{
+    padding:20px;
+  }
 }
+
 </style>
 </head>
 <body>
@@ -225,7 +294,7 @@ main{
 
 <section class="hero" id="hero">
 
-  <div class="overlay"></div>
+  <div class="hero-overlay"></div>
 
   <div class="hero-content">
 
@@ -235,7 +304,7 @@ main{
 
     <p id="hero-description"></p>
 
-    <div class="buttons">
+    <div class="hero-buttons">
       <button class="play-btn">▶ Assistir</button>
       <button class="info-btn">ℹ Informações</button>
     </div>
@@ -244,17 +313,20 @@ main{
 
 </section>
 
-<main id="content"></main>
+<main id="sections-container"></main>
+
+<!-- PLAYER -->
 
 <div id="playerModal" class="player-modal hidden">
 
-  <button class="close-player"
-          onclick="closePlayer()">
+  <button
+    class="close-player"
+    onclick="closePlayer()">
     ✕
   </button>
 
   <iframe
-    id="playerFrame"
+    id="player-frame"
     allowfullscreen>
   </iframe>
 
@@ -262,133 +334,237 @@ main{
 
 <script>
 
-const BRIDGE_URL = 'https://SEU_BACKEND.up.railway.app';
+/* ========================================= */
+/* CONFIG */
+/* ========================================= */
 
-const PLAYERS = {
+const BRIDGE_URL =
+  'https://SEU_BACKEND.up.railway.app';
 
-  movie: (id) =>
-    `https://myembed.biz/filme/${id}`,
+/* ========================================= */
+/* SERVERS */
+/* ========================================= */
 
-  tv: (id, season = 1, episode = 1) =>
-    `https://myembed.biz/serie/${id}/${season}/${episode}`
-};
-
-const categories = [
+const SERVERS = [
 
   {
-    title: '🔥 Em Alta',
-    endpoint: '/trending/all/day'
+    label:'MyEmbed',
+    fn:(id,t,s,e)=>{
+
+      if(t === 'tv'){
+
+        return `https://myembed.biz/serie/${id}/${s||1}/${e||1}`;
+      }
+
+      return `https://myembed.biz/filme/${id}`;
+    }
   },
 
   {
-    title: '🎬 Filmes Populares',
-    endpoint: '/movie/popular?language=pt-BR'
+    label:'VidSrc',
+    fn:(id,t,s,e)=>
+      `https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}`
   },
 
   {
-    title: '⭐ Top Filmes',
-    endpoint: '/movie/top_rated?language=pt-BR'
-  },
-
-  {
-    title: '📺 Séries Populares',
-    endpoint: '/tv/popular?language=pt-BR'
-  },
-
-  {
-    title: '🎌 Animes Clássicos',
-    endpoint: '/discover/tv?with_genres=16&with_origin_country=JP&first_air_date.lte=2010-01-01'
-  },
-
-  {
-    title: '🚀 Animes Novos',
-    endpoint: '/discover/tv?with_genres=16&sort_by=popularity.desc'
-  },
-
-  {
-    title: '🇰🇷 Doramas',
-    endpoint: '/discover/tv?with_origin_country=KR'
-  },
-
-  {
-    title: '🎥 Filmes Dublados',
-    endpoint: '/discover/movie?watch_region=BR&sort_by=popularity.desc'
+    label:'VidSrc.me',
+    fn:(id,t,s,e)=>
+      `https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}`
   }
+
 ];
 
-const content = document.getElementById('content');
+let curSrvIdx = 0;
 
-async function fetchData(endpoint){
+/* ========================================= */
+/* CATEGORIES */
+/* ========================================= */
 
-  const cacheKey = endpoint;
+const SECTIONS_DEF = [
 
-  const cached = localStorage.getItem(cacheKey);
+  {
+    id:'trending',
+    title:'🔥 Em Alta',
+    endpoint:'/trending/all/week',
+    type:'movie'
+  },
 
-  if(cached){
-    return JSON.parse(cached);
+  {
+    id:'popular',
+    title:'🎬 Filmes Populares',
+    endpoint:'/movie/popular',
+    type:'movie'
+  },
+
+  {
+    id:'top',
+    title:'⭐ Top Filmes',
+    endpoint:'/movie/top_rated',
+    type:'movie'
+  },
+
+  {
+    id:'series',
+    title:'📺 Séries',
+    endpoint:'/tv/popular',
+    type:'tv'
+  },
+
+  {
+    id:'animes',
+    title:'🎌 Animes',
+    endpoint:'/discover/tv?with_genres=16&with_origin_country=JP&sort_by=popularity.desc',
+    type:'tv'
+  },
+
+  {
+    id:'animeold',
+    title:'📼 Animes Clássicos',
+    endpoint:'/discover/tv?with_genres=16&with_origin_country=JP&first_air_date.lte=2010-01-01',
+    type:'tv'
+  },
+
+  {
+    id:'doramas',
+    title:'🇰🇷 Doramas',
+    endpoint:'/discover/tv?with_origin_country=KR',
+    type:'tv'
+  },
+
+  {
+    id:'dub',
+    title:'🎥 Filmes Dublados',
+    endpoint:'/discover/movie?watch_region=BR&sort_by=popularity.desc',
+    type:'movie'
+  }
+
+];
+
+/* ========================================= */
+/* API */
+/* ========================================= */
+
+async function api(endpoint){
+
+  const cache = localStorage.getItem(endpoint);
+
+  if(cache){
+
+    return JSON.parse(cache);
   }
 
   const res = await fetch(
-    `${BRIDGE_URL}/tmdb${endpoint}`
+    `${BRIDGE_URL}/tmdb${endpoint}${
+      endpoint.includes('?') ? '&' : '?'
+    }language=pt-BR&region=BR`
   );
 
   const data = await res.json();
 
   localStorage.setItem(
-    cacheKey,
+    endpoint,
     JSON.stringify(data)
   );
 
   return data;
 }
 
+/* ========================================= */
+/* HERO */
+/* ========================================= */
+
 async function loadHero(){
 
-  try{
+  const data =
+    await api('/trending/all/week');
 
-    const data = await fetchData('/trending/all/day');
+  const random =
+    data.results[
+      Math.floor(Math.random() * data.results.length)
+    ];
 
-    const random =
-      data.results[
-        Math.floor(Math.random() * data.results.length)
-      ];
+  const hero =
+    document.getElementById('hero');
 
-    const hero = document.getElementById('hero');
+  hero.style.backgroundImage =
+    `url(https://image.tmdb.org/t/p/original${random.backdrop_path})`;
 
-    hero.style.backgroundImage =
-      `url(https://image.tmdb.org/t/p/original${random.backdrop_path})`;
+  document.getElementById('hero-title').innerText =
+    random.title || random.name;
 
-    document.getElementById('hero-title').innerText =
-      random.title || random.name;
-
-    document.getElementById('hero-description').innerText =
-      random.overview;
-
-  }catch(err){
-    console.error(err);
-  }
+  document.getElementById('hero-description').innerText =
+    random.overview;
 }
 
-async function createRows(){
+/* ========================================= */
+/* CONTINUE */
+/* ========================================= */
 
-  for(const category of categories){
+function getContinue(){
 
-    const data = await fetchData(category.endpoint);
+  return JSON.parse(
+    localStorage.getItem('continueWatching') || '{}'
+  );
+}
 
-    const row = document.createElement('section');
+function saveContinue(item){
 
-    row.className = 'row';
+  const list = getContinue();
 
-    row.innerHTML = `
+  list[item.id] = {
+    ...item,
+    ts:Date.now()
+  };
 
-      <h2>${category.title}</h2>
+  localStorage.setItem(
+    'continueWatching',
+    JSON.stringify(list)
+  );
+}
 
-      <div class="cards">
+/* ========================================= */
+/* FAVORITES */
+/* ========================================= */
 
-        ${data.results.map(item => `
+function getFavs(){
 
-          <div class="card"
-               onclick='openPlayer(${JSON.stringify(item)})'>
+  return JSON.parse(
+    localStorage.getItem('favorites') || '{}'
+  );
+}
+
+/* ========================================= */
+/* CAROUSEL */
+/* ========================================= */
+
+function makeCarousel(section,items,type){
+
+  const sec = document.createElement('section');
+
+  sec.className = 'row';
+
+  sec.innerHTML = `
+    <h2 class="row-title">
+      ${section.title}
+    </h2>
+
+    <div class="cards">
+
+      ${items.map(item=>{
+
+        const genres =
+          item.genre_ids || [];
+
+        return `
+
+          <div
+            class="card"
+            onclick='openPlayer(${JSON.stringify(item)}, "${type}")'>
+
+            ${genres.includes(16)
+              ? '<div class="card-badge">ANIME</div>'
+              : ''
+            }
 
             <img
               loading="lazy"
@@ -400,41 +576,115 @@ async function createRows(){
 
           </div>
 
-        `).join('')}
+        `;
+      }).join('')}
 
-      </div>
-    `;
+    </div>
+  `;
 
-    content.appendChild(row);
+  return sec;
+}
+
+/* ========================================= */
+/* LOAD ROWS */
+/* ========================================= */
+
+async function loadRows(){
+
+  const container =
+    document.getElementById('sections-container');
+
+  for(const section of SECTIONS_DEF){
+
+    const skel = document.createElement('div');
+
+    skel.className = 'cards';
+
+    skel.innerHTML =
+      Array(10).fill('<div class="skel"></div>').join('');
+
+    container.appendChild(skel);
+
+    const data =
+      await api(section.endpoint);
+
+    skel.remove();
+
+    const row =
+      makeCarousel(
+        section,
+        data.results || [],
+        section.type
+      );
+
+    container.appendChild(row);
   }
 }
 
-function openPlayer(item){
+/* ========================================= */
+/* PLAYER */
+/* ========================================= */
+
+function loadServer(idx,id,type,season,episode){
+
+  curSrvIdx = idx;
+
+  const frame =
+    document.getElementById('player-frame');
+
+  frame.src =
+    SERVERS[idx]
+      .fn(id,type,season,episode);
+}
+
+function openPlayer(item,type){
 
   const modal =
     document.getElementById('playerModal');
 
-  const iframe =
-    document.getElementById('playerFrame');
-
   modal.classList.remove('hidden');
 
-  const type =
+  const mediaType =
+    type ||
     item.media_type ||
     (item.first_air_date ? 'tv' : 'movie');
 
-  if(type === 'movie'){
+  loadServer(
+    0,
+    item.id,
+    mediaType,
+    1,
+    1
+  );
 
-    iframe.src =
-      PLAYERS.movie(item.id);
+  saveContinue(item);
 
-  }else{
+  setTimeout(()=>{
 
-    iframe.src =
-      PLAYERS.tv(item.id,1,1);
-  }
+    const frame =
+      document.getElementById('player-frame');
 
-  saveContinueWatching(item);
+    try{
+
+      if(!frame.contentWindow){
+
+        if(curSrvIdx < SERVERS.length - 1){
+
+          curSrvIdx++;
+
+          loadServer(
+            curSrvIdx,
+            item.id,
+            mediaType,
+            1,
+            1
+          );
+        }
+      }
+
+    }catch(e){}
+
+  },7000);
 }
 
 function closePlayer(){
@@ -442,40 +692,22 @@ function closePlayer(){
   const modal =
     document.getElementById('playerModal');
 
-  const iframe =
-    document.getElementById('playerFrame');
+  const frame =
+    document.getElementById('player-frame');
 
-  iframe.src = '';
+  frame.src = '';
 
   modal.classList.add('hidden');
 }
 
-function saveContinueWatching(item){
-
-  const list =
-    JSON.parse(
-      localStorage.getItem('continueWatching') || '[]'
-    );
-
-  const exists =
-    list.find(i => i.id === item.id);
-
-  if(!exists){
-
-    list.unshift(item);
-
-    localStorage.setItem(
-      'continueWatching',
-      JSON.stringify(list.slice(0,20))
-    );
-  }
-}
+/* ========================================= */
+/* INIT */
+/* ========================================= */
 
 loadHero();
-createRows();
+loadRows();
 
 </script>
 
 </body>
 </html>
-```
