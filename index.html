@@ -162,6 +162,10 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
    5. COMPONENTES EXTRAS
    ═══════════════════════════════════════════════════════ */
 .empty-row{text-align:center;padding:30px;color:#444;font-size:14px;}
+.ver-mais-wrap{text-align:center;margin-top:14px;}
+.ver-mais-btn{background:transparent;border:1px solid #333;color:#aaa;padding:8px 28px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;}
+.ver-mais-btn:hover{border-color:var(--red);color:#fff;background:rgba(229,9,20,.1);}
+.ver-mais-btn:disabled{opacity:.4;cursor:default;}
 #toast{position:fixed;bottom:30px;right:30px;background:#222;border:1px solid #333;border-radius:8px;padding:12px 20px;font-size:14px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
 #toast.show{opacity:1;transform:translateY(0);}
 .btn-close{position:fixed;top:16px;right:4%;width:38px;height:38px;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;z-index:810;transition:background .2s;}
@@ -274,67 +278,82 @@ const SERVERS = [
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
 const SECTIONS_HOME = [
-  { id:'trending',   title:'🔥 Bombando no Brasil',    endpoint:'/trending/all/week',      params:{ region:'BR' },                           type:'mixed' },
-  { id:'lancamentos',title:'🎬 Lançamentos',           endpoint:'/movie/upcoming',          params:{ region:'BR' },                           type:'movie' },
-  { id:'series_pop', title:'📺 Séries em Alta',        endpoint:'/tv/popular',              params:{ region:'BR' },                           type:'tv' }
+  { id:'trending',    title:'🔥 Bombando Agora',         endpoint:'/trending/all/week',   params:{ region:'BR' },                                                                    type:'mixed' },
+  { id:'mais_vistos', title:'👁️ Mais Assistidos',        endpoint:'/movie/popular',        params:{ region:'BR' },                                                                    type:'movie' },
+  { id:'tv_popular',  title:'📺 Séries Mais Assistidas', endpoint:'/tv/popular',           params:{ region:'BR' },                                                                    type:'tv'    },
+  { id:'lancamentos', title:'🆕 Lançamentos',             endpoint:'/movie/upcoming',       params:{ region:'BR' },                                                                    type:'movie' },
+  { id:'top_filmes',  title:'🏆 Top Filmes Avaliados',   endpoint:'/movie/top_rated',      params:{ region:'BR' },                                                                    type:'movie' },
+  { id:'animacao_h',  title:'🧸 Animação & Família',     endpoint:'/discover/movie',       params:{ with_genres:'16|10751', region:'BR', sort_by:'popularity.desc' },                 type:'movie' },
+  { id:'acao_h',      title:'💥 Ação & Aventura',        endpoint:'/discover/movie',       params:{ with_genres:'28', region:'BR', sort_by:'popularity.desc', without_genres:'16' },  type:'movie' },
+  { id:'comedia_h',   title:'😂 Comédias',               endpoint:'/discover/movie',       params:{ with_genres:'35', region:'BR', sort_by:'popularity.desc', without_genres:'16' },  type:'movie' },
+  { id:'anime_h',     title:'⛩️ Animes em Alta',         endpoint:'/discover/tv',          params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc' },       type:'tv'    },
+  { id:'scifi_h',     title:'🚀 Ficção Científica',      endpoint:'/discover/movie',       params:{ with_genres:'878', region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
+  { id:'terror_h',    title:'👻 Terror & Suspense',      endpoint:'/discover/movie',       params:{ with_genres:'27|53', region:'BR', sort_by:'popularity.desc' },                    type:'movie' },
+  { id:'series_pop',  title:'🎭 Séries de Drama',        endpoint:'/discover/tv',          params:{ with_genres:'18', region:'BR', sort_by:'popularity.desc', without_genres:'16' },  type:'tv'    },
+  { id:'brasil_h',    title:'🇧🇷 Produções Brasileiras', endpoint:'/discover/movie',       params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' },             type:'movie' },
+  { id:'doc_h',       title:'🎓 Documentários',          endpoint:'/discover/movie',       params:{ with_genres:'99', region:'BR', sort_by:'popularity.desc' },                        type:'movie' },
 ];
 
 const SECTIONS_CATS = {
+  // FILMES — ordem: família/animação → comédia → ação → suspense → pesados → docs
   movies: [
-    { id:'m_pop',     title:'🎬 Mais Populares',        endpoint:'/movie/popular',      params:{ region:'BR' },                                                       type:'movie' },
-    { id:'m_top',     title:'🏆 Mais Bem Avaliados',    endpoint:'/movie/top_rated',    params:{ region:'BR' },                                                       type:'movie' },
-    { id:'m_lanc',    title:'🆕 Lançamentos',           endpoint:'/movie/upcoming',     params:{ region:'BR' },                                                       type:'movie' },
-    { id:'m_acao',    title:'💥 Ação',                  endpoint:'/discover/movie',     params:{ with_genres:'28',     region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
-    { id:'m_aventura',title:'🌍 Aventura',              endpoint:'/discover/movie',     params:{ with_genres:'12',     region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
-    { id:'m_comedia', title:'😂 Comédia',               endpoint:'/discover/movie',     params:{ with_genres:'35',     region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
-    { id:'m_terror',  title:'👻 Terror',                endpoint:'/discover/movie',     params:{ with_genres:'27',     region:'BR', sort_by:'popularity.desc' },       type:'movie' },
-    { id:'m_suspense',title:'🔪 Suspense & Thriller',   endpoint:'/discover/movie',     params:{ with_genres:'53',     region:'BR', sort_by:'popularity.desc' },       type:'movie' },
-    { id:'m_drama',   title:'🎭 Drama',                 endpoint:'/discover/movie',     params:{ with_genres:'18',     region:'BR', sort_by:'popularity.desc', without_genres:'16,10749' }, type:'movie' },
-    { id:'m_romance', title:'💕 Romance',               endpoint:'/discover/movie',     params:{ with_genres:'10749', region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
-    { id:'m_scifi',   title:'👽 Ficção Científica',     endpoint:'/discover/movie',     params:{ with_genres:'878',    region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
-    { id:'m_fantasia',title:'🧙 Fantasia',              endpoint:'/discover/movie',     params:{ with_genres:'14',     region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
-    { id:'m_guerra',  title:'⚔️ Guerra & História',     endpoint:'/discover/movie',     params:{ with_genres:'10752', region:'BR', sort_by:'popularity.desc' },        type:'movie' },
-    { id:'m_crime',   title:'🕵️ Crime',                endpoint:'/discover/movie',     params:{ with_genres:'80',     region:'BR', sort_by:'popularity.desc' },       type:'movie' },
-    { id:'m_doc',     title:'🎓 Documentários',         endpoint:'/discover/movie',     params:{ with_genres:'99',     region:'BR', sort_by:'popularity.desc' },       type:'movie' },
-    { id:'m_familia', title:'👨‍👩‍👧 Família',             endpoint:'/discover/movie',     params:{ with_genres:'10751', region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'movie' },
-    { id:'m_musical', title:'🎵 Musical',               endpoint:'/discover/movie',     params:{ with_genres:'10402', region:'BR', sort_by:'popularity.desc' },        type:'movie' },
-    { id:'m_anim',    title:'🧸 Animação',              endpoint:'/discover/movie',     params:{ with_genres:'16',     region:'BR', sort_by:'popularity.desc' },       type:'movie' },
+    { id:'m_pop',      title:'🎬 Mais Populares',        endpoint:'/movie/popular',     params:{ region:'BR' },                                                                          type:'movie' },
+    { id:'m_top',      title:'🏆 Mais Bem Avaliados',    endpoint:'/movie/top_rated',   params:{ region:'BR' },                                                                          type:'movie' },
+    { id:'m_lanc',     title:'🆕 Lançamentos',           endpoint:'/movie/upcoming',    params:{ region:'BR' },                                                                          type:'movie' },
+    { id:'m_familia',  title:'👨‍👩‍👧 Família',             endpoint:'/discover/movie',    params:{ with_genres:'10751',  region:'BR', sort_by:'popularity.desc', without_genres:'16,27,28,53,878,80,99' }, type:'movie' },
+    { id:'m_anim',     title:'🧸 Animação',              endpoint:'/discover/movie',    params:{ with_genres:'16',     region:'BR', sort_by:'popularity.desc' },                         type:'movie' },
+    { id:'m_comedia',  title:'😂 Comédia',               endpoint:'/discover/movie',    params:{ with_genres:'35',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,28,10749' }, type:'movie' },
+    { id:'m_romance',  title:'💕 Romance',               endpoint:'/discover/movie',    params:{ with_genres:'10749', region:'BR', sort_by:'popularity.desc', without_genres:'16,27,28' }, type:'movie' },
+    { id:'m_aventura', title:'🌍 Aventura',              endpoint:'/discover/movie',    params:{ with_genres:'12',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,53' }, type:'movie' },
+    { id:'m_acao',     title:'💥 Ação',                  endpoint:'/discover/movie',    params:{ with_genres:'28',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,53,12' }, type:'movie' },
+    { id:'m_fantasia', title:'🧙 Fantasia',              endpoint:'/discover/movie',    params:{ with_genres:'14',     region:'BR', sort_by:'popularity.desc', without_genres:'16,28' }, type:'movie' },
+    { id:'m_scifi',    title:'👽 Ficção Científica',     endpoint:'/discover/movie',    params:{ with_genres:'878',    region:'BR', sort_by:'popularity.desc', without_genres:'16,28,27' }, type:'movie' },
+    { id:'m_drama',    title:'🎭 Drama',                 endpoint:'/discover/movie',    params:{ with_genres:'18',     region:'BR', sort_by:'popularity.desc', without_genres:'16,10749,35,27' }, type:'movie' },
+    { id:'m_crime',    title:'🕵️ Crime',                endpoint:'/discover/movie',    params:{ with_genres:'80',     region:'BR', sort_by:'popularity.desc', without_genres:'16,28' }, type:'movie' },
+    { id:'m_suspense', title:'🔪 Suspense & Thriller',   endpoint:'/discover/movie',    params:{ with_genres:'53',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,80' }, type:'movie' },
+    { id:'m_terror',   title:'👻 Terror',                endpoint:'/discover/movie',    params:{ with_genres:'27',     region:'BR', sort_by:'popularity.desc', without_genres:'16,53' }, type:'movie' },
+    { id:'m_guerra',   title:'⚔️ Guerra & História',     endpoint:'/discover/movie',    params:{ with_genres:'10752', region:'BR', sort_by:'popularity.desc', without_genres:'16' },    type:'movie' },
+    { id:'m_musical',  title:'🎵 Musical',               endpoint:'/discover/movie',    params:{ with_genres:'10402', region:'BR', sort_by:'popularity.desc' },                         type:'movie' },
+    { id:'m_doc',      title:'🎓 Documentários',         endpoint:'/discover/movie',    params:{ with_genres:'99',     region:'BR', sort_by:'popularity.desc', without_genres:'16' },   type:'movie' },
   ],
+  // SÉRIES — ordem: família → comédia → drama → ação → crime → pesados → docs
   series: [
-    { id:'s_pop',     title:'📺 Mais Populares',        endpoint:'/tv/popular',         params:{ region:'BR' },                                                       type:'tv' },
-    { id:'s_top',     title:'🏆 Mais Bem Avaliadas',    endpoint:'/tv/top_rated',       params:{ region:'BR' },                                                       type:'tv' },
-    { id:'s_ar',      title:'📡 No Ar Hoje',            endpoint:'/tv/airing_today',    params:{ region:'BR' },                                                       type:'tv' },
-    { id:'s_drama',   title:'🎭 Drama',                 endpoint:'/discover/tv',        params:{ with_genres:'18',     region:'BR', sort_by:'popularity.desc', without_genres:'16,10766' }, type:'tv' },
-    { id:'s_comedia', title:'😂 Comédia',               endpoint:'/discover/tv',        params:{ with_genres:'35',     region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'tv' },
-    { id:'s_crime',   title:'🕵️ Crime & Mistério',     endpoint:'/discover/tv',        params:{ with_genres:'80|9648',region:'BR', sort_by:'popularity.desc' },       type:'tv' },
-    { id:'s_acao',    title:'💥 Ação & Aventura',       endpoint:'/discover/tv',        params:{ with_genres:'10759', region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'tv' },
-    { id:'s_scifi',   title:'🚀 Ficção Científica',     endpoint:'/discover/tv',        params:{ with_genres:'10765', region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'tv' },
-    { id:'s_doc',     title:'🎓 Documentários',         endpoint:'/discover/tv',        params:{ with_genres:'99',     region:'BR', sort_by:'popularity.desc' },       type:'tv' },
-    { id:'s_reality', title:'🎤 Reality Shows',         endpoint:'/discover/tv',        params:{ with_genres:'10764', region:'BR', sort_by:'popularity.desc' },        type:'tv' },
-    { id:'s_familia', title:'👨‍👩‍👧 Família',             endpoint:'/discover/tv',        params:{ with_genres:'10751', region:'BR', sort_by:'popularity.desc', without_genres:'16' }, type:'tv' },
-    { id:'s_talk',    title:'🎙️ Talk Shows',            endpoint:'/discover/tv',        params:{ with_genres:'10767', region:'BR', sort_by:'popularity.desc' },        type:'tv' },
-    { id:'s_guerra',  title:'⚔️ Guerra & Política',     endpoint:'/discover/tv',        params:{ with_genres:'10768', region:'BR', sort_by:'popularity.desc' },        type:'tv' },
-    { id:'s_western', title:'🤠 Western',               endpoint:'/discover/tv',        params:{ with_genres:'37',     region:'BR', sort_by:'popularity.desc' },       type:'tv' },
+    { id:'s_pop',      title:'📺 Mais Populares',        endpoint:'/tv/popular',        params:{ region:'BR' },                                                                          type:'tv' },
+    { id:'s_top',      title:'🏆 Mais Bem Avaliadas',    endpoint:'/tv/top_rated',      params:{ region:'BR' },                                                                          type:'tv' },
+    { id:'s_ar',       title:'📡 No Ar Hoje',            endpoint:'/tv/airing_today',   params:{ region:'BR' },                                                                          type:'tv' },
+    { id:'s_familia',  title:'👨‍👩‍👧 Família',             endpoint:'/discover/tv',       params:{ with_genres:'10751', region:'BR', sort_by:'popularity.desc', without_genres:'16,10766,18,80' }, type:'tv' },
+    { id:'s_comedia',  title:'😂 Comédia',               endpoint:'/discover/tv',       params:{ with_genres:'35',    region:'BR', sort_by:'popularity.desc', without_genres:'16,10766,18' }, type:'tv' },
+    { id:'s_reality',  title:'🎤 Reality Shows',         endpoint:'/discover/tv',       params:{ with_genres:'10764', region:'BR', sort_by:'popularity.desc' },                         type:'tv' },
+    { id:'s_drama',    title:'🎭 Drama',                 endpoint:'/discover/tv',       params:{ with_genres:'18',    region:'BR', sort_by:'popularity.desc', without_genres:'16,10766,35,80' }, type:'tv' },
+    { id:'s_acao',     title:'💥 Ação & Aventura',       endpoint:'/discover/tv',       params:{ with_genres:'10759', region:'BR', sort_by:'popularity.desc', without_genres:'16' },    type:'tv' },
+    { id:'s_scifi',    title:'🚀 Ficção Científica',     endpoint:'/discover/tv',       params:{ with_genres:'10765', region:'BR', sort_by:'popularity.desc', without_genres:'16' },    type:'tv' },
+    { id:'s_crime',    title:'🕵️ Crime & Mistério',     endpoint:'/discover/tv',       params:{ with_genres:'80|9648',region:'BR', sort_by:'popularity.desc', without_genres:'16' },   type:'tv' },
+    { id:'s_talk',     title:'🎙️ Talk Shows',            endpoint:'/discover/tv',       params:{ with_genres:'10767', region:'BR', sort_by:'popularity.desc' },                         type:'tv' },
+    { id:'s_guerra',   title:'⚔️ Guerra & Política',     endpoint:'/discover/tv',       params:{ with_genres:'10768', region:'BR', sort_by:'popularity.desc' },                         type:'tv' },
+    { id:'s_western',  title:'🤠 Western',               endpoint:'/discover/tv',       params:{ with_genres:'37',    region:'BR', sort_by:'popularity.desc' },                         type:'tv' },
+    { id:'s_doc',      title:'🎓 Documentários',         endpoint:'/discover/tv',       params:{ with_genres:'99',    region:'BR', sort_by:'popularity.desc', without_genres:'16' },    type:'tv' },
   ],
+  // ANIMES — ordem: populares → ação → comédia → romance → fantasia → terror → docs
   animes: [
-    { id:'a_pop',     title:'⛩️ Mais Populares',        endpoint:'/discover/tv',        params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc' },          type:'tv' },
-    { id:'a_top',     title:'🏆 Mais Bem Avaliados',    endpoint:'/discover/tv',        params:{ with_genres:'16', with_original_language:'ja', sort_by:'vote_average.desc', 'vote_count.gte':200 }, type:'tv' },
-    { id:'a_acao',    title:'⚔️ Ação & Luta',           endpoint:'/discover/tv',        params:{ with_genres:'16|10759', with_original_language:'ja', sort_by:'popularity.desc' },    type:'tv' },
-    { id:'a_fantasia',title:'🐉 Fantasia',              endpoint:'/discover/tv',        params:{ with_genres:'16|14',   with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_comedia', title:'😂 Comédia',               endpoint:'/discover/tv',        params:{ with_genres:'16|35',   with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_romance', title:'💕 Romance',               endpoint:'/discover/tv',        params:{ with_genres:'16|10749',with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_scifi',   title:'🚀 Ficção Científica',     endpoint:'/discover/tv',        params:{ with_genres:'16|10765',with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_terror',  title:'👻 Terror & Horror',       endpoint:'/discover/tv',        params:{ with_genres:'16|27',   with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_esporte', title:'⚽ Esportes',              endpoint:'/discover/tv',        params:{ with_genres:'16',      with_original_language:'ja', with_keywords:'6075|155026', sort_by:'popularity.desc' }, type:'tv' },
-    { id:'a_filme',   title:'🎬 Filmes de Anime',       endpoint:'/discover/movie',     params:{ with_genres:'16',      with_original_language:'ja', sort_by:'popularity.desc' },      type:'movie' },
+    { id:'a_pop',      title:'⛩️ Mais Populares',        endpoint:'/discover/tv',       params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc' },            type:'tv' },
+    { id:'a_top',      title:'🏆 Mais Bem Avaliados',    endpoint:'/discover/tv',       params:{ with_genres:'16', with_original_language:'ja', sort_by:'vote_average.desc', 'vote_count.gte':200 }, type:'tv' },
+    { id:'a_kids',     title:'🧒 Para Crianças',         endpoint:'/discover/tv',       params:{ with_genres:'16|10762', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
+    { id:'a_comedia',  title:'😂 Comédia',               endpoint:'/discover/tv',       params:{ with_genres:'16|35',    with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
+    { id:'a_romance',  title:'💕 Romance',               endpoint:'/discover/tv',       params:{ with_genres:'16|10749', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
+    { id:'a_acao',     title:'⚔️ Ação & Luta',           endpoint:'/discover/tv',       params:{ with_genres:'16|10759', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
+    { id:'a_fantasia', title:'🐉 Fantasia',              endpoint:'/discover/tv',       params:{ with_genres:'16|14',    with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
+    { id:'a_scifi',    title:'🚀 Ficção Científica',     endpoint:'/discover/tv',       params:{ with_genres:'16|10765', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
+    { id:'a_terror',   title:'👻 Terror & Horror',       endpoint:'/discover/tv',       params:{ with_genres:'16|27',    with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
+    { id:'a_filme',    title:'🎬 Filmes de Anime',       endpoint:'/discover/movie',    params:{ with_genres:'16',       with_original_language:'ja', sort_by:'popularity.desc' },      type:'movie' },
   ],
+  // BRASIL — filmes, séries, novelas
   brasil: [
-    { id:'br_filmes', title:'🎬 Filmes Brasileiros',    endpoint:'/discover/movie',     params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' },               type:'movie' },
-    { id:'br_top',    title:'🏆 Filmes BR Mais Avaliados', endpoint:'/discover/movie',  params:{ with_original_language:'pt', region:'BR', sort_by:'vote_average.desc', 'vote_count.gte':50 }, type:'movie' },
-    { id:'br_series', title:'📺 Séries Brasileiras',   endpoint:'/discover/tv',        params:{ with_original_language:'pt', origin_country:'BR', sort_by:'popularity.desc' },        type:'tv' },
-    { id:'br_novelas',title:'💔 Novelas',               endpoint:'/discover/tv',        params:{ with_genres:'10766',  with_original_language:'pt', origin_country:'BR', sort_by:'popularity.desc' }, type:'tv' },
-    { id:'br_doc',    title:'🎓 Documentários BR',      endpoint:'/discover/movie',     params:{ with_genres:'99',     with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-    { id:'br_comedia',title:'😂 Comédias BR',           endpoint:'/discover/movie',     params:{ with_genres:'35',     with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' },
+    { id:'br_filmes',  title:'🎬 Filmes Brasileiros',    endpoint:'/discover/movie',    params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' },                 type:'movie' },
+    { id:'br_top',     title:'🏆 Filmes BR Mais Avaliados', endpoint:'/discover/movie', params:{ with_original_language:'pt', region:'BR', sort_by:'vote_average.desc', 'vote_count.gte':50 }, type:'movie' },
+    { id:'br_comedia', title:'😂 Comédias BR',           endpoint:'/discover/movie',    params:{ with_genres:'35', with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' },
+    { id:'br_series',  title:'📺 Séries Brasileiras',   endpoint:'/discover/tv',       params:{ with_original_language:'pt', origin_country:'BR', sort_by:'popularity.desc' },          type:'tv' },
+    { id:'br_novelas', title:'💔 Novelas',               endpoint:'/discover/tv',       params:{ with_genres:'10766', with_original_language:'pt', origin_country:'BR', sort_by:'popularity.desc' }, type:'tv' },
+    { id:'br_doc',     title:'🎓 Documentários BR',      endpoint:'/discover/movie',    params:{ with_genres:'99', with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' },
   ],
 };
 
@@ -383,27 +402,39 @@ function toast(msg){
   clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-// 6. HERO (BANNER ROTATIVO NO TOPO)
+// 6. HERO (BANNER ROTATIVO NO TOPO) — atualiza a cada 1 hora
 let heroItems=[], heroIdx=0, heroTimer;
 async function loadHero(){
-  const d = await api('/trending/movie/week',{region:'BR'});
-  heroItems = (d.results||[]).filter(m=>m.backdrop_path).slice(0,6);
-  const hero=document.getElementById('hero');
-  const dots=document.getElementById('hero-dots');
-  hero.querySelectorAll('.hero-slide').forEach(s=>s.remove());
-  dots.innerHTML='';
-  heroItems.forEach((m,i)=>{
-    const s=document.createElement('div');
-    s.className='hero-slide'+(i===0?' active':'');
-    s.style.backgroundImage=`url('${IMG}/w1280${m.backdrop_path}')`;
-    hero.insertBefore(s,dots);
-    const d2=document.createElement('div');
-    d2.className='hero-dot'+(i===0?' active':'');
-    d2.onclick=()=>setHero(i);
-    dots.appendChild(d2);
-  });
-  renderHeroContent(0);
-  heroTimer=setInterval(()=>setHero((heroIdx+1)%heroItems.length),7000);
+  try{
+    // Cache de 1h no localStorage
+    const HERO_KEY='pf_hero_cache', HERO_TTL=3600000;
+    const cached=store.get(HERO_KEY);
+    let results;
+    if(cached.ts && Date.now()-cached.ts < HERO_TTL && cached.items?.length){
+      results=cached.items;
+    } else {
+      const d=await api('/trending/all/week',{region:'BR'});
+      results=(d.results||[]).filter(m=>m.backdrop_path && m.poster_path).slice(0,8);
+      store.set(HERO_KEY,{ts:Date.now(),items:results});
+    }
+    heroItems=results;
+    const hero=document.getElementById('hero');
+    const dots=document.getElementById('hero-dots');
+    hero.querySelectorAll('.hero-slide').forEach(s=>s.remove());
+    dots.innerHTML='';
+    heroItems.forEach((m,i)=>{
+      const s=document.createElement('div');
+      s.className='hero-slide'+(i===0?' active':'');
+      s.style.backgroundImage=`url('${IMG}/w1280${m.backdrop_path}')`;
+      hero.insertBefore(s,dots);
+      const d2=document.createElement('div');
+      d2.className='hero-dot'+(i===0?' active':'');
+      d2.onclick=()=>setHero(i);
+      dots.appendChild(d2);
+    });
+    renderHeroContent(0);
+    heroTimer=setInterval(()=>setHero((heroIdx+1)%heroItems.length),7000);
+  }catch(err){}
 }
 function setHero(i){
   heroIdx=i;
@@ -416,11 +447,14 @@ function renderHeroContent(i){
   const hero=document.getElementById('hero');
   let c=hero.querySelector('.hero-content');
   if(!c){ c=document.createElement('div'); c.className='hero-content'; hero.insertBefore(c,hero.querySelector('.hero-dots')); }
-  const y=(m.release_date||'').split('-')[0];
+  const y=(m.release_date||m.first_air_date||'').split('-')[0];
   const r=m.vote_average?m.vote_average.toFixed(1):'N/A';
+  const mtype=m.media_type||'movie';
+  const typeLabel=mtype==='tv'?'SÉRIE':'FILME';
   c.innerHTML=`
     <div class="hero-tags">
       <span class="hero-tag red">🔥 Em Alta</span>
+      <span class="hero-tag outline">${typeLabel}</span>
       <span class="hero-tag outline">${y}</span>
       <span class="hero-tag outline">⭐ ${r}</span>
     </div>
@@ -428,13 +462,13 @@ function renderHeroContent(i){
     <div class="hero-meta"><span class="score">★ ${r}</span><span>${y}</span></div>
     <p class="hero-desc">${m.overview||''}</p>
     <div class="hero-btns">
-      <button class="btn-watch" onclick="openDetails(${m.id},'movie')"><i class="fas fa-play"></i> Assistir</button>
-      <button class="btn-more" onclick="openDetails(${m.id},'movie')"><i class="fas fa-info-circle"></i> Mais Info</button>
+      <button class="btn-watch" onclick="openDetails(${m.id},'${mtype}')"><i class="fas fa-play"></i> Assistir</button>
+      <button class="btn-more" onclick="openDetails(${m.id},'${mtype}')"><i class="fas fa-info-circle"></i> Mais Info</button>
     </div>`;
 }
 
 // 7. CARROSSÉIS DE FILMES E SÉRIES
-function makeCarousel(sec, items, type){
+function makeCarousel(sec, items, type, hasMore){
   const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
   wrap.innerHTML=`
     <div class="section-header"><span class="section-title">${sec.title}</span></div>
@@ -442,7 +476,8 @@ function makeCarousel(sec, items, type){
       <button class="carousel-btn prev" onclick="scrollCar('${sec.id}',-1)"><i class="fas fa-chevron-left"></i></button>
       <div class="carousel" id="car-${sec.id}"></div>
       <button class="carousel-btn next" onclick="scrollCar('${sec.id}',1)"><i class="fas fa-chevron-right"></i></button>
-    </div>`;
+    </div>
+    ${hasMore!==false?`<div class="ver-mais-wrap"><button class="ver-mais-btn" id="vm-${sec.id}" onclick="loadMore('${sec.id}')">Ver mais ↓</button></div>`:''}`;
   const car=wrap.querySelector('.carousel');
   items.forEach(m=>{
     const itemType = m.media_type||type||'movie';
@@ -481,6 +516,9 @@ function scrollCar(id,dir){
   if(car) car.scrollBy({left:dir*600,behavior:'smooth'});
 }
 
+// Rastreia página atual de cada seção para "Ver mais"
+const secPages={};
+
 async function loadSection(sec){
   const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
   wrap.innerHTML=`
@@ -490,8 +528,62 @@ async function loadSection(sec){
   try{
     const d=await api(sec.endpoint,{...sec.params,page:1});
     const items=(d.results||[]).filter(m=>m.poster_path).slice(0,20);
-    wrap.replaceWith(makeCarousel(sec,items,sec.type));
+    secPages[sec.id]={sec, page:1, totalPages:d.total_pages||1};
+    const hasMore=(d.total_pages||1)>1;
+    wrap.replaceWith(makeCarousel(sec,items,sec.type,hasMore));
   }catch(e){ wrap.remove(); }
+}
+
+async function loadMore(secId){
+  const state=secPages[secId]; if(!state) return;
+  const btn=document.getElementById('vm-'+secId);
+  if(btn){ btn.disabled=true; btn.textContent='Carregando...'; }
+  try{
+    const nextPage=state.page+1;
+    const d=await api(state.sec.endpoint,{...state.sec.params, page:nextPage});
+    const items=(d.results||[]).filter(m=>m.poster_path).slice(0,20);
+    const car=document.getElementById('car-'+secId);
+    if(car){
+      items.forEach(m=>{
+        const itemType=m.media_type||state.sec.type||'movie';
+        const name=m.title||m.name||'';
+        const year=(m.release_date||m.first_air_date||'').split('-')[0];
+        const rating=m.vote_average?m.vote_average.toFixed(1):'';
+        const poster=m.poster_path?`${IMG}/w500${m.poster_path}`:'';
+        const isFav=!!getFavs()[m.id];
+        const card=document.createElement('div');
+        card.className='card'; card.title=name;
+        card.onclick=()=>openDetails(m.id,itemType);
+        card.innerHTML=`
+          ${poster?`<img src="${poster}" alt="${name}" loading="lazy" onerror="this.style.display='none'">`:''}
+          ${itemType==='tv'?'<div class="card-badge">SÉRIE</div>':''}
+          <div class="card-overlay">
+            <div class="card-title">${name}</div>
+            <div class="card-meta">${rating?'⭐ '+rating:''} ${year}</div>
+            <div class="card-actions">
+              <div class="card-btn" onclick="event.stopPropagation();openDetails(${m.id},'${itemType}')"><i class="fas fa-play"></i></div>
+              <div class="card-btn fav ${isFav?'fav-on':''}" data-id="${m.id}"
+                onclick="event.stopPropagation();toggleFav(${m.id},'${itemType}','${name.replace(/'/g,"\\'")}','${poster}')">
+                <i class="fas fa-heart"></i>
+              </div>
+            </div>
+          </div>`;
+        car.appendChild(card);
+      });
+      // Scroll para mostrar os novos itens
+      car.scrollBy({left:car.scrollWidth,behavior:'smooth'});
+    }
+    state.page=nextPage;
+    if(btn){
+      if(nextPage >= (d.total_pages||1)){
+        btn.style.display='none'; // sem mais páginas
+      } else {
+        btn.disabled=false; btn.textContent='Ver mais ↓';
+      }
+    }
+  }catch(e){
+    if(btn){ btn.disabled=false; btn.textContent='Ver mais ↓'; }
+  }
 }
 
 // 8. FUNÇÕES DE NAVEGAÇÃO E MENUS
