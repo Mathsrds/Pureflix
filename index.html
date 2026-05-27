@@ -237,7 +237,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
             <div class="spinner"></div>
             <p>Carregando stream...</p>
           </div>
-          <iframe id="player-frame" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+          <iframe id="player-frame" allowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *; encrypted-media; gyroscope; accelerometer" referrerpolicy="no-referrer"></iframe>
         </div>
       </div>
 
@@ -882,6 +882,88 @@ window.addEventListener('scroll', () => {
   }
   lastScrollTop = Math.max(scrollTop, 0); 
 });
+
+
+// ═══════════════════════════════════════════════════
+// BLOQUEADOR DE POPUPS / NOVAS ABAS
+// ═══════════════════════════════════════════════════
+(function(){
+  // Bloqueia window.open (popup clássico)
+  const _origOpen = window.open.bind(window);
+  window.open = function(url, target, features){
+    if(!url || url === '' || url === 'about:blank') return null;
+    console.log('[AdBlock] popup bloqueado:', url);
+    return null;
+  };
+
+  // Bloqueia qualquer link <a target="_blank"> que venha de dentro de iframes
+  // interceptando clicks na página pai
+  function isSameOrigin(url){
+    if(!url || url.startsWith('#')) return true;
+    try{ return new URL(url, location.href).origin === location.origin; }
+    catch{ return false; }
+  }
+
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a[href]');
+    if(a && !isSameOrigin(a.href)){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      console.log('[AdBlock] link externo bloqueado:', a.href);
+    }
+  }, true);
+
+  // Bloqueia tentativa de redirect da página (location replace/assign)
+  ['assign','replace'].forEach(method=>{
+    const orig = location[method].bind(location);
+    try{
+      Object.defineProperty(location, method, {
+        configurable:true,
+        value: function(url){
+          if(isSameOrigin(url)){ orig(url); }
+          else{ console.log('[AdBlock] location.'+method+' bloqueado:', url); }
+        }
+      });
+    }catch(e){}
+  });
+
+  // Bloqueia beforeunload disparado por scripts de ads
+  let _safeLeave = false;
+  document.addEventListener('click', e=>{
+    const a = e.target.closest('a');
+    if(a && isSameOrigin(a.href)) _safeLeave = true;
+  }, false);
+
+  window.addEventListener('beforeunload', e=>{
+    if(!_safeLeave){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      e.returnValue = '';
+      setTimeout(()=>{ _safeLeave=false; }, 500);
+      return '';
+    }
+  }, true);
+
+  // Escudo mobile: no primeiro toque sobre o iframe, absorve o evento
+  // para evitar que o player abra aba ao simples toque
+  const frame = document.getElementById('player-frame');
+  if(frame){
+    const wrap = frame.parentElement;
+    if(wrap){
+      wrap.style.position = 'relative';
+      const shield = document.createElement('div');
+      shield.style.cssText = 'position:absolute;inset:0;z-index:5;cursor:pointer;';
+      let clicks = 0;
+      shield.addEventListener('pointerdown', function(e){
+        clicks++;
+        if(clicks >= 2) shield.remove(); // remove após 2 toques para liberar controles
+      });
+      wrap.appendChild(shield);
+    }
+  }
+
+  console.log('[AdBlock] ✓ Bloqueador de anúncios ativo');
+})();
 
 // 15. START DO SITE
 (async()=>{
