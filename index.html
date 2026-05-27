@@ -266,8 +266,8 @@ const SERVERS = [
   { label:'VidSrc',    fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me', fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc.xyz',fn:(id,t,s,e)=>`https://vidsrc.xyz/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'SuperEmbed',fn:(id,t,s,e)=>`https://superembed.stream/embed?tmdb=${id}&type=${t}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'Embed.su',  fn:(id,t,s,e)=>`https://myembed.biz/filme/{$id}` },
+  { label:'WarezCDN ',fn:(id,t,s,e)=>`warezcdn.site/filme/{id}&type=${t}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'VidSrc.cc',  fn:(id,t,s,e)=>`vidsrc.cc/v2/embed/movie/{id}` },
 ];
 
 // Seções do site
