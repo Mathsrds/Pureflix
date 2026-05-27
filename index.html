@@ -263,10 +263,10 @@ const IMG   = 'https://image.tmdb.org/t/p';
 const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 const SERVERS = [
-  { label:'VidSrc',    fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'VidSrc.me', fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'WarezCDN 🇧🇷',  fn:(id,t,s,e)=>t==='movie'?`https://embed.warezcdn.link/filme/${id}`:`https://embed.warezcdn.link/serie/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'VidSrc.cc 🇧🇷', fn:(id,t,s,e)=>t==='movie'?`https://vidsrc.cc/v2/embed/movie/${id}`:`https://vidsrc.cc/v2/embed/tv/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'VidSrc',         fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'VidSrc.me',      fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'VidSrc.cc 🇧🇷',  fn:(id,t,s,e)=>curImdbId?(t==='movie'?`https://vidsrc.cc/v2/embed/movie/${curImdbId}`:`https://vidsrc.cc/v2/embed/tv/${curImdbId}${s?'/'+s+'/'+e:''}`):`https://vidsrc.cc/v2/embed/movie/${id}` },
 ];
 
 // Seções do site
@@ -463,7 +463,7 @@ async function loadSection(sec){
 // ═══════════════════════════════════════════════════════
 // PLAYER
 // ═══════════════════════════════════════════════════════
-let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
+let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer, curImdbId='';
 
 function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
 
@@ -580,11 +580,12 @@ async function openDetails(id,type){
   document.getElementById('fallback-bar').classList.remove('show');
   clearTimeout(fallbackTimer);
 
-  curId=id; curType=type; curSeason=1; curEp=1; curSrvIdx=0;
+  curId=id; curType=type; curSeason=1; curEp=1; curSrvIdx=0; curImdbId='';
 
   // Dados básicos instantâneos + detalhes completos
   try{
     const m=await api(`/${type}/${id}`,{append_to_response:'external_ids,videos,credits'});
+    curImdbId = m.external_ids?.imdb_id || '';
     const name=m.title||m.name;
     const year=(m.release_date||m.first_air_date||'').split('-')[0];
     const rating=m.vote_average?m.vote_average.toFixed(1):'N/A';
