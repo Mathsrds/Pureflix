@@ -265,8 +265,8 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 const SERVERS = [
   { label:'VidSrc',    fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me', fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'WarezCDN ',fn:(id,t,s,e)=>`warezcdn.site/serie/{id}/{t}/{ep}&type=${t}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'VidSrc.cc',  fn:(id,t,s,e)=>`vidsrc.cc/v2/embed/tv/{id}/{t}/{ep}` },
+  { label:'WarezCDN ',fn:(id,t,s,e)=>`https://warezcdn.site/serie/{id}/{t}/{ep}&type=${t}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'VidSrc.cc',  fn:(id,t,s,e)=>`https://vidsrc.cc/v2/embed/tv/{id}/{t}/{ep}` },
 ];
 
 // Seções do site
