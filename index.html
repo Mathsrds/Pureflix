@@ -322,7 +322,29 @@ function toggleFav(id,type,name,poster){
 }
 function getContinue(){ return store.get('pf_cont'); }
 function saveContinue(id,type,name,poster,season,ep){
-  const c=getContinue(); c[id]={id,type,name,poster,season,ep,ts:Date.now()};
+  const c=getContinue();
+  // Preserva watchedSec e totalSec se já existirem
+  const prev=c[id]||{};
+  c[id]={id,type,name,poster,season,ep,ts:Date.now(),
+         watchedSec:prev.watchedSec||0,
+         totalSec:prev.totalSec||0};
+  store.set('pf_cont',c);
+}
+function removeContinue(id){
+  const c=getContinue(); delete c[id];
+  store.set('pf_cont',c);
+}
+function updateProgress(id, watchedSec, totalSec){
+  const c=getContinue();
+  if(!c[id]) return;
+  c[id].watchedSec=watchedSec;
+  c[id].totalSec=totalSec;
+  // Remove automaticamente se assistiu >= 85% e tem duração conhecida
+  if(totalSec > 0 && watchedSec/totalSec >= 0.85){
+    delete c[id];
+    store.set('pf_cont',c);
+    return;
+  }
   store.set('pf_cont',c);
 }
 
@@ -479,9 +501,29 @@ function buildServerBtns(){
   });
 }
 
+let _progressTimer=null, _watchedSec=0, _totalSec=0, _playerActive=false;
+
+function startProgressTracking(){
+  clearInterval(_progressTimer);
+  _playerActive=true;
+  _progressTimer=setInterval(()=>{
+    if(!_playerActive||!curId) return;
+    _watchedSec++;
+    // Estima duração total: filmes ~6600s (110min), séries ~2640s (44min)
+    if(_totalSec===0){
+      const saved=getContinue()[curId];
+      _totalSec=saved?.totalSec||(curType==='movie'?6600:2640);
+    }
+    updateProgress(curId,_watchedSec,_totalSec);
+  },1000);
+}
+
+function stopProgressTracking(){ _playerActive=false; clearInterval(_progressTimer); }
+
 function loadServer(i){
   curSrvIdx=i;
   clearTimeout(fallbackTimer);
+  stopProgressTracking();
   document.getElementById('fallback-bar').classList.remove('show');
   document.querySelector('.player-loader').style.display='flex';
   document.querySelectorAll('.srv-btn').forEach((b,j)=>{
@@ -508,6 +550,11 @@ function onFrameLoad(){
   document.querySelector('.player-loader').style.display='none';
   clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
+  // Restaura segundos já assistidos e começa a contar
+  const saved=getContinue()[curId];
+  _watchedSec=saved?.watchedSec||0;
+  _totalSec=saved?.totalSec||0;
+  startProgressTracking();
   // Anti-tela preta: checar depois de 5s se frame ainda visível
   fallbackTimer=setTimeout(()=>{
     document.getElementById('fallback-msg').textContent='⚠️ Tela preta? Tente outro servidor.';
@@ -698,8 +745,34 @@ function showContinue(){
     document.getElementById('sections-container').innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Nenhum conteúdo para continuar. 🎬</div></div>`;
     return;
   }
-  const items=cont.map(f=>({id:f.id,title:f.name,poster_path:f.poster?.replace(`${IMG}/w500`,'')||null,media_type:f.type}));
-  const sec=makeCarousel({id:'cont',title:'▶️ Continuar Assistindo'},items,'movie');
+  // Monta seção manual com barra de progresso e botão remover
+  const sec=document.createElement('div');
+  sec.className='section';
+  sec.innerHTML=`<div class="section-header"><span class="section-title">▶️ Continuar Assistindo</span></div>`;
+  const grid=document.createElement('div');
+  grid.style.cssText='display:flex;flex-wrap:wrap;gap:12px;padding:4px 0;';
+  cont.forEach(f=>{
+    const pct=f.totalSec>0?Math.min(100,Math.round(f.watchedSec/f.totalSec*100)):0;
+    const card=document.createElement('div');
+    card.style.cssText=`position:relative;width:var(--card-w);cursor:pointer;flex-shrink:0;`;
+    card.innerHTML=`
+      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
+        ${f.poster?`<img src="${f.poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>'}
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.15);">
+          <div style="height:100%;width:${pct}%;background:var(--red);transition:width .3s;"></div>
+        </div>
+        <button onclick="event.stopPropagation();removeContinue('${f.id}');showContinue();"
+          style="position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(0,0,0,.75);border:1px solid #555;border-radius:50%;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;"
+          title="Remover da lista">✕</button>
+      </div>
+      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
+      ${f.type==='tv'?`<div style="font-size:11px;color:var(--gray);">T${f.season||1} · Ep ${f.ep||1}</div>`:''}
+      ${pct>0?`<div style="font-size:11px;color:var(--gray);">${pct}% assistido</div>`:''}
+    `;
+    card.onclick=()=>openDetails(f.id,f.type);
+    grid.appendChild(card);
+  });
+  sec.appendChild(grid);
   document.getElementById('sections-container').appendChild(sec);
 }
 
@@ -715,6 +788,7 @@ function showSection(id){
 // NAVEGAÇÃO
 // ═══════════════════════════════════════════════════════
 function goHome(){
+  stopProgressTracking();
   clearTimeout(fallbackTimer);
   document.getElementById('player-frame').src='';
   document.getElementById('page-home').style.display='block';
