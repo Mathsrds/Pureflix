@@ -746,6 +746,100 @@ window.onscroll=()=>{
   // Rota inicial
   window.onhashchange();
 })();
+
+
+// ═══════════════════════════════════════════════════════
+// BLOQUEADOR DE POPUPS E ANÚNCIOS DOS PLAYERS
+// ═══════════════════════════════════════════════════════
+(function(){
+  // 1. Bloqueia window.open (método mais comum de popup)
+  const _open = window.open.bind(window);
+  window.open = function(url, target, features){
+    if(!url || url === 'about:blank') return _open(url, target, features);
+    console.log('[AdBlock] window.open bloqueado:', url);
+    return null;
+  };
+
+  // 2. Intercepta cliques/toques que tentam sair da página
+  function isSafeUrl(url){
+    if(!url) return true;
+    try {
+      const u = new URL(url, location.href);
+      // Permite mesma origem e links internos (#)
+      return u.origin === location.origin || url.startsWith('#');
+    } catch(e){ return false; }
+  }
+
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a');
+    if(a && a.href && !isSafeUrl(a.href)){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      console.log('[AdBlock] link externo bloqueado:', a.href);
+    }
+  }, true);
+
+  // 3. Bloqueia redirecionamento da página atual (location.href = ...)
+  const _desc = Object.getOwnPropertyDescriptor(window, 'location');
+  try {
+    let _blocked = false;
+    const _loc = window.location;
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      get(){ return _loc; },
+      set(url){
+        if(!isSafeUrl(String(url))){
+          console.log('[AdBlock] location.href redirect bloqueado:', url);
+          return;
+        }
+        _loc.href = url;
+      }
+    });
+  } catch(e){ /* fallback silencioso */ }
+
+  // 4. No mobile: evita que toque no iframe abra popup antes do play
+  const frame = document.getElementById('player-frame');
+  if(frame){
+    // Cria uma camada protetora transparente que desaparece no primeiro toque
+    const shield = document.createElement('div');
+    shield.id = 'ad-shield';
+    shield.style.cssText = `
+      position:absolute;inset:0;z-index:10;cursor:pointer;
+      background:transparent;
+    `;
+    let touchCount = 0;
+    shield.addEventListener('click', function(e){
+      touchCount++;
+      if(touchCount >= 1){
+        // Após 1 clique real, remove o escudo para não atrapalhar os controles
+        shield.remove();
+      }
+    });
+    // Insere o escudo sobre o iframe
+    const wrapper = frame.parentElement;
+    if(wrapper){ wrapper.style.position='relative'; wrapper.appendChild(shield); }
+  }
+
+  // 5. Bloqueia beforeunload causado por scripts do iframe
+  let _allowUnload = false;
+  window.addEventListener('beforeunload', function(e){
+    if(!_allowUnload){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      e.returnValue = '';
+      return '';
+    }
+  }, true);
+
+  // Permite fechar/navegar normalmente ao clicar em links internos do site
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a');
+    if(a && isSafeUrl(a.href)) _allowUnload = true;
+  }, false);
+
+  console.log('[AdBlock] Bloqueador de anúncios ativado ✓');
+})();
+
 </script>
 </body>
 </html>
