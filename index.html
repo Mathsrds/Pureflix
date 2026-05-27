@@ -23,13 +23,13 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 ::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
 
 /* ── HEADER ── */
-#header{position:fixed!important;top:0!important;left:0;right:0;height:var(--header-h);display:flex;align-items:center;padding:0 4%;z-index:1000;transition:background .4s;will-change:background;}
+#header{position:fixed;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;padding:0 4%;z-index:900;transition:background .4s;}
 #header.solid{background:var(--bg2);box-shadow:0 2px 20px rgba(0,0,0,.6);}
 .logo{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--red);letter-spacing:3px;cursor:pointer;margin-right:30px;flex-shrink:0;}
 .nav{display:flex;gap:6px;align-items:center;}
 .nav-btn{background:none;border:none;color:var(--gray);font-family:'Barlow',sans-serif;font-size:13px;padding:6px 10px;cursor:pointer;border-radius:4px;transition:all .2s;white-space:nowrap;}
 .nav-btn:hover,.nav-btn.active{color:var(--white);background:rgba(255,255,255,.08);}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
 .header-right button{background:none;border:none;color:var(--gray);font-size:16px;cursor:pointer;transition:color .2s;padding:4px;}
 .header-right button:hover{color:var(--white);}
 .avatar{width:30px;height:30px;background:var(--red);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
@@ -183,13 +183,12 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <div id="header">
   <div class="logo" onclick="goHome()">PUREFLIX</div>
   <div class="nav">
-    <button class="nav-btn active" onclick="goHome()">Início</button>
-    <button class="nav-btn" onclick="showSection('movies')">Filmes</button>
-    <button class="nav-btn" onclick="showSection('series')">Séries</button>
-    <button class="nav-btn" onclick="showSection('anime')">Animes</button>
-    <button class="nav-btn" onclick="showSection('brasil')">Brasil</button>
-    <button class="nav-btn" onclick="showFav()">Favoritos</button>
-    <button class="nav-btn" onclick="showContinue()">Continuar</button>
+    <button class="nav-btn active" onclick="goHome(event)">Início</button>
+    <button class="nav-btn" onclick="showSection('movies', event)">Filmes</button>
+    <button class="nav-btn" onclick="showSection('series', event)">Séries</button>
+    <button class="nav-btn" onclick="showSection('animes', event)">Animes</button>
+    <button class="nav-btn" onclick="showFav(event)">Favoritos</button>
+    <button class="nav-btn" onclick="showContinue(event)">Continuar</button>
   </div>
   <div class="header-right">
     <button onclick="toggleSearch()" title="Buscar"><i class="fas fa-search"></i></button>
@@ -202,18 +201,15 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   <button onclick="doSearch()"><i class="fas fa-search"></i> Buscar</button>
 </div>
 
-<!-- HOME -->
 <div id="page-home">
   <div id="hero">
-    <!-- slides injetados via JS -->
     <div class="hero-dots" id="hero-dots"></div>
   </div>
   <div id="sections-container"></div>
 </div>
 
-<!-- DETAILS -->
 <div id="page-details">
-  <div class="btn-close" onclick="goHome()"><i class="fas fa-times"></i></div>
+  <div class="btn-close" onclick="closeDetails()"><i class="fas fa-times"></i></div>
   <div class="det-backdrop" id="det-backdrop"></div>
   <div class="det-body">
     <div class="det-poster"><img id="det-poster" src="" alt=""></div>
@@ -223,7 +219,6 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
       <p class="det-synopsis" id="det-synopsis"></p>
       <div class="det-btns" id="det-btns"></div>
 
-      <!-- Player -->
       <div class="player-section">
         <p class="player-label"><i class="fas fa-server"></i> Servidor de streaming:</p>
         <div class="server-grid" id="server-grid"></div>
@@ -238,11 +233,10 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
           </div>
           <iframe id="player-frame" allowfullscreen
             onload="onFrameLoad()"
-            allow="autoplay; fullscreen *; picture-in-picture; encrypted-media"></iframe>
+            allow="autoplay; fullscreen; picture-in-picture"></iframe>
         </div>
       </div>
 
-      <!-- Seasons/Episodes (TV only) -->
       <div class="seasons-section" id="seasons-section" style="display:none">
         <div class="seasons-label"><i class="fas fa-tv"></i> Temporadas e Episódios</div>
         <div class="season-tabs" id="season-tabs"></div>
@@ -256,7 +250,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 
 <script>
 // ═══════════════════════════════════════════════════════
-// CONFIG
+// CONFIG E SERVIDORES FOCADOS EM DUBLADO
 // ═══════════════════════════════════════════════════════
 const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
 const BASE  = 'https://api.themoviedb.org/3';
@@ -264,27 +258,44 @@ const IMG   = 'https://image.tmdb.org/t/p';
 const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 const SERVERS = [
-  { label:'VidSrc',         fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'VidSrc.me',      fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'2Embed 🇧🇷',      fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
+  { label: 'WarezCDN (Dublado)', fn: (id, t, s, e) => t === 'movie' ? `https://embed.warezcdn.net/filme/${id}` : `https://embed.warezcdn.net/serie/${id}/${s}/${e}` },
+  { label: 'VidSrc.cc (Multi-Áudio)', fn: (id, t, s, e) => `https://vidsrc.cc/v2/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` },
+  { label: 'VidSrc Direct', fn: (id, t, s, e) => `https://vidsrc.to/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` },
+  { label: 'SuperEmbed', fn: (id, t, s, e) => `https://superembed.stream/embed?tmdb=${id}&type=${t}${s ? '&season=' + s + '&episode=' + e : ''}` },
+  { label: 'Embed.su', fn: (id, t, s, e) => `https://embed.su/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` }
 ];
 
-// Seções do site
-const SECTIONS_DEF = [
+// ═══════════════════════════════════════════════════════
+// SEÇÕES ORGANIZADAS POR CATEGORIAS
+// ═══════════════════════════════════════════════════════
+const SECTIONS_HOME = [
   { id:'trending',   title:'🔥 Bombando no Brasil',    endpoint:'/trending/all/week',      params:{ region:'BR' },                           type:'mixed' },
   { id:'lancamentos',title:'🎬 Lançamentos',           endpoint:'/movie/upcoming',          params:{ region:'BR' },                           type:'movie' },
-  { id:'acao',       title:'💥 Ação',                  endpoint:'/discover/movie',          params:{ with_genres:28,  region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-  { id:'comedia',    title:'😂 Comédia',               endpoint:'/discover/movie',          params:{ with_genres:35,  region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-  { id:'terror',     title:'👻 Terror',                endpoint:'/discover/movie',          params:{ with_genres:27,  region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-  { id:'suspense',   title:'🔪 Suspense / Thriller',   endpoint:'/discover/movie',          params:{ with_genres:53,  region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-  { id:'animacao',   title:'🎭 Animação',              endpoint:'/discover/movie',          params:{ with_genres:16,  region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-  { id:'anime',      title:'⛩️ Animes',                endpoint:'/discover/tv',             params:{ with_genres:16,  with_origin_country:'JP', sort_by:'popularity.desc' }, type:'tv' },
-  { id:'series',     title:'📺 Séries em Alta',        endpoint:'/tv/popular',              params:{ region:'BR' },                           type:'tv' },
-  { id:'docs',       title:'🎓 Documentários',         endpoint:'/discover/movie',          params:{ with_genres:99,  region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-  { id:'brasil',     title:'🇧🇷 Produções Nacionais',  endpoint:'/discover/movie',          params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' },
-  { id:'drama',      title:'🎭 Drama',                 endpoint:'/discover/movie',          params:{ with_genres:18,  region:'BR', sort_by:'popularity.desc' }, type:'movie' },
+  { id:'series_pop', title:'📺 Séries em Alta',        endpoint:'/tv/popular',              params:{ region:'BR' },                           type:'tv' },
+  { id:'brasil',     title:'🇧🇷 Produções Nacionais',  endpoint:'/discover/movie',          params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' }
 ];
+
+const SECTIONS_CATS = {
+  movies: [
+    { id: 'm_acao', title: "💥 Ação & Aventura", endpoint: "/discover/movie", params: { with_genres: '28', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
+    { id: 'm_comedia', title: "😂 Comédia", endpoint: "/discover/movie", params: { with_genres: '35', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
+    { id: 'm_terror', title: "👻 Terror & Suspense", endpoint: "/discover/movie", params: { with_genres: '27,53', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
+    { id: 'm_scifi', title: "👽 Ficção Científica", endpoint: "/discover/movie", params: { with_genres: '878', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
+    { id: 'm_anim', title: "🎭 Animação", endpoint: "/discover/movie", params: { with_genres: '16', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' }
+  ],
+  series: [
+    { id: 's_drama', title: "🎭 Drama", endpoint: "/discover/tv", params: { with_genres: '18', region: 'BR', sort_by: 'popularity.desc' }, type: 'tv' },
+    { id: 's_comedia', title: "😂 Comédia", endpoint: "/discover/tv", params: { with_genres: '35', region: 'BR', sort_by: 'popularity.desc' }, type: 'tv' },
+    { id: 's_crime', title: "🕵️ Mistério & Crime", endpoint: "/discover/tv", params: { with_genres: '968,80', region: 'BR', sort_by: 'popularity.desc' }, type: 'tv' },
+    { id: 's_scifi', title: "🛸 Sci-Fi & Fantasy", endpoint: "/discover/tv", params: { with_genres: '10765', region: 'BR', sort_by: 'popularity.desc' }, type: 'tv' }
+  ],
+  animes: [
+    { id: 'a_pop', title: "🔥 Animes Populares", endpoint: "/discover/tv", params: { with_genres: '16', with_original_language: 'ja', sort_by: 'popularity.desc' }, type: 'tv' },
+    { id: 'a_acao', title: "⚔️ Ação e Luta", endpoint: "/discover/tv", params: { with_genres: '16,10759', with_original_language: 'ja', sort_by: 'popularity.desc' }, type: 'tv' },
+    { id: 'a_comedia', title: "😂 Comédia", endpoint: "/discover/tv", params: { with_genres: '16,35', with_original_language: 'ja', sort_by: 'popularity.desc' }, type: 'tv' },
+    { id: 'a_fantasia', title: "🐉 Fantasia", endpoint: "/discover/tv", params: { with_genres: '16,10765', with_original_language: 'ja', sort_by: 'popularity.desc' }, type: 'tv' }
+  ]
+};
 
 // ═══════════════════════════════════════════════════════
 // CACHE
@@ -322,29 +333,7 @@ function toggleFav(id,type,name,poster){
 }
 function getContinue(){ return store.get('pf_cont'); }
 function saveContinue(id,type,name,poster,season,ep){
-  const c=getContinue();
-  // Preserva watchedSec e totalSec se já existirem
-  const prev=c[id]||{};
-  c[id]={id,type,name,poster,season,ep,ts:Date.now(),
-         watchedSec:prev.watchedSec||0,
-         totalSec:prev.totalSec||0};
-  store.set('pf_cont',c);
-}
-function removeContinue(id){
-  const c=getContinue(); delete c[id];
-  store.set('pf_cont',c);
-}
-function updateProgress(id, watchedSec, totalSec){
-  const c=getContinue();
-  if(!c[id]) return;
-  c[id].watchedSec=watchedSec;
-  c[id].totalSec=totalSec;
-  // Remove automaticamente se assistiu >= 85% e tem duração conhecida
-  if(totalSec > 0 && watchedSec/totalSec >= 0.85){
-    delete c[id];
-    store.set('pf_cont',c);
-    return;
-  }
+  const c=getContinue(); c[id]={id,type,name,poster,season,ep,ts:Date.now()};
   store.set('pf_cont',c);
 }
 
@@ -418,7 +407,6 @@ function makeCarousel(sec, items, type){
   wrap.innerHTML=`
     <div class="section-header">
       <span class="section-title">${sec.title}</span>
-      <span class="section-more">Ver tudo →</span>
     </div>
     <div class="carousel-wrap">
       <button class="carousel-btn prev" onclick="scrollCar('${sec.id}',-1)"><i class="fas fa-chevron-left"></i></button>
@@ -436,7 +424,7 @@ function makeCarousel(sec, items, type){
     const isFav=!!favs[m.id];
     const cont=getContinue();
     const contData=cont[m.id];
-    const pct=contData?60:0; // placeholder
+    const pct=contData?60:0; 
     const card=document.createElement('div');
     card.className='card'; card.title=name;
     card.onclick=()=>openDetails(m.id,itemType);
@@ -484,9 +472,74 @@ async function loadSection(sec){
 }
 
 // ═══════════════════════════════════════════════════════
-// PLAYER
+// NAVEGAÇÃO ENTRE CATEGORIAS
 // ═══════════════════════════════════════════════════════
-let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer, curImdbId='';
+function clearPage(hideHero, eventElement) {
+  clearTimeout(fallbackTimer);
+  document.getElementById('player-frame').src='';
+  document.getElementById('page-home').style.display='block';
+  document.getElementById('page-details').style.display='none';
+  window.location.hash='';
+  document.getElementById('hero').style.display = hideHero ? 'none' : 'block';
+  document.getElementById('sections-container').innerHTML='';
+
+  if(eventElement) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      eventElement.classList.add('active');
+  }
+}
+
+async function goHome(e){
+  // Se clicou no botão inicio ou na logo
+  const el = e ? e.currentTarget : document.querySelector('.nav-btn[onclick="goHome(event)"]');
+  clearPage(false, el);
+  
+  // Recarrega as seções de destaque da tela principal
+  for(const sec of SECTIONS_HOME){
+    loadSection(sec);
+    await new Promise(r=>setTimeout(r,120));
+  }
+}
+
+async function showSection(catId, e){
+  clearPage(true, e.currentTarget);
+  const categories = SECTIONS_CATS[catId];
+  if(!categories) return;
+
+  for(const sec of categories){
+    loadSection(sec);
+    await new Promise(r=>setTimeout(r,150));
+  }
+}
+
+function showFav(e){
+  clearPage(true, e.currentTarget);
+  const favs=Object.values(getFavs());
+  if(!favs.length){
+    document.getElementById('sections-container').innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Você ainda não tem favoritos. ❤️</div></div>`;
+    return;
+  }
+  const items=favs.map(f=>({id:f.id,title:f.name,poster_path:null,_poster:f.poster,media_type:f.type}));
+  const sec=makeCarousel({id:'fav',title:'❤️ Meus Favoritos'},items.map(i=>({...i,poster_path:i._poster?.replace(`${IMG}/w500`,'')||null})),'movie');
+  document.getElementById('sections-container').appendChild(sec);
+}
+
+function showContinue(e){
+  clearPage(true, e.currentTarget);
+  const cont=Object.values(getContinue()).sort((a,b)=>b.ts-a.ts);
+  if(!cont.length){
+    document.getElementById('sections-container').innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Nenhum conteúdo para continuar. 🎬</div></div>`;
+    return;
+  }
+  const items=cont.map(f=>({id:f.id,title:f.name,poster_path:f.poster?.replace(`${IMG}/w500`,'')||null,media_type:f.type}));
+  const sec=makeCarousel({id:'cont',title:'▶️ Continuar Assistindo'},items,'movie');
+  document.getElementById('sections-container').appendChild(sec);
+}
+
+// ═══════════════════════════════════════════════════════
+// PLAYER E SERVIDORES
+// ═══════════════════════════════════════════════════════
+let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
 
 function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
 
@@ -501,29 +554,9 @@ function buildServerBtns(){
   });
 }
 
-let _progressTimer=null, _watchedSec=0, _totalSec=0, _playerActive=false;
-
-function startProgressTracking(){
-  clearInterval(_progressTimer);
-  _playerActive=true;
-  _progressTimer=setInterval(()=>{
-    if(!_playerActive||!curId) return;
-    _watchedSec++;
-    // Estima duração total: filmes ~6600s (110min), séries ~2640s (44min)
-    if(_totalSec===0){
-      const saved=getContinue()[curId];
-      _totalSec=saved?.totalSec||(curType==='movie'?6600:2640);
-    }
-    updateProgress(curId,_watchedSec,_totalSec);
-  },1000);
-}
-
-function stopProgressTracking(){ _playerActive=false; clearInterval(_progressTimer); }
-
 function loadServer(i){
   curSrvIdx=i;
   clearTimeout(fallbackTimer);
-  stopProgressTracking();
   document.getElementById('fallback-bar').classList.remove('show');
   document.querySelector('.player-loader').style.display='flex';
   document.querySelectorAll('.srv-btn').forEach((b,j)=>{
@@ -531,10 +564,8 @@ function loadServer(i){
     b.classList.remove('trying');
   });
   document.getElementById('player-frame').src=getUrl(i);
-  // Anti-tela preta: se não carregar em 12s, oferece trocar
   fallbackTimer=setTimeout(()=>{
-    document.getElementById('fallback-msg').textContent=
-      `⚠️ "${SERVERS[i].label}" pode estar com problemas. Tentar próximo?`;
+    document.getElementById('fallback-msg').textContent=`⚠️ "${SERVERS[i].label}" pode estar com problemas. Tentar próximo?`;
     document.getElementById('fallback-bar').classList.add('show');
   },12000);
   if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
@@ -550,12 +581,6 @@ function onFrameLoad(){
   document.querySelector('.player-loader').style.display='none';
   clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
-  // Restaura segundos já assistidos e começa a contar
-  const saved=getContinue()[curId];
-  _watchedSec=saved?.watchedSec||0;
-  _totalSec=saved?.totalSec||0;
-  startProgressTracking();
-  // Anti-tela preta: checar depois de 5s se frame ainda visível
   fallbackTimer=setTimeout(()=>{
     document.getElementById('fallback-msg').textContent='⚠️ Tela preta? Tente outro servidor.';
     document.getElementById('fallback-bar').classList.add('show');
@@ -563,7 +588,7 @@ function onFrameLoad(){
 }
 
 // ═══════════════════════════════════════════════════════
-// SEASONS / EPISODES
+// TEMPORADAS E EPISÓDIOS
 // ═══════════════════════════════════════════════════════
 async function loadSeasons(id, numSeasons){
   const sec=document.getElementById('seasons-section');
@@ -628,12 +653,10 @@ async function openDetails(id,type){
   document.getElementById('fallback-bar').classList.remove('show');
   clearTimeout(fallbackTimer);
 
-  curId=id; curType=type; curSeason=1; curEp=1; curSrvIdx=0; curImdbId='';
+  curId=id; curType=type; curSeason=1; curEp=1; curSrvIdx=0;
 
-  // Dados básicos instantâneos + detalhes completos
   try{
     const m=await api(`/${type}/${id}`,{append_to_response:'external_ids,videos,credits'});
-    curImdbId = m.external_ids?.imdb_id || '';
     const name=m.title||m.name;
     const year=(m.release_date||m.first_air_date||'').split('-')[0];
     const rating=m.vote_average?m.vote_average.toFixed(1):'N/A';
@@ -641,15 +664,11 @@ async function openDetails(id,type){
     const genres=(m.genres||[]).map(g=>g.name);
     const favs=getFavs();
 
-    // Backdrop
     if(m.backdrop_path){
       document.getElementById('det-backdrop').style.backgroundImage=`url('${IMG}/w1280${m.backdrop_path}')`;
     }
-    // Poster
     document.getElementById('det-poster').src=m.poster_path?`${IMG}/w500${m.poster_path}`:'';
-    // Title
     document.getElementById('det-title').textContent=name;
-    // Tags
     document.getElementById('det-tags').innerHTML=`
       <span class="det-tag green">⭐ ${rating}</span>
       <span class="det-tag">${year}</span>
@@ -657,10 +676,8 @@ async function openDetails(id,type){
       <span class="det-tag">${type==='tv'?'SÉRIE':'FILME'}</span>
       ${genres.slice(0,3).map(g=>`<span class="det-tag red">${g}</span>`).join('')}
     `;
-    // Synopsis
     document.getElementById('det-synopsis').textContent=m.overview||'Sinopse não disponível.';
 
-    // Botões
     const trailer=(m.videos?.results||[]).find(v=>v.type==='Trailer'&&v.site==='YouTube');
     document.getElementById('det-btns').innerHTML=`
       <button class="btn-watch" onclick="loadServer(0)"><i class="fas fa-play"></i> Assistir</button>
@@ -670,15 +687,12 @@ async function openDetails(id,type){
       </button>
     `;
 
-    // Player
     buildServerBtns();
     loadServer(0);
 
-    // Seasons para TV
     if(type==='tv' && m.number_of_seasons){
       await loadSeasons(id, m.number_of_seasons);
     }
-
     saveContinue(id,type,name,m.poster_path?`${IMG}/w500${m.poster_path}`:'',curSeason,curEp);
 
   }catch(err){
@@ -689,6 +703,13 @@ async function openDetails(id,type){
 function openTrailer(key){
   document.querySelector('.player-loader').style.display='none';
   document.getElementById('player-frame').src=`https://www.youtube.com/embed/${key}?autoplay=1`;
+}
+
+function closeDetails() {
+    document.getElementById('page-details').style.display='none';
+    document.getElementById('page-home').style.display='block';
+    window.location.hash='';
+    document.getElementById('player-frame').src=''; 
 }
 
 // ═══════════════════════════════════════════════════════
@@ -703,9 +724,9 @@ function toggleSearch(){
 async function doSearch(){
   const q=document.getElementById('searchInput').value.trim(); if(!q) return;
   document.getElementById('searchbar').classList.remove('open');
-  goHome();
-  document.getElementById('sections-container').innerHTML='';
-  // Buscar filmes + séries
+  
+  clearPage(true, null); // Limpa a página e esconde o Hero
+  
   try{
     const [mv,tv]=await Promise.all([
       api('/search/movie',{query:q,region:'BR'}),
@@ -715,87 +736,15 @@ async function doSearch(){
                ...(tv.results||[]).map(m=>({...m,media_type:'tv'}))]
               .filter(m=>m.poster_path)
               .sort((a,b)=>b.popularity-a.popularity);
-    const fake={id:'search',title:`🔎 "${q}"`,endpoint:'',params:{}};
+    const fake={id:'search',title:`🔎 Resultados para "${q}"`,endpoint:'',params:{}};
     const sec=makeCarousel(fake,all,'movie');
     document.getElementById('sections-container').appendChild(sec);
   }catch(e){}
 }
 
 // ═══════════════════════════════════════════════════════
-// FAVORITOS / CONTINUAR
+// GERAIS
 // ═══════════════════════════════════════════════════════
-function showFav(){
-  goHome();
-  document.getElementById('sections-container').innerHTML='';
-  const favs=Object.values(getFavs());
-  if(!favs.length){
-    document.getElementById('sections-container').innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Você ainda não tem favoritos. ❤️</div></div>`;
-    return;
-  }
-  const items=favs.map(f=>({id:f.id,title:f.name,poster_path:null,_poster:f.poster,media_type:f.type}));
-  const sec=makeCarousel({id:'fav',title:'❤️ Meus Favoritos'},items.map(i=>({...i,poster_path:i._poster?.replace(`${IMG}/w500`,'')||null})),'movie');
-  document.getElementById('sections-container').appendChild(sec);
-}
-
-function showContinue(){
-  goHome();
-  document.getElementById('sections-container').innerHTML='';
-  const cont=Object.values(getContinue()).sort((a,b)=>b.ts-a.ts);
-  if(!cont.length){
-    document.getElementById('sections-container').innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Nenhum conteúdo para continuar. 🎬</div></div>`;
-    return;
-  }
-  // Monta seção manual com barra de progresso e botão remover
-  const sec=document.createElement('div');
-  sec.className='section';
-  sec.innerHTML=`<div class="section-header"><span class="section-title">▶️ Continuar Assistindo</span></div>`;
-  const grid=document.createElement('div');
-  grid.style.cssText='display:flex;flex-wrap:wrap;gap:12px;padding:4px 0;';
-  cont.forEach(f=>{
-    const pct=f.totalSec>0?Math.min(100,Math.round(f.watchedSec/f.totalSec*100)):0;
-    const card=document.createElement('div');
-    card.style.cssText=`position:relative;width:var(--card-w);cursor:pointer;flex-shrink:0;`;
-    card.innerHTML=`
-      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
-        ${f.poster?`<img src="${f.poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>'}
-        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.15);">
-          <div style="height:100%;width:${pct}%;background:var(--red);transition:width .3s;"></div>
-        </div>
-        <button onclick="event.stopPropagation();removeContinue('${f.id}');showContinue();"
-          style="position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(0,0,0,.75);border:1px solid #555;border-radius:50%;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;"
-          title="Remover da lista">✕</button>
-      </div>
-      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
-      ${f.type==='tv'?`<div style="font-size:11px;color:var(--gray);">T${f.season||1} · Ep ${f.ep||1}</div>`:''}
-      ${pct>0?`<div style="font-size:11px;color:var(--gray);">${pct}% assistido</div>`:''}
-    `;
-    card.onclick=()=>openDetails(f.id,f.type);
-    grid.appendChild(card);
-  });
-  sec.appendChild(grid);
-  document.getElementById('sections-container').appendChild(sec);
-}
-
-function showSection(id){
-  const sec=SECTIONS_DEF.find(s=>s.id===id);
-  if(!sec) return;
-  goHome();
-  document.getElementById('sections-container').innerHTML='';
-  loadSection(sec);
-}
-
-// ═══════════════════════════════════════════════════════
-// NAVEGAÇÃO
-// ═══════════════════════════════════════════════════════
-function goHome(){
-  stopProgressTracking();
-  clearTimeout(fallbackTimer);
-  document.getElementById('player-frame').src='';
-  document.getElementById('page-home').style.display='block';
-  document.getElementById('page-details').style.display='none';
-  window.location.hash='';
-}
-
 window.onhashchange=()=>{
   const h=window.location.hash;
   const m=h.match(/^#(movie|tv)\/(\d+)/);
@@ -803,123 +752,16 @@ window.onhashchange=()=>{
   else{ document.getElementById('page-home').style.display='block'; document.getElementById('page-details').style.display='none'; }
 };
 
-function updateHeaderSolid(){
-  const scrolled = window.scrollY > 50 ||
-    (document.getElementById('page-details').style.display !== 'none' &&
-     document.getElementById('page-details').scrollTop > 10);
-  document.getElementById('header').classList.toggle('solid', scrolled);
-}
-window.onscroll = updateHeaderSolid;
-document.getElementById('page-details')?.addEventListener('scroll', updateHeaderSolid);
+window.onscroll=()=>{
+  document.getElementById('header').classList.toggle('solid',window.scrollY>50);
+};
 
-// ═══════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════
 (async()=>{
   loadHero();
-  const cont=document.getElementById('sections-container');
-  // Carrega seções progressivamente
-  for(const sec of SECTIONS_DEF){
-    loadSection(sec);
-    await new Promise(r=>setTimeout(r,120)); // stagger para não travar a UI
-  }
-  // Rota inicial
+  goHome(null);
   window.onhashchange();
 })();
-
-
-// ═══════════════════════════════════════════════════════
-// BLOQUEADOR DE POPUPS E ANÚNCIOS DOS PLAYERS
-// ═══════════════════════════════════════════════════════
-(function(){
-  // 1. Bloqueia window.open (método mais comum de popup)
-  const _open = window.open.bind(window);
-  window.open = function(url, target, features){
-    if(!url || url === 'about:blank') return _open(url, target, features);
-    console.log('[AdBlock] window.open bloqueado:', url);
-    return null;
-  };
-
-  // 2. Intercepta cliques/toques que tentam sair da página
-  function isSafeUrl(url){
-    if(!url) return true;
-    try {
-      const u = new URL(url, location.href);
-      // Permite mesma origem e links internos (#)
-      return u.origin === location.origin || url.startsWith('#');
-    } catch(e){ return false; }
-  }
-
-  document.addEventListener('click', function(e){
-    const a = e.target.closest('a');
-    if(a && a.href && !isSafeUrl(a.href)){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      console.log('[AdBlock] link externo bloqueado:', a.href);
-    }
-  }, true);
-
-  // 3. Bloqueia redirecionamento da página atual (location.href = ...)
-  const _desc = Object.getOwnPropertyDescriptor(window, 'location');
-  try {
-    let _blocked = false;
-    const _loc = window.location;
-    Object.defineProperty(window, 'location', {
-      configurable: true,
-      get(){ return _loc; },
-      set(url){
-        if(!isSafeUrl(String(url))){
-          console.log('[AdBlock] location.href redirect bloqueado:', url);
-          return;
-        }
-        _loc.href = url;
-      }
-    });
-  } catch(e){ /* fallback silencioso */ }
-
-  // 4. No mobile: evita que toque no iframe abra popup antes do play
-  const frame = document.getElementById('player-frame');
-  if(frame){
-    // Cria uma camada protetora transparente que desaparece no primeiro toque
-    const shield = document.createElement('div');
-    shield.id = 'ad-shield';
-    shield.style.cssText = `
-      position:absolute;inset:0;z-index:10;cursor:pointer;
-      background:transparent;
-    `;
-    let touchCount = 0;
-    shield.addEventListener('click', function(e){
-      touchCount++;
-      if(touchCount >= 1){
-        // Após 1 clique real, remove o escudo para não atrapalhar os controles
-        shield.remove();
-      }
-    });
-    // Insere o escudo sobre o iframe
-    const wrapper = frame.parentElement;
-    if(wrapper){ wrapper.style.position='relative'; wrapper.appendChild(shield); }
-  }
-
-  // 5. Bloqueia beforeunload causado por scripts do iframe
-  let _allowUnload = false;
-  window.addEventListener('beforeunload', function(e){
-    if(!_allowUnload){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      e.returnValue = '';
-      return '';
-    }
-  }, true);
-
-  // Permite fechar/navegar normalmente ao clicar em links internos do site
-  document.addEventListener('click', function(e){
-    const a = e.target.closest('a');
-    if(a && isSafeUrl(a.href)) _allowUnload = true;
-  }, false);
-
-  console.log('[AdBlock] Bloqueador de anúncios ativado ✓');
-})();
-
 </script>
 </body>
 </html>
