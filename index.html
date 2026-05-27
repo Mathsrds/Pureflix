@@ -269,11 +269,10 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 // 2. SERVIDORES DE VÍDEO (Foco em Dublados)
 const SERVERS = [
-  { label: 'WarezCDN (Dublado)', fn: (id, t, s, e) => t === 'movie' ? `https://embed.warezcdn.net/filme/${id}` : `https://embed.warezcdn.net/serie/${id}/${s}/${e}` },
-  { label: 'VidSrc.cc (Multi-Áudio)', fn: (id, t, s, e) => `https://vidsrc.cc/v2/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` },
-  { label: 'VidSrc Direct', fn: (id, t, s, e) => `https://vidsrc.to/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` },
-  { label: 'SuperEmbed', fn: (id, t, s, e) => `https://superembed.stream/embed?tmdb=${id}&type=${t}${s ? '&season=' + s + '&episode=' + e : ''}` },
-  { label: 'Embed.su', fn: (id, t, s, e) => `https://embed.su/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` }
+  { label:'VidSrc',         fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'VidSrc.me',      fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'2Embed 🇧🇷',      fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
 ];
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
