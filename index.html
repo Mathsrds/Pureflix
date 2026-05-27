@@ -7,6 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+/* ═══════════════════════════════════════════════════════
+   1. VARIÁVEIS E GERAIS
+   ═══════════════════════════════════════════════════════ */
 :root{
   --red:#e50914; --red2:#b20710;
   --bg:#0a0a0a; --bg2:#141414; --bg3:#1a1a1a;
@@ -22,8 +25,10 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
 
-/* ── HEADER ── */
-#header{position:fixed;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;padding:0 4%;z-index:900;transition:background .4s;}
+/* ═══════════════════════════════════════════════════════
+   2. CABEÇALHO (HEADER) INTELIGENTE
+   ═══════════════════════════════════════════════════════ */
+#header{position:fixed;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;padding:0 4%;z-index:900;transition: background 0.4s, transform 0.3s ease-in-out;}
 #header.solid{background:var(--bg2);box-shadow:0 2px 20px rgba(0,0,0,.6);}
 .logo{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--red);letter-spacing:3px;cursor:pointer;margin-right:30px;flex-shrink:0;}
 .nav{display:flex;gap:6px;align-items:center;}
@@ -34,14 +39,16 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .header-right button:hover{color:var(--white);}
 .avatar{width:30px;height:30px;background:var(--red);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
 
-/* ── SEARCH ── */
+/* Busca */
 #searchbar{position:fixed;top:var(--header-h);left:0;right:0;background:rgba(10,10,10,.97);padding:14px 4%;z-index:899;border-bottom:1px solid #222;display:none;}
 #searchbar.open{display:flex;gap:10px;}
 #searchbar input{flex:1;background:#1e1e1e;border:1px solid #333;border-radius:6px;padding:10px 16px;color:#fff;font-size:15px;font-family:'Barlow',sans-serif;outline:none;}
 #searchbar input:focus{border-color:#555;}
 #searchbar button{background:var(--red);color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;}
 
-/* ── HERO ── */
+/* ═══════════════════════════════════════════════════════
+   3. HERO (BANNER PRINCIPAL) E CARROSSÉIS
+   ═══════════════════════════════════════════════════════ */
 #hero{height:90vh;position:relative;overflow:hidden;}
 .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s;background:center/cover no-repeat;}
 .hero-slide.active{opacity:1;}
@@ -64,15 +71,11 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .hero-dot{width:6px;height:6px;background:rgba(255,255,255,.3);border-radius:50%;cursor:pointer;transition:all .3s;}
 .hero-dot.active{width:20px;border-radius:3px;background:var(--red);}
 
-/* ── MAIN ── */
 #page-home{padding-bottom:60px;}
 .section{padding:0 4%;margin-top:40px;}
 .section-header{display:flex;align-items:baseline;gap:14px;margin-bottom:16px;}
 .section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;}
-.section-more{font-size:12px;color:var(--green);cursor:pointer;opacity:0;transition:opacity .2s;}
-.section-header:hover .section-more{opacity:1;}
 
-/* ── CAROUSEL ── */
 .carousel-wrap{position:relative;}
 .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;background:rgba(10,10,10,.85);border:1px solid #333;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:all .2s;opacity:0;}
 .carousel-wrap:hover .carousel-btn{opacity:1;}
@@ -82,7 +85,6 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .carousel{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:6px;}
 .carousel::-webkit-scrollbar{height:0;}
 
-/* ── CARDS ── */
 .card{flex:0 0 var(--card-w);height:var(--card-h);background:var(--bg3);border-radius:6px;overflow:hidden;cursor:pointer;position:relative;scroll-snap-align:start;transition:transform .25s,box-shadow .25s;}
 .card:hover{transform:scale(1.07);z-index:20;box-shadow:0 14px 40px rgba(0,0,0,.7);}
 .card img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -99,7 +101,9 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .skel{background:linear-gradient(90deg,#1a1a1a 25%,#262626 50%,#1a1a1a 75%);background-size:400% 100%;animation:skel 1.4s infinite;border-radius:6px;flex:0 0 var(--card-w);height:var(--card-h);}
 @keyframes skel{0%{background-position:400% 0}100%{background-position:-400% 0}}
 
-/* ── DETAILS PAGE ── */
+/* ═══════════════════════════════════════════════════════
+   4. PÁGINA DE DETALHES E PLAYER
+   ═══════════════════════════════════════════════════════ */
 #page-details{position:fixed;inset:0;background:var(--bg);z-index:800;display:none;overflow-y:auto;padding-top:var(--header-h);}
 .det-backdrop{width:100%;height:420px;position:relative;background:center/cover no-repeat;flex-shrink:0;}
 .det-backdrop::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.3) 55%,transparent 85%);}
@@ -115,7 +119,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .det-synopsis{font-size:15px;line-height:1.7;color:#bbb;margin-bottom:24px;}
 .det-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;}
 
-/* ── PLAYER ── */
+/* Player e Servidores */
 .player-section{margin-bottom:20px;}
 .player-label{font-size:13px;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .server-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
@@ -134,7 +138,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .fallback-bar.show{display:flex;}
 .fallback-bar button{background:orange;color:#000;border:none;border-radius:4px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;}
 
-/* ── SEASONS ── */
+/* Temporadas (Apenas Séries) */
 .seasons-section{margin-top:24px;}
 .seasons-label{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .season-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
@@ -153,20 +157,17 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .ep-num{font-size:11px;color:var(--gray);margin-bottom:4px;}
 .ep-title{font-size:14px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ep-desc{font-size:12px;color:#777;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.ep-progress{height:2px;background:var(--red);margin-top:6px;border-radius:1px;}
 
-/* ── FAVORITES / CONTINUE ── */
+/* ═══════════════════════════════════════════════════════
+   5. COMPONENTES EXTRAS
+   ═══════════════════════════════════════════════════════ */
 .empty-row{text-align:center;padding:30px;color:#444;font-size:14px;}
-
-/* ── TOAST ── */
 #toast{position:fixed;bottom:30px;right:30px;background:#222;border:1px solid #333;border-radius:8px;padding:12px 20px;font-size:14px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
 #toast.show{opacity:1;transform:translateY(0);}
-
-/* ── CLOSE BTN ── */
 .btn-close{position:fixed;top:16px;right:4%;width:38px;height:38px;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;z-index:810;transition:background .2s;}
 .btn-close:hover{background:var(--red);}
 
-/* ── MOBILE ── */
+/* Mobile Adapts */
 @media(max-width:768px){
   :root{--card-w:130px;--card-h:195px;}
   .hero-title{font-size:38px;}
@@ -181,7 +182,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <body>
 
 <div id="header">
-  <div class="logo" onclick="goHome()">PUREFLIX</div>
+  <div class="logo" onclick="goHome(event)">PUREFLIX</div>
   <div class="nav">
     <button class="nav-btn active" onclick="goHome(event)">Início</button>
     <button class="nav-btn" onclick="showSection('movies', event)">Filmes</button>
@@ -231,9 +232,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
             <div class="spinner"></div>
             <p>Carregando stream...</p>
           </div>
-          <iframe id="player-frame" allowfullscreen
-            onload="onFrameLoad()"
-            allow="autoplay; fullscreen; picture-in-picture"></iframe>
+          <iframe id="player-frame" allowfullscreen onload="onFrameLoad()" allow="autoplay; fullscreen; picture-in-picture"></iframe>
         </div>
       </div>
 
@@ -242,6 +241,14 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
         <div class="season-tabs" id="season-tabs"></div>
         <div class="episodes-grid" id="episodes-grid"></div>
       </div>
+
+      <div class="seasons-section" id="recommendations-section" style="display:none; margin-top:40px;">
+        <div class="seasons-label"><i class="fas fa-star"></i> Títulos Semelhantes Recomendados</div>
+        <div class="carousel-wrap">
+          <div class="carousel" id="recommendations-carousel"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -249,14 +256,13 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <div id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// CONFIG E SERVIDORES FOCADOS EM DUBLADO
-// ═══════════════════════════════════════════════════════
+// 1. DADOS DE ACESSO À API
 const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
 const BASE  = 'https://api.themoviedb.org/3';
 const IMG   = 'https://image.tmdb.org/t/p';
 const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
+// 2. SERVIDORES DE VÍDEO (Foco em Dublados)
 const SERVERS = [
   { label: 'WarezCDN (Dublado)', fn: (id, t, s, e) => t === 'movie' ? `https://embed.warezcdn.net/filme/${id}` : `https://embed.warezcdn.net/serie/${id}/${s}/${e}` },
   { label: 'VidSrc.cc (Multi-Áudio)', fn: (id, t, s, e) => `https://vidsrc.cc/v2/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` },
@@ -265,18 +271,16 @@ const SERVERS = [
   { label: 'Embed.su', fn: (id, t, s, e) => `https://embed.su/embed/${t}/${id}${s ? '/' + s + '/' + e : ''}` }
 ];
 
-// ═══════════════════════════════════════════════════════
-// SEÇÕES ORGANIZADAS POR CATEGORIAS
-// ═══════════════════════════════════════════════════════
+// 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
 const SECTIONS_HOME = [
   { id:'trending',   title:'🔥 Bombando no Brasil',    endpoint:'/trending/all/week',      params:{ region:'BR' },                           type:'mixed' },
   { id:'lancamentos',title:'🎬 Lançamentos',           endpoint:'/movie/upcoming',          params:{ region:'BR' },                           type:'movie' },
-  { id:'series_pop', title:'📺 Séries em Alta',        endpoint:'/tv/popular',              params:{ region:'BR' },                           type:'tv' },
-  { id:'brasil',     title:'🇧🇷 Produções Nacionais',  endpoint:'/discover/movie',          params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' }
+  { id:'series_pop', title:'📺 Séries em Alta',        endpoint:'/tv/popular',              params:{ region:'BR' },                           type:'tv' }
 ];
 
 const SECTIONS_CATS = {
   movies: [
+    { id: 'm_br', title: "🇧🇷 Produções Nacionais", endpoint: "/discover/movie", params: { with_original_language: 'pt', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
     { id: 'm_acao', title: "💥 Ação & Aventura", endpoint: "/discover/movie", params: { with_genres: '28', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
     { id: 'm_comedia', title: "😂 Comédia", endpoint: "/discover/movie", params: { with_genres: '35', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
     { id: 'm_terror', title: "👻 Terror & Suspense", endpoint: "/discover/movie", params: { with_genres: '27,53', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' },
@@ -284,6 +288,8 @@ const SECTIONS_CATS = {
     { id: 'm_anim', title: "🎭 Animação", endpoint: "/discover/movie", params: { with_genres: '16', region: 'BR', sort_by: 'popularity.desc' }, type: 'movie' }
   ],
   series: [
+    { id: 's_br', title: "🇧🇷 Séries Nacionais", endpoint: "/discover/tv", params: { origin_country: 'BR', with_original_language: 'pt', sort_by: 'popularity.desc' }, type: 'tv' },
+    { id: 's_novelas', title: "📺 Novelas Brasileiras", endpoint: "/discover/tv", params: { with_genres: '10766', origin_country: 'BR', with_original_language: 'pt', sort_by: 'popularity.desc' }, type: 'tv' },
     { id: 's_drama', title: "🎭 Drama", endpoint: "/discover/tv", params: { with_genres: '18', region: 'BR', sort_by: 'popularity.desc' }, type: 'tv' },
     { id: 's_comedia', title: "😂 Comédia", endpoint: "/discover/tv", params: { with_genres: '35', region: 'BR', sort_by: 'popularity.desc' }, type: 'tv' },
     { id: 's_crime', title: "🕵️ Mistério & Crime", endpoint: "/discover/tv", params: { with_genres: '968,80', region: 'BR', sort_by: 'popularity.desc' }, type: 'tv' },
@@ -297,9 +303,7 @@ const SECTIONS_CATS = {
   ]
 };
 
-// ═══════════════════════════════════════════════════════
-// CACHE
-// ═══════════════════════════════════════════════════════
+// 4. SISTEMA DE API E CACHE (Evita travar o site)
 const MEM = {};
 async function api(path, params={}) {
   const url = new URL(BASE+path);
@@ -307,15 +311,15 @@ async function api(path, params={}) {
   Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
   const key = url.toString();
   if (MEM[key]) return MEM[key];
-  const r = await fetch(url, OPTS);
-  const d = await r.json();
-  MEM[key] = d;
-  return d;
+  try {
+    const r = await fetch(url, OPTS);
+    const d = await r.json();
+    MEM[key] = d;
+    return d;
+  } catch(e) { return {}; }
 }
 
-// ═══════════════════════════════════════════════════════
-// STORAGE (favoritos / continuar)
-// ═══════════════════════════════════════════════════════
+// 5. BANCO DE DADOS LOCAL (Favoritos e Continuar)
 const store = {
   get:(k)=>{ try{ return JSON.parse(localStorage.getItem(k)||'{}') }catch{ return {} } },
   set:(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)) }catch{} },
@@ -327,8 +331,7 @@ function toggleFav(id,type,name,poster){
   else{ f[id]={id,type,name,poster}; toast('⭐ Adicionado aos favoritos!'); }
   store.set('pf_favs',f);
   document.querySelectorAll(`.card-btn.fav[data-id="${id}"]`).forEach(b=>{
-    b.classList.toggle('fav-on',!!f[id]);
-    b.title = f[id]?'Remover':'Favoritar';
+    b.classList.toggle('fav-on',!!f[id]); b.title = f[id]?'Remover':'Favoritar';
   });
 }
 function getContinue(){ return store.get('pf_cont'); }
@@ -337,9 +340,7 @@ function saveContinue(id,type,name,poster,season,ep){
   store.set('pf_cont',c);
 }
 
-// ═══════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════
+// Mensagens Toast (Pop-ups)
 let toastT;
 function toast(msg){
   const el=document.getElementById('toast');
@@ -347,9 +348,7 @@ function toast(msg){
   clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-// ═══════════════════════════════════════════════════════
-// HERO DINÂMICO
-// ═══════════════════════════════════════════════════════
+// 6. HERO (BANNER ROTATIVO NO TOPO)
 let heroItems=[], heroIdx=0, heroTimer;
 async function loadHero(){
   const d = await api('/trending/movie/week',{region:'BR'});
@@ -399,15 +398,11 @@ function renderHeroContent(i){
     </div>`;
 }
 
-// ═══════════════════════════════════════════════════════
-// CARROSSEL
-// ═══════════════════════════════════════════════════════
+// 7. CARROSSÉIS DE FILMES E SÉRIES
 function makeCarousel(sec, items, type){
   const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
   wrap.innerHTML=`
-    <div class="section-header">
-      <span class="section-title">${sec.title}</span>
-    </div>
+    <div class="section-header"><span class="section-title">${sec.title}</span></div>
     <div class="carousel-wrap">
       <button class="carousel-btn prev" onclick="scrollCar('${sec.id}',-1)"><i class="fas fa-chevron-left"></i></button>
       <div class="carousel" id="car-${sec.id}"></div>
@@ -422,21 +417,19 @@ function makeCarousel(sec, items, type){
     const poster=m.poster_path?`${IMG}/w500${m.poster_path}`:'';
     const favs=getFavs();
     const isFav=!!favs[m.id];
-    const cont=getContinue();
-    const contData=cont[m.id];
-    const pct=contData?60:0; 
+    const contData=getContinue()[m.id];
     const card=document.createElement('div');
     card.className='card'; card.title=name;
     card.onclick=()=>openDetails(m.id,itemType);
     card.innerHTML=`
       ${poster?`<img src="${poster}" alt="${name}" loading="lazy" onerror="this.style.display='none'">`:''}
       ${itemType==='tv'?'<div class="card-badge">SÉRIE</div>':''}
-      ${contData?`<div class="card-continue" style="width:${pct}%"></div>`:''}
+      ${contData?`<div class="card-continue" style="width:60%"></div>`:''}
       <div class="card-overlay">
         <div class="card-title">${name}</div>
         <div class="card-meta">${rating?'⭐ '+rating:''} ${year}</div>
         <div class="card-actions">
-          <div class="card-btn" onclick="e=>{e.stopPropagation();openDetails(${m.id},'${itemType}')}" title="Assistir"><i class="fas fa-play"></i></div>
+          <div class="card-btn" onclick="e=>{e.stopPropagation();openDetails(${m.id},'${itemType}')}"><i class="fas fa-play"></i></div>
           <div class="card-btn fav ${isFav?'fav-on':''}" data-id="${m.id}" title="${isFav?'Remover':'Favoritar'}"
             onclick="event.stopPropagation();toggleFav(${m.id},'${itemType}','${name.replace(/'/g,"\\'")}','${poster}')">
             <i class="fas fa-heart"></i>
@@ -457,23 +450,16 @@ async function loadSection(sec){
   const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
   wrap.innerHTML=`
     <div class="section-header"><span class="section-title">${sec.title}</span></div>
-    <div class="carousel-wrap">
-      <div class="carousel" id="car-${sec.id}">
-        ${Array(8).fill('<div class="skel"></div>').join('')}
-      </div>
-    </div>`;
+    <div class="carousel-wrap"><div class="carousel" id="car-${sec.id}">${Array(8).fill('<div class="skel"></div>').join('')}</div></div>`;
   document.getElementById('sections-container').appendChild(wrap);
   try{
     const d=await api(sec.endpoint,{...sec.params,page:1});
     const items=(d.results||[]).filter(m=>m.poster_path).slice(0,20);
-    const el=makeCarousel(sec,items,sec.type);
-    wrap.replaceWith(el);
+    wrap.replaceWith(makeCarousel(sec,items,sec.type));
   }catch(e){ wrap.remove(); }
 }
 
-// ═══════════════════════════════════════════════════════
-// NAVEGAÇÃO ENTRE CATEGORIAS
-// ═══════════════════════════════════════════════════════
+// 8. FUNÇÕES DE NAVEGAÇÃO E MENUS
 function clearPage(hideHero, eventElement) {
   clearTimeout(fallbackTimer);
   document.getElementById('player-frame').src='';
@@ -490,11 +476,8 @@ function clearPage(hideHero, eventElement) {
 }
 
 async function goHome(e){
-  // Se clicou no botão inicio ou na logo
   const el = e ? e.currentTarget : document.querySelector('.nav-btn[onclick="goHome(event)"]');
   clearPage(false, el);
-  
-  // Recarrega as seções de destaque da tela principal
   for(const sec of SECTIONS_HOME){
     loadSection(sec);
     await new Promise(r=>setTimeout(r,120));
@@ -505,7 +488,6 @@ async function showSection(catId, e){
   clearPage(true, e.currentTarget);
   const categories = SECTIONS_CATS[catId];
   if(!categories) return;
-
   for(const sec of categories){
     loadSection(sec);
     await new Promise(r=>setTimeout(r,150));
@@ -520,8 +502,7 @@ function showFav(e){
     return;
   }
   const items=favs.map(f=>({id:f.id,title:f.name,poster_path:null,_poster:f.poster,media_type:f.type}));
-  const sec=makeCarousel({id:'fav',title:'❤️ Meus Favoritos'},items.map(i=>({...i,poster_path:i._poster?.replace(`${IMG}/w500`,'')||null})),'movie');
-  document.getElementById('sections-container').appendChild(sec);
+  document.getElementById('sections-container').appendChild(makeCarousel({id:'fav',title:'❤️ Meus Favoritos'},items.map(i=>({...i,poster_path:i._poster?.replace(`${IMG}/w500`,'')||null})),'movie'));
 }
 
 function showContinue(e){
@@ -532,13 +513,42 @@ function showContinue(e){
     return;
   }
   const items=cont.map(f=>({id:f.id,title:f.name,poster_path:f.poster?.replace(`${IMG}/w500`,'')||null,media_type:f.type}));
-  const sec=makeCarousel({id:'cont',title:'▶️ Continuar Assistindo'},items,'movie');
-  document.getElementById('sections-container').appendChild(sec);
+  document.getElementById('sections-container').appendChild(makeCarousel({id:'cont',title:'▶️ Continuar Assistindo'},items,'movie'));
 }
 
-// ═══════════════════════════════════════════════════════
-// PLAYER E SERVIDORES
-// ═══════════════════════════════════════════════════════
+// 9. RECOMENDAÇÕES (Nova Função)
+async function loadRecommendations(id, type) {
+  const container = document.getElementById('recommendations-section');
+  const carousel = document.getElementById('recommendations-carousel');
+  carousel.innerHTML = '<div style="color:#555;padding:10px;">Buscando recomendações...</div>';
+  container.style.display = 'block';
+
+  try {
+    const d = await api(`/${type}/${id}/recommendations`);
+    const items = (d.results || []).filter(m => m.poster_path).slice(0, 15);
+    
+    if (items.length === 0) {
+      container.style.display = 'none';
+      return;
+    }
+
+    carousel.innerHTML = '';
+    items.forEach(m => {
+      const name = m.title || m.name || '';
+      const poster = `${IMG}/w500${m.poster_path}`;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.title = name;
+      card.onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); openDetails(m.id, type); };
+      card.innerHTML = `<img src="${poster}" alt="${name}" loading="lazy"><div class="card-overlay"><div class="card-title">${name}</div></div>`;
+      carousel.appendChild(card);
+    });
+  } catch (e) {
+    container.style.display = 'none';
+  }
+}
+
+// 10. O PLAYER E SERVIDORES
 let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
 
 function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
@@ -555,14 +565,10 @@ function buildServerBtns(){
 }
 
 function loadServer(i){
-  curSrvIdx=i;
-  clearTimeout(fallbackTimer);
+  curSrvIdx=i; clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
   document.querySelector('.player-loader').style.display='flex';
-  document.querySelectorAll('.srv-btn').forEach((b,j)=>{
-    b.classList.toggle('active',j===i);
-    b.classList.remove('trying');
-  });
+  document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
   document.getElementById('player-frame').src=getUrl(i);
   fallbackTimer=setTimeout(()=>{
     document.getElementById('fallback-msg').textContent=`⚠️ "${SERVERS[i].label}" pode estar com problemas. Tentar próximo?`;
@@ -571,11 +577,7 @@ function loadServer(i){
   if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
 }
 
-function nextServer(){
-  const next=(curSrvIdx+1)%SERVERS.length;
-  toast(`Trocando para ${SERVERS[next].label}...`);
-  loadServer(next);
-}
+function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando para ${SERVERS[next].label}...`); loadServer(next); }
 
 function onFrameLoad(){
   document.querySelector('.player-loader').style.display='none';
@@ -587,18 +589,12 @@ function onFrameLoad(){
   },8000);
 }
 
-// ═══════════════════════════════════════════════════════
-// TEMPORADAS E EPISÓDIOS
-// ═══════════════════════════════════════════════════════
+// 11. SÉRIES: TEMPORADAS E EPISÓDIOS
 async function loadSeasons(id, numSeasons){
-  const sec=document.getElementById('seasons-section');
-  sec.style.display='block';
-  const tabs=document.getElementById('season-tabs');
-  tabs.innerHTML='';
+  const sec=document.getElementById('seasons-section'); sec.style.display='block';
+  const tabs=document.getElementById('season-tabs'); tabs.innerHTML='';
   for(let s=1;s<=Math.min(numSeasons,15);s++){
-    const b=document.createElement('button');
-    b.className='season-tab'+(s===1?' active':'');
-    b.textContent=`Temporada ${s}`;
+    const b=document.createElement('button'); b.className='season-tab'+(s===1?' active':''); b.textContent=`Temporada ${s}`;
     b.onclick=()=>{ document.querySelectorAll('.season-tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); curSeason=s; loadEpisodes(id,s); };
     tabs.appendChild(b);
   }
@@ -610,17 +606,13 @@ async function loadEpisodes(id,season){
   grid.innerHTML='<div style="color:#555;padding:10px;font-size:13px">Carregando episódios...</div>';
   try{
     const d=await api(`/tv/${id}/season/${season}`);
-    const eps=d.episodes||[];
     grid.innerHTML='';
-    eps.forEach(ep=>{
+    (d.episodes||[]).forEach(ep=>{
       const card=document.createElement('div');
       card.className='episode-card'+(ep.episode_number===curEp&&season===curSeason?' active':'');
       const still=ep.still_path?`${IMG}/w300${ep.still_path}`:'';
       card.innerHTML=`
-        <div class="ep-thumb">
-          ${still?`<img src="${still}" alt="">`:' '}
-          <div class="play-over"><i class="fas fa-play" style="color:#fff;font-size:18px"></i></div>
-        </div>
+        <div class="ep-thumb">${still?`<img src="${still}" alt="">`:' '}<div class="play-over"><i class="fas fa-play" style="color:#fff;font-size:18px"></i></div></div>
         <div class="ep-info">
           <div class="ep-num">Ep. ${ep.episode_number} ${ep.runtime?'· '+ep.runtime+'min':''}</div>
           <div class="ep-title">${ep.name||'Episódio '+ep.episode_number}</div>
@@ -629,9 +621,7 @@ async function loadEpisodes(id,season){
       card.onclick=()=>{
         curSeason=season; curEp=ep.episode_number;
         document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
-        card.classList.add('active');
-        loadServer(curSrvIdx);
-        buildServerBtns();
+        card.classList.add('active'); loadServer(curSrvIdx); buildServerBtns();
         toast(`▶ T${season} E${ep.episode_number}: ${ep.name}`);
       };
       grid.appendChild(card);
@@ -639,65 +629,50 @@ async function loadEpisodes(id,season){
   }catch(e){ grid.innerHTML='<div class="empty-row">Erro ao carregar episódios.</div>'; }
 }
 
-// ═══════════════════════════════════════════════════════
-// DETALHES
-// ═══════════════════════════════════════════════════════
+// 12. ABERTURA DE DETALHES GERAL
 async function openDetails(id,type){
   window.location.hash=`#${type}/${id}`;
-  document.getElementById('page-home').style.display='none';
-  document.getElementById('page-details').style.display='block';
-  window.scrollTo(0,0);
-  document.querySelector('.player-loader').style.display='flex';
-  document.getElementById('player-frame').src='';
-  document.getElementById('seasons-section').style.display='none';
-  document.getElementById('fallback-bar').classList.remove('show');
+  document.getElementById('page-home').style.display='none'; document.getElementById('page-details').style.display='block'; window.scrollTo(0,0);
+  document.querySelector('.player-loader').style.display='flex'; document.getElementById('player-frame').src='';
+  document.getElementById('seasons-section').style.display='none'; document.getElementById('fallback-bar').classList.remove('show');
   clearTimeout(fallbackTimer);
-
   curId=id; curType=type; curSeason=1; curEp=1; curSrvIdx=0;
 
   try{
     const m=await api(`/${type}/${id}`,{append_to_response:'external_ids,videos,credits'});
-    const name=m.title||m.name;
-    const year=(m.release_date||m.first_air_date||'').split('-')[0];
+    const name=m.title||m.name; const year=(m.release_date||m.first_air_date||'').split('-')[0];
     const rating=m.vote_average?m.vote_average.toFixed(1):'N/A';
     const runtime=m.runtime||(m.episode_run_time&&m.episode_run_time[0]);
     const genres=(m.genres||[]).map(g=>g.name);
-    const favs=getFavs();
-
-    if(m.backdrop_path){
-      document.getElementById('det-backdrop').style.backgroundImage=`url('${IMG}/w1280${m.backdrop_path}')`;
-    }
+    
+    if(m.backdrop_path) document.getElementById('det-backdrop').style.backgroundImage=`url('${IMG}/w1280${m.backdrop_path}')`;
     document.getElementById('det-poster').src=m.poster_path?`${IMG}/w500${m.poster_path}`:'';
     document.getElementById('det-title').textContent=name;
     document.getElementById('det-tags').innerHTML=`
-      <span class="det-tag green">⭐ ${rating}</span>
-      <span class="det-tag">${year}</span>
+      <span class="det-tag green">⭐ ${rating}</span><span class="det-tag">${year}</span>
       ${runtime?`<span class="det-tag">${runtime} min</span>`:''}
       <span class="det-tag">${type==='tv'?'SÉRIE':'FILME'}</span>
       ${genres.slice(0,3).map(g=>`<span class="det-tag red">${g}</span>`).join('')}
     `;
     document.getElementById('det-synopsis').textContent=m.overview||'Sinopse não disponível.';
-
+    
     const trailer=(m.videos?.results||[]).find(v=>v.type==='Trailer'&&v.site==='YouTube');
     document.getElementById('det-btns').innerHTML=`
       <button class="btn-watch" onclick="loadServer(0)"><i class="fas fa-play"></i> Assistir</button>
       ${trailer?`<button class="btn-more" onclick="openTrailer('${trailer.key}')"><i class="fab fa-youtube"></i> Trailer</button>`:''}
       <button class="btn-more" onclick="toggleFav(${id},'${type}','${name.replace(/'/g,"\\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
-        <i class="fas fa-heart"></i> ${favs[id]?'Remover':'Favoritar'}
+        <i class="fas fa-heart"></i> ${getFavs()[id]?'Remover':'Favoritar'}
       </button>
     `;
 
-    buildServerBtns();
-    loadServer(0);
-
-    if(type==='tv' && m.number_of_seasons){
-      await loadSeasons(id, m.number_of_seasons);
-    }
+    buildServerBtns(); loadServer(0);
+    if(type==='tv' && m.number_of_seasons) await loadSeasons(id, m.number_of_seasons);
     saveContinue(id,type,name,m.poster_path?`${IMG}/w500${m.poster_path}`:'',curSeason,curEp);
+    
+    // Chama as recomendações adicionadas agora
+    await loadRecommendations(id, type);
 
-  }catch(err){
-    document.getElementById('det-title').textContent='Erro ao carregar.';
-  }
+  }catch(err){ document.getElementById('det-title').textContent='Erro ao carregar.'; }
 }
 
 function openTrailer(key){
@@ -706,61 +681,53 @@ function openTrailer(key){
 }
 
 function closeDetails() {
-    document.getElementById('page-details').style.display='none';
-    document.getElementById('page-home').style.display='block';
-    window.location.hash='';
-    document.getElementById('player-frame').src=''; 
+    document.getElementById('page-details').style.display='none'; document.getElementById('page-home').style.display='block';
+    window.location.hash=''; document.getElementById('player-frame').src=''; 
 }
 
-// ═══════════════════════════════════════════════════════
-// BUSCA
-// ═══════════════════════════════════════════════════════
+// 13. BUSCA
 function toggleSearch(){
-  const b=document.getElementById('searchbar');
-  b.classList.toggle('open');
+  const b=document.getElementById('searchbar'); b.classList.toggle('open');
   if(b.classList.contains('open')) document.getElementById('searchInput').focus();
 }
 
 async function doSearch(){
   const q=document.getElementById('searchInput').value.trim(); if(!q) return;
   document.getElementById('searchbar').classList.remove('open');
-  
-  clearPage(true, null); // Limpa a página e esconde o Hero
-  
+  clearPage(true, null);
   try{
-    const [mv,tv]=await Promise.all([
-      api('/search/movie',{query:q,region:'BR'}),
-      api('/search/tv',{query:q,region:'BR'}),
-    ]);
-    const all=[...(mv.results||[]).map(m=>({...m,media_type:'movie'})),
-               ...(tv.results||[]).map(m=>({...m,media_type:'tv'}))]
-              .filter(m=>m.poster_path)
-              .sort((a,b)=>b.popularity-a.popularity);
-    const fake={id:'search',title:`🔎 Resultados para "${q}"`,endpoint:'',params:{}};
-    const sec=makeCarousel(fake,all,'movie');
-    document.getElementById('sections-container').appendChild(sec);
+    const [mv,tv]=await Promise.all([ api('/search/movie',{query:q,region:'BR'}), api('/search/tv',{query:q,region:'BR'}) ]);
+    const all=[...(mv.results||[]).map(m=>({...m,media_type:'movie'})), ...(tv.results||[]).map(m=>({...m,media_type:'tv'}))]
+              .filter(m=>m.poster_path).sort((a,b)=>b.popularity-a.popularity);
+    document.getElementById('sections-container').appendChild(makeCarousel({id:'search',title:`🔎 Resultados para "${q}"`,endpoint:'',params:{}},all,'movie'));
   }catch(e){}
 }
 
-// ═══════════════════════════════════════════════════════
-// GERAIS
-// ═══════════════════════════════════════════════════════
+// 14. EVENTOS DE JANELA E SCROLL INTELIGENTE
 window.onhashchange=()=>{
-  const h=window.location.hash;
-  const m=h.match(/^#(movie|tv)\/(\d+)/);
+  const m=window.location.hash.match(/^#(movie|tv)\/(\d+)/);
   if(m) openDetails(parseInt(m[2]),m[1]);
   else{ document.getElementById('page-home').style.display='block'; document.getElementById('page-details').style.display='none'; }
 };
 
-window.onscroll=()=>{
-  document.getElementById('header').classList.toggle('solid',window.scrollY>50);
-};
+let lastScrollTop = 0;
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  header.classList.toggle('solid', scrollTop > 50);
+  
+  // Lógica do cabeçalho que se esconde (A Nova Função)
+  if (scrollTop > lastScrollTop && scrollTop > 100) {
+    header.style.transform = 'translateY(-100%)';
+  } else {
+    header.style.transform = 'translateY(0)';
+  }
+  lastScrollTop = Math.max(scrollTop, 0); 
+});
 
-// INIT
+// 15. START DO SITE
 (async()=>{
-  loadHero();
-  goHome(null);
-  window.onhashchange();
+  loadHero(); goHome(null); window.onhashchange();
 })();
 </script>
 </body>
