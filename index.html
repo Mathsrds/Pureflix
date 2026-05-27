@@ -237,7 +237,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
           </div>
           <iframe id="player-frame" allowfullscreen
             onload="onFrameLoad()"
-            allow="autoplay; fullscreen; picture-in-picture"></iframe>
+            allow="autoplay; fullscreen *; picture-in-picture; encrypted-media"></iframe>
         </div>
       </div>
 
@@ -266,7 +266,7 @@ const SERVERS = [
   { label:'VidSrc',         fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',      fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'VidSrc.cc 🇧🇷',  fn:(id,t,s,e)=>curImdbId?(t==='movie'?`https://vidsrc.cc/v2/embed/movie/${curImdbId}`:`https://vidsrc.cc/v2/embed/tv/${curImdbId}${s?'/'+s+'/'+e:''}`):`https://vidsrc.cc/v2/embed/movie/${id}` },
+  { label:'2Embed 🇧🇷',      fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
 ];
 
 // Seções do site
