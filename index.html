@@ -237,7 +237,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
             <div class="spinner"></div>
             <p>Carregando stream...</p>
           </div>
-          <iframe id="player-frame" allowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *; encrypted-media; gyroscope; accelerometer" referrerpolicy="no-referrer"></iframe>
+          <iframe id="player-frame" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
         </div>
       </div>
 
@@ -592,6 +592,8 @@ function clearPage(hideHero, eventElement) {
   window.location.hash='';
   document.getElementById('hero').style.display = hideHero ? 'none' : 'block';
   document.getElementById('sections-container').innerHTML='';
+  // Fecha a barra de busca sempre que mudar de seção
+  document.getElementById('searchbar').classList.remove('open');
 
   if(eventElement) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -765,6 +767,7 @@ async function loadEpisodes(id,season){
   try{
     const d=await api(`/tv/${id}/season/${season}`);
     grid.innerHTML='';
+    const _savedEp = (season===curSeason) ? curEp : null;
     (d.episodes||[]).forEach(ep=>{
       const card=document.createElement('div');
       card.className='episode-card'+(ep.episode_number===curEp&&season===curSeason?' active':'');
@@ -781,7 +784,14 @@ async function loadEpisodes(id,season){
         document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
         card.classList.add('active'); loadServer(curSrvIdx); buildServerBtns();
         toast(`▶ T${season} E${ep.episode_number}: ${ep.name}`);
+        // Salva temporada e episódio atual
+        const _sc=getContinue(); if(_sc[curId]){ _sc[curId].season=curSeason; _sc[curId].ep=curEp; store.set('pf_cont',_sc); }
       };
+      // Destaca episódio salvo ao carregar lista
+      if(_savedEp && ep.episode_number === _savedEp){
+        card.classList.add('active');
+        setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),300);
+      }
       grid.appendChild(card);
     });
   }catch(e){ grid.innerHTML='<div class="empty-row">Erro ao carregar episódios.</div>'; }
@@ -794,7 +804,11 @@ async function openDetails(id,type){
   document.querySelector('.player-loader').style.display='flex'; document.getElementById('player-frame').src='';
   document.getElementById('seasons-section').style.display='none'; document.getElementById('fallback-bar').classList.remove('show');
   clearTimeout(fallbackTimer);
-  curId=id; curType=type; curSeason=1; curEp=1; curSrvIdx=0;
+  curId=id; curType=type; curSrvIdx=0;
+  // Restaura temporada/episódio salvo
+  const _saved = getContinue()[id];
+  curSeason = (_saved && type==='tv' && _saved.season) ? _saved.season : 1;
+  curEp     = (_saved && type==='tv' && _saved.ep)     ? _saved.ep     : 1;
 
   try{
     const m=await api(`/${type}/${id}`,{append_to_response:'external_ids,videos,credits'});
@@ -824,7 +838,14 @@ async function openDetails(id,type){
     `;
 
     buildServerBtns(); loadServer(0);
-    if(type==='tv' && m.number_of_seasons) await loadSeasons(id, m.number_of_seasons);
+    if(type==='tv' && m.number_of_seasons){
+      await loadSeasons(id, m.number_of_seasons);
+      // Se foi restaurado da lista "Continuar", destaca o episódio e faz scroll
+      if(_saved && _saved.season && _saved.ep){
+        const activeCard = document.querySelector(`.ep-card.active`);
+        if(activeCard) activeCard.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }
     saveContinue(id,type,name,m.poster_path?`${IMG}/w500${m.poster_path}`:'',curSeason,curEp);
     
     // Chama as recomendações adicionadas agora
@@ -882,88 +903,6 @@ window.addEventListener('scroll', () => {
   }
   lastScrollTop = Math.max(scrollTop, 0); 
 });
-
-
-// ═══════════════════════════════════════════════════
-// BLOQUEADOR DE POPUPS / NOVAS ABAS
-// ═══════════════════════════════════════════════════
-(function(){
-  // Bloqueia window.open (popup clássico)
-  const _origOpen = window.open.bind(window);
-  window.open = function(url, target, features){
-    if(!url || url === '' || url === 'about:blank') return null;
-    console.log('[AdBlock] popup bloqueado:', url);
-    return null;
-  };
-
-  // Bloqueia qualquer link <a target="_blank"> que venha de dentro de iframes
-  // interceptando clicks na página pai
-  function isSameOrigin(url){
-    if(!url || url.startsWith('#')) return true;
-    try{ return new URL(url, location.href).origin === location.origin; }
-    catch{ return false; }
-  }
-
-  document.addEventListener('click', function(e){
-    const a = e.target.closest('a[href]');
-    if(a && !isSameOrigin(a.href)){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      console.log('[AdBlock] link externo bloqueado:', a.href);
-    }
-  }, true);
-
-  // Bloqueia tentativa de redirect da página (location replace/assign)
-  ['assign','replace'].forEach(method=>{
-    const orig = location[method].bind(location);
-    try{
-      Object.defineProperty(location, method, {
-        configurable:true,
-        value: function(url){
-          if(isSameOrigin(url)){ orig(url); }
-          else{ console.log('[AdBlock] location.'+method+' bloqueado:', url); }
-        }
-      });
-    }catch(e){}
-  });
-
-  // Bloqueia beforeunload disparado por scripts de ads
-  let _safeLeave = false;
-  document.addEventListener('click', e=>{
-    const a = e.target.closest('a');
-    if(a && isSameOrigin(a.href)) _safeLeave = true;
-  }, false);
-
-  window.addEventListener('beforeunload', e=>{
-    if(!_safeLeave){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      e.returnValue = '';
-      setTimeout(()=>{ _safeLeave=false; }, 500);
-      return '';
-    }
-  }, true);
-
-  // Escudo mobile: no primeiro toque sobre o iframe, absorve o evento
-  // para evitar que o player abra aba ao simples toque
-  const frame = document.getElementById('player-frame');
-  if(frame){
-    const wrap = frame.parentElement;
-    if(wrap){
-      wrap.style.position = 'relative';
-      const shield = document.createElement('div');
-      shield.style.cssText = 'position:absolute;inset:0;z-index:5;cursor:pointer;';
-      let clicks = 0;
-      shield.addEventListener('pointerdown', function(e){
-        clicks++;
-        if(clicks >= 2) shield.remove(); // remove após 2 toques para liberar controles
-      });
-      wrap.appendChild(shield);
-    }
-  }
-
-  console.log('[AdBlock] ✓ Bloqueador de anúncios ativo');
-})();
 
 // 15. START DO SITE
 (async()=>{
