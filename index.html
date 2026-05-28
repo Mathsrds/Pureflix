@@ -129,7 +129,8 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .srv-btn.trying{border-color:orange;color:orange;animation:pulse .8s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 .player-box{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;position:relative;}
-.player-box iframe{width:100%;height:100%;border:none;display:block;}
+.player-box iframe{width:100%;height:100%;border:none;display:block;pointer-events:none;}
+.player-box iframe.active{pointer-events:auto;}
 .player-loader{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
 .spinner{width:48px;height:48px;border:3px solid #222;border-top-color:var(--red);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -237,7 +238,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
             <div class="spinner"></div>
             <p>Carregando stream...</p>
           </div>
-          <iframe id="player-frame" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+          <iframe id="player-frame" allowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *; encrypted-media"></iframe>
         </div>
       </div>
 
@@ -903,6 +904,146 @@ window.addEventListener('scroll', () => {
   }
   lastScrollTop = Math.max(scrollTop, 0); 
 });
+
+
+// ══════════════════════════════════════════════════════════════
+// 16. BLOQUEADOR AGRESSIVO DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
+// ══════════════════════════════════════════════════════════════
+(function(){
+
+  // ── A. Salvar e restaurar estado ao voltar para a página ──
+  function saveState(){
+    try{
+      const state = {
+        hash: window.location.hash,
+        scroll: window.scrollY
+      };
+      sessionStorage.setItem('pf_state', JSON.stringify(state));
+    }catch(e){}
+  }
+
+  function restoreState(){
+    try{
+      const raw = sessionStorage.getItem('pf_state');
+      if(!raw) return;
+      const state = JSON.parse(raw);
+      if(state.hash && state.hash !== window.location.hash){
+        window.location.hash = state.hash;
+      }
+      if(state.scroll > 0){
+        setTimeout(()=>window.scrollTo(0, state.scroll), 300);
+      }
+    }catch(e){}
+  }
+
+  // Salva estado antes de sair / minimizar
+  window.addEventListener('pagehide', saveState);
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden) saveState();
+    else restoreState();
+  });
+
+  // Restaura ao voltar (bfcache)
+  window.addEventListener('pageshow', (e)=>{
+    if(e.persisted) restoreState();
+  });
+
+  // ── B. Bloqueia window.open (popup clássico) ──
+  window.open = function(){ return null; };
+
+  // ── C. Bloqueia links externos ──
+  function isSameOrigin(url){
+    if(!url || url === '' || url.startsWith('#') || url.startsWith('javascript')) return true;
+    try{ return new URL(url, location.href).origin === location.origin; }
+    catch{ return false; }
+  }
+
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a[href]');
+    if(a && !isSameOrigin(a.href)){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  }, true);
+
+  // ── D. Bloqueia beforeunload de scripts de anúncio ──
+  let _safeLeave = false;
+  document.addEventListener('click', e=>{
+    const a = e.target.closest('a');
+    if(a && isSameOrigin(a.href)) _safeLeave = true;
+  });
+  window.addEventListener('beforeunload', e=>{
+    if(!_safeLeave){
+      e.preventDefault();
+      e.returnValue = '';
+      setTimeout(()=>{ _safeLeave = false; }, 1000);
+      return '';
+    }
+  }, true);
+
+  // ── E. Escudo agressivo no iframe (sua ideia) ──
+  function installShield(){
+    const frame = document.getElementById('player-frame');
+    if(!frame) return;
+
+    // Remove escudo antigo se existir
+    const old = document.getElementById('ad-shield');
+    if(old) old.remove();
+
+    const wrapper = frame.parentElement;
+    wrapper.style.position = 'relative';
+
+    const shield = document.createElement('div');
+    shield.id = 'ad-shield';
+    shield.style.cssText = [
+      'position:absolute','inset:0','z-index:100',
+      'cursor:pointer','background:transparent',
+      'touch-action:none'
+    ].join(';');
+
+    // Mata qualquer evento de toque/clique antes de chegar ao iframe
+    function killEvent(e){
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      return false;
+    }
+
+    shield.addEventListener('touchstart',  killEvent, {capture:true, passive:false});
+    shield.addEventListener('touchend',    killEvent, {capture:true, passive:false});
+    shield.addEventListener('touchmove',   killEvent, {capture:true, passive:false});
+    shield.addEventListener('pointerdown', killEvent, {capture:true, passive:false});
+
+    // No clique do usuário: remove escudo, ativa pointer-events no iframe
+    shield.addEventListener('click', function(e){
+      killEvent(e);
+      shield.remove();
+      frame.classList.add('active'); // pointer-events:auto via CSS
+      // Tenta mandar play via postMessage (funciona em alguns players)
+      try{ frame.contentWindow.postMessage({action:'play'}, '*'); }catch(_){}
+      try{ frame.contentWindow.postMessage('play', '*'); }catch(_){}
+    }, {capture:true});
+
+    wrapper.appendChild(shield);
+  }
+
+  // Reinstala o escudo sempre que o src do iframe mudar
+  const frame = document.getElementById('player-frame');
+  if(frame){
+    const _origSrcDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
+    let _lastSrc = '';
+    const srcObserver = new MutationObserver(()=>{
+      if(frame.src !== _lastSrc && frame.src && frame.src !== window.location.href){
+        _lastSrc = frame.src;
+        frame.classList.remove('active'); // desativa pointer-events
+        setTimeout(installShield, 100);   // instala novo escudo
+      }
+    });
+    srcObserver.observe(frame, {attributes:true, attributeFilter:['src']});
+  }
+
+  console.log('[PureFlix] Proteção anti-anúncio ativa ✓');
+})();
 
 // 15. START DO SITE
 (async()=>{
