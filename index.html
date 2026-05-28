@@ -763,8 +763,8 @@ function injectIframe(box, url){
   frame.id = 'player-frame';
   frame.allowFullscreen = true;
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
-  // sandbox permissivo: permite scripts e popups bloqueados pelo nosso JS
-  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-top-navigation-by-user-activation');
+  // SEM sandbox — players como WarezCDN detetam e bloqueiam o vídeo.
+  // O bloqueio de popups é feito pelo window.open=null no nosso AdBlock.
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
