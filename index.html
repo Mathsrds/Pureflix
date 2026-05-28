@@ -105,10 +105,10 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 /* ═══════════════════════════════════════════════════════
    4. PÁGINA DE DETALHES E PLAYER
    ═══════════════════════════════════════════════════════ */
-#page-details{position:fixed;inset:0;background:var(--bg);z-index:800;display:none;overflow-y:auto;padding-top:var(--header-h);}
-.det-backdrop{width:100%;height:420px;position:relative;background:center/cover no-repeat;flex-shrink:0;}
+#page-details{position:fixed;inset:0;background:var(--bg);z-index:950;display:none;overflow-y:auto;padding-top:0;}
+.det-backdrop{width:100%;height:calc(420px + var(--header-h));position:relative;background:center/cover no-repeat;flex-shrink:0;}
 .det-backdrop::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.3) 55%,transparent 85%);}
-.det-body{max-width:1100px;margin:0 auto;padding:0 4% 60px;display:flex;gap:36px;margin-top:-140px;position:relative;z-index:5;}
+.det-body{max-width:1100px;margin:0 auto;padding:0 4% 60px;display:flex;gap:36px;margin-top:-160px;position:relative;z-index:5;}
 .det-poster{width:210px;flex-shrink:0;border-radius:8px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.7);}
 .det-poster img{width:100%;display:block;}
 .det-info{flex:1;min-width:0;}
@@ -122,10 +122,11 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 
 /* Player e Servidores */
 .player-section{margin-bottom:20px;}
-.player-label{font-size:13px;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.server-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
-.srv-btn{background:var(--bg3);border:1px solid #2a2a2a;color:#ccc;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Barlow',sans-serif;}
-.srv-btn:hover{border-color:#555;color:#fff;}
+.player-label{font-size:11px;color:var(--gray);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+.server-grid{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px;margin-bottom:14px;flex-wrap:nowrap;}
+.server-grid::-webkit-scrollbar{display:none;}
+.srv-btn{background:transparent;border:1px solid #444;color:#ccc;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;font-family:'Barlow',sans-serif;white-space:nowrap;flex-shrink:0;}
+.srv-btn:hover:not(.active){border-color:#fff;color:#fff;}
 .srv-btn.active{background:var(--red);border-color:var(--red);color:#fff;}
 .srv-btn.trying{border-color:orange;color:orange;animation:pulse .8s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -177,7 +178,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .ver-mais-btn:disabled{opacity:.4;cursor:default;}
 #toast{position:fixed;bottom:30px;right:30px;background:#222;border:1px solid #333;border-radius:8px;padding:12px 20px;font-size:14px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
 #toast.show{opacity:1;transform:translateY(0);}
-.btn-close{position:fixed;top:16px;right:4%;width:38px;height:38px;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;z-index:810;transition:background .2s;}
+.btn-close{position:fixed;top:16px;right:4%;width:38px;height:38px;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;z-index:960;transition:background .2s;}
 .btn-close:hover{background:var(--red);}
 
 /* Mobile Adapts */
@@ -239,8 +240,8 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   .det-synopsis{font-size:13px;}
   .det-btns{justify-content:center;}
   .player-section{margin-top:20px;}
-  .server-grid{gap:6px;}
-  .srv-btn{font-size:11px;padding:6px 12px;}
+  .server-grid{gap:6px;flex-wrap:nowrap;}
+  .srv-btn{font-size:12px;padding:7px 14px;border-radius:20px;}
 
   /* Episódios */
   .episode-card{padding:10px;}
@@ -333,14 +334,19 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
       <div class="det-btns" id="det-btns"></div>
 
       <div class="player-section">
-        <p class="player-label"><i class="fas fa-server"></i> Servidor de streaming:</p>
-        <div class="server-grid" id="server-grid"></div>
-        <div class="fallback-bar" id="fallback-bar">
+        <div class="player-box" id="player-box">
+          <!-- iframe e fake-play são injetados dinamicamente pelo JS -->
+        </div>
+        <div class="fallback-bar" id="fallback-bar" style="margin-top:10px;">
           <span id="fallback-msg">⚠️ Tela preta detectada. Trocando servidor...</span>
           <button onclick="nextServer()">Trocar agora</button>
         </div>
-        <div class="player-box" id="player-box">
-          <!-- iframe e fake-play são injetados dinamicamente pelo JS -->
+        <div style="margin-top:16px;">
+          <p class="player-label"><i class="fas fa-film"></i> Fontes de Vídeo</p>
+          <div class="server-grid" id="server-grid"></div>
+          <p style="color:var(--gray);font-size:12px;margin-top:8px;line-height:1.5;">
+            Se o vídeo não carregar ou estiver sem dublagem, tente outra fonte acima. As fontes com 🇧🇷 têm opção de dublagem em português.
+          </p>
         </div>
       </div>
 
@@ -374,8 +380,11 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 const SERVERS = [
   { label:'VidSrc',         fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',      fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'VidSrc Pro',     fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
   { label:'2Embed 🇧🇷',      fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
+  { label:'MultiEmbed',     fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
+  { label:'EmbedFlix',      fn:(id,t,s,e)=>t==='movie'?`https://embedflix.eu/embed/movie/${id}`:`https://embedflix.eu/embed/tv/${id}/${s||1}/${e||1}` },
 ];
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
