@@ -129,12 +129,19 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .srv-btn.trying{border-color:orange;color:orange;animation:pulse .8s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 .player-box{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;position:relative;}
-.player-box iframe{width:100%;height:100%;border:none;display:block;pointer-events:none;}
-.player-box iframe.active{pointer-events:auto;}
-.player-loader{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.player-box iframe{width:100%;height:100%;border:none;display:block;position:absolute;inset:0;}
+.player-loader{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:2;}
 .spinner{width:48px;height:48px;border:3px solid #222;border-top-color:var(--red);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .player-loader p{font-size:13px;color:#555;}
+/* Botão de play falso */
+#fake-play-btn{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#000;cursor:pointer;transition:background .2s;}
+#fake-play-btn:hover,#fake-play-btn:active{background:#111;}
+#fake-play-btn .play-circle{width:72px;height:72px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(229,9,20,.5);transition:transform .15s;}
+#fake-play-btn:hover .play-circle,#fake-play-btn:active .play-circle{transform:scale(1.1);}
+#fake-play-btn .play-circle i{font-size:28px;color:#fff;margin-left:4px;}
+#fake-play-btn .play-label{font-size:13px;color:#aaa;font-weight:600;letter-spacing:.5px;}
+#fake-play-btn .play-title{font-size:15px;color:#fff;font-weight:700;text-align:center;padding:0 20px;max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .fallback-bar{margin-top:10px;display:none;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);border-radius:6px;padding:10px 16px;font-size:13px;color:orange;align-items:center;justify-content:space-between;gap:10px;}
 .fallback-bar.show{display:flex;}
 .fallback-bar button{background:orange;color:#000;border:none;border-radius:4px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;}
@@ -233,12 +240,8 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
           <span id="fallback-msg">⚠️ Tela preta detectada. Trocando servidor...</span>
           <button onclick="nextServer()">Trocar agora</button>
         </div>
-        <div class="player-box">
-          <div class="player-loader" id="player-loader">
-            <div class="spinner"></div>
-            <p>Carregando stream...</p>
-          </div>
-          <iframe id="player-frame" allowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *; encrypted-media"></iframe>
+        <div class="player-box" id="player-box">
+          <!-- iframe e fake-play são injetados dinamicamente pelo JS -->
         </div>
       </div>
 
@@ -587,7 +590,7 @@ async function loadMore(secId){
 // 8. FUNÇÕES DE NAVEGAÇÃO E MENUS
 function clearPage(hideHero, eventElement) {
   clearTimeout(fallbackTimer);
-  document.getElementById('player-frame').src='';
+  document.getElementById('player-box').innerHTML='';
   document.getElementById('page-home').style.display='block';
   document.getElementById('page-details').style.display='none';
   window.location.hash='';
@@ -722,16 +725,64 @@ function buildServerBtns(){
   });
 }
 
+function buildPlayerBox(url, srvLabel, autoplay){
+  const box = document.getElementById('player-box');
+  box.innerHTML = ''; // limpa iframe anterior
+
+  if(!autoplay){
+    // Mostra botão de play falso — iframe ainda não existe
+    const btn = document.createElement('div');
+    btn.id = 'fake-play-btn';
+    // Pega título do filme/série para exibir
+    const titleEl = document.getElementById('det-title');
+    const titleText = titleEl ? titleEl.textContent : '';
+    btn.innerHTML = `
+      <div class="play-title">${titleText}</div>
+      <div class="play-circle"><i class="fas fa-play"></i></div>
+      <div class="play-label">${srvLabel} — Toque para assistir</div>
+    `;
+    btn.addEventListener('click', function(){
+      btn.remove();
+      injectIframe(box, url);
+    });
+    box.appendChild(btn);
+  } else {
+    injectIframe(box, url);
+  }
+}
+
+function injectIframe(box, url){
+  // Loader
+  const loader = document.createElement('div');
+  loader.className = 'player-loader'; loader.id = 'player-loader';
+  loader.innerHTML = '<div class="spinner"></div><p>Carregando stream...</p>';
+  box.appendChild(loader);
+
+  // iframe criado após gesto do usuário (permite autoplay no mobile)
+  const frame = document.createElement('iframe');
+  frame.id = 'player-frame';
+  frame.allowFullscreen = true;
+  frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
+  // sandbox permissivo: permite scripts e popups bloqueados pelo nosso JS
+  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-top-navigation-by-user-activation');
+  frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
+  frame.addEventListener('load', onFrameLoad);
+  box.appendChild(frame);
+  frame.src = url; // src DEPOIS de appendar — gesto já aconteceu
+  clearTimeout(fallbackTimer);
+  fallbackTimer=setTimeout(()=>{
+    document.getElementById('fallback-msg').textContent=`⚠️ "${SERVERS[curSrvIdx].label}" pode estar com problemas. Tentar próximo?`;
+    document.getElementById('fallback-bar').classList.add('show');
+  },12000);
+}
+
 function loadServer(i){
   curSrvIdx=i; clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
-  document.querySelector('.player-loader').style.display='flex';
   document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
-  document.getElementById('player-frame').src=getUrl(i);
-  fallbackTimer=setTimeout(()=>{
-    document.getElementById('fallback-msg').textContent=`⚠️ "${SERVERS[i].label}" pode estar com problemas. Tentar próximo?`;
-    document.getElementById('fallback-bar').classList.add('show');
-  },12000);
+  // No mobile mostra fake-play; no desktop carrega direto
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  buildPlayerBox(getUrl(i), SERVERS[i].label, !isMobile);
   if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
 }
 
@@ -739,8 +790,9 @@ function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando 
 
 function onFrameLoad(){
   const frame=document.getElementById('player-frame');
-  if(!frame.src||frame.src===window.location.href) return;
-  document.querySelector('.player-loader').style.display='none';
+  if(!frame||!frame.src||frame.src===window.location.href) return;
+  const loader=document.getElementById('player-loader');
+  if(loader) loader.style.display='none';
   clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
   fallbackTimer=setTimeout(()=>{
@@ -748,7 +800,6 @@ function onFrameLoad(){
     document.getElementById('fallback-bar').classList.add('show');
   },8000);
 }
-document.getElementById('player-frame').addEventListener('load', onFrameLoad);
 
 // 11. SÉRIES: TEMPORADAS E EPISÓDIOS
 async function loadSeasons(id, numSeasons){
@@ -802,7 +853,7 @@ async function loadEpisodes(id,season){
 async function openDetails(id,type){
   window.location.hash=`#${type}/${id}`;
   document.getElementById('page-home').style.display='none'; document.getElementById('page-details').style.display='block'; window.scrollTo(0,0);
-  document.querySelector('.player-loader').style.display='flex'; document.getElementById('player-frame').src='';
+  document.getElementById('player-box').innerHTML='';
   document.getElementById('seasons-section').style.display='none'; document.getElementById('fallback-bar').classList.remove('show');
   clearTimeout(fallbackTimer);
   curId=id; curType=type; curSrvIdx=0;
@@ -856,13 +907,13 @@ async function openDetails(id,type){
 }
 
 function openTrailer(key){
-  document.querySelector('.player-loader').style.display='none';
-  document.getElementById('player-frame').src=`https://www.youtube.com/embed/${key}?autoplay=1`;
+  const box = document.getElementById('player-box');
+  injectIframe(box, `https://www.youtube.com/embed/${key}?autoplay=1`);
 }
 
 function closeDetails() {
     document.getElementById('page-details').style.display='none'; document.getElementById('page-home').style.display='block';
-    window.location.hash=''; document.getElementById('player-frame').src=''; 
+    window.location.hash=''; document.getElementById('player-box').innerHTML=''; 
 }
 
 // 13. BUSCA
@@ -981,66 +1032,7 @@ window.addEventListener('scroll', () => {
     }
   }, true);
 
-  // ── E. Escudo agressivo no iframe (sua ideia) ──
-  function installShield(){
-    const frame = document.getElementById('player-frame');
-    if(!frame) return;
-
-    // Remove escudo antigo se existir
-    const old = document.getElementById('ad-shield');
-    if(old) old.remove();
-
-    const wrapper = frame.parentElement;
-    wrapper.style.position = 'relative';
-
-    const shield = document.createElement('div');
-    shield.id = 'ad-shield';
-    shield.style.cssText = [
-      'position:absolute','inset:0','z-index:100',
-      'cursor:pointer','background:transparent',
-      'touch-action:none'
-    ].join(';');
-
-    // Mata qualquer evento de toque/clique antes de chegar ao iframe
-    function killEvent(e){
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      return false;
-    }
-
-    shield.addEventListener('touchstart',  killEvent, {capture:true, passive:false});
-    shield.addEventListener('touchend',    killEvent, {capture:true, passive:false});
-    shield.addEventListener('touchmove',   killEvent, {capture:true, passive:false});
-    shield.addEventListener('pointerdown', killEvent, {capture:true, passive:false});
-
-    // No clique do usuário: remove escudo, ativa pointer-events no iframe
-    shield.addEventListener('click', function(e){
-      killEvent(e);
-      shield.remove();
-      frame.classList.add('active'); // pointer-events:auto via CSS
-      // Tenta mandar play via postMessage (funciona em alguns players)
-      try{ frame.contentWindow.postMessage({action:'play'}, '*'); }catch(_){}
-      try{ frame.contentWindow.postMessage('play', '*'); }catch(_){}
-    }, {capture:true});
-
-    wrapper.appendChild(shield);
-  }
-
-  // Reinstala o escudo sempre que o src do iframe mudar
-  const frame = document.getElementById('player-frame');
-  if(frame){
-    const _origSrcDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
-    let _lastSrc = '';
-    const srcObserver = new MutationObserver(()=>{
-      if(frame.src !== _lastSrc && frame.src && frame.src !== window.location.href){
-        _lastSrc = frame.src;
-        frame.classList.remove('active'); // desativa pointer-events
-        setTimeout(installShield, 100);   // instala novo escudo
-      }
-    });
-    srcObserver.observe(frame, {attributes:true, attributeFilter:['src']});
-  }
+  // Proteção de anúncios via fake-play-btn (installShield removido)
 
   console.log('[PureFlix] Proteção anti-anúncio ativa ✓');
 })();
