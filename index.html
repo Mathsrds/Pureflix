@@ -384,7 +384,7 @@ const SERVERS = [
   { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
   { label:'2Embed 🇧🇷',      fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
   { label:'MultiEmbed',     fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
-  { label:'EmbedFlix',      fn:(id,t,s,e)=>t==='movie'?`https://embedflix.eu/embed/movie/${id}`:`https://embedflix.eu/embed/tv/${id}/${s||1}/${e||1}` },
+  { label:'AutoEmbed',      fn:(id,t,s,e)=>t==='movie'?`https://autoembed.co/movie/tmdb/${id}`:`https://autoembed.co/tv/tmdb/${id}-${s||1}-${e||1}` },
 ];
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
@@ -1138,32 +1138,35 @@ window.addEventListener('scroll', () => {
   // ── B. Bloqueia window.open (popup clássico) ──
   window.open = function(){ return null; };
 
-  // ── C. Bloqueia links externos ──
+  // ── C. Bloqueia links externos — apenas fora de iframes ──
   function isSameOrigin(url){
     if(!url || url === '' || url.startsWith('#') || url.startsWith('javascript')) return true;
     try{ return new URL(url, location.href).origin === location.origin; }
     catch{ return false; }
   }
 
+  // Só intercepta cliques em <a> que estejam no DOM principal (não dentro de iframe)
   document.addEventListener('click', function(e){
     const a = e.target.closest('a[href]');
-    if(a && !isSameOrigin(a.href)){
+    if(!a) return;
+    // Se o link tem target="_blank" E é externo, bloqueia abertura de nova aba
+    if(!isSameOrigin(a.href) && (a.target === '_blank' || a.target === '_top')){
       e.preventDefault();
       e.stopImmediatePropagation();
     }
   }, true);
 
-  // ── D. Bloqueia beforeunload de scripts de anúncio ──
-  let _safeLeave = false;
-  document.addEventListener('click', e=>{
-    const a = e.target.closest('a');
-    if(a && isSameOrigin(a.href)) _safeLeave = true;
-  });
+  // ── D. Bloqueia beforeunload apenas quando não veio de ação do usuário ──
+  // Usa flag de tempo: se o beforeunload disparar < 500ms após qualquer clique,
+  // provavelmente foi o usuário. Caso contrário, é script de anúncio.
+  let _lastClick = 0;
+  document.addEventListener('click', ()=>{ _lastClick = Date.now(); }, true);
   window.addEventListener('beforeunload', e=>{
-    if(!_safeLeave){
+    const msSinceClick = Date.now() - _lastClick;
+    // Se nenhum clique nos últimos 2s, é anúncio tentando redirecionar
+    if(msSinceClick > 2000){
       e.preventDefault();
       e.returnValue = '';
-      setTimeout(()=>{ _safeLeave = false; }, 1000);
       return '';
     }
   }, true);
