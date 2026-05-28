@@ -694,7 +694,10 @@ function clearPage(hideHero, eventElement) {
   document.getElementById('page-details').style.display='none';
   window.location.hash='';
   document.getElementById('hero').style.display = hideHero ? 'none' : 'block';
-  document.getElementById('sections-container').innerHTML='';
+  const sc = document.getElementById('sections-container');
+  sc.innerHTML='';
+  // Espaçamento: quando hero está oculto, garante distância do header
+  sc.style.paddingTop = hideHero ? 'calc(var(--header-h) + 32px)' : '0';
   // Fecha a barra de busca sempre que mudar de seção
   document.getElementById('searchbar').classList.remove('open');
 
@@ -725,13 +728,38 @@ async function showSection(catId, e){
 
 function showFav(e){
   clearPage(true, e?.currentTarget||null);
-  const favs=Object.values(getFavs());
+  const sc = document.getElementById('sections-container');
+  const favs = Object.values(getFavs());
   if(!favs.length){
-    document.getElementById('sections-container').innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Você ainda não tem favoritos. ❤️</div></div>`;
+    sc.innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Você ainda não tem favoritos. ❤️</div></div>`;
     return;
   }
-  const items=favs.map(f=>({id:f.id,title:f.name,poster_path:null,_poster:f.poster,media_type:f.type}));
-  document.getElementById('sections-container').appendChild(makeCarousel({id:'fav',title:'❤️ Meus Favoritos'},items.map(i=>({...i,poster_path:i._poster?.replace(`${IMG}/w500`,'')||null})),'movie'));
+  const wrap = document.createElement('div');
+  wrap.className = 'section';
+  wrap.innerHTML = `<div class="section-header"><span class="section-title">❤️ Meus Favoritos</span><span style="color:var(--gray);font-size:13px;">${favs.length} título${favs.length>1?'s':''}</span></div>`;
+
+  // Grid responsivo — sem carrossel, expandido para baixo
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:flex;flex-wrap:wrap;gap:14px;';
+
+  favs.forEach(f => {
+    const poster = f.poster || '';
+    const card = document.createElement('div');
+    card.style.cssText = 'position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
+    card.onclick = () => openDetails(f.id, f.type);
+    card.innerHTML = `
+      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
+        ${poster ? `<img src="${poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
+                 : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>`}
+        <div style="position:absolute;top:6px;left:6px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px;">${f.type==='movie'?'FILME':'SÉRIE'}</div>
+      </div>
+      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  wrap.appendChild(grid);
+  sc.appendChild(wrap);
 }
 
 function removeContinue(id){
