@@ -455,21 +455,18 @@ const SECTIONS_CATS = {
   ],
   // ANIMES — with_genres SEMPRE com vírgula (AND), with_original_language='ja' em todos
   animes: [
-    // Genre 16 = Animation, with_original_language:'ja' = japonês
-    // Para TV, TMDB usa keywords para subgéneros de anime
-    // 210024=shounen 6075=seinen 17461=shojo 155534=isekai 315274=slice of life
-    { id:'a_pop',      title:'⛩️ Mais Populares',        endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20 },                                                        type:'tv' },
-    { id:'a_top',      title:'🏆 Mais Bem Avaliados',    endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'vote_average.desc', 'vote_count.gte':200 },                                                      type:'tv' },
-    { id:'a_acao',     title:'⚔️ Ação & Luta',           endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'210024|6075|9715', 'vote_count.gte':20 },                       type:'tv' },
-    { id:'a_romance',  title:'💕 Romance',               endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'17461|10283|155534', 'vote_count.gte':20 },                      type:'tv' },
-    { id:'a_fantasia', title:'🐉 Fantasia & Isekai',     endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'155534|10714|195394', 'vote_count.gte':20 },                     type:'tv' },
-    { id:'a_comedia',  title:'😂 Comédia',               endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'9717|315274', 'vote_count.gte':20 },                            type:'tv' },
-    { id:'a_scifi',    title:'🤖 Sci-Fi & Mecha',        endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'2651|9717|3141', 'vote_count.gte':20 },                         type:'tv' },
-    { id:'a_kids',     title:'🧒 Para Crianças',         endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'9717|190370|6889', 'vote_count.gte':10 },                       type:'tv' },
-    { id:'a_terror',   title:'👻 Terror & Horror',       endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'9716|251265|9672', 'vote_count.gte':20 },                       type:'tv' },
-    { id:'a_slife',    title:'🌸 Slice of Life',         endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'315274|186965', 'vote_count.gte':20 },                          type:'tv' },
-    { id:'a_sport',    title:'🏆 Esportes',              endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', with_keywords:'6075|9715|18018', 'vote_count.gte':20 },                        type:'tv' },
-    { id:'a_filme',    title:'🎬 Filmes de Anime',       endpoint:'/discover/movie', params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':30 },                                                         type:'movie' },
+    // Géneros TV TMDB: 16=Animação, 10759=Ação/Aventura, 10762=Kids
+    // 35=Comédia, 18=Drama, 10765=SciFi/Fantasy, 9648=Mistério
+    // SEM with_keywords — evita resultados contaminados
+    { id:'a_pop',      title:'⛩️ Mais Populares',     endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',    'vote_count.gte':20,  without_genres:'99,10764,10763' }, type:'tv' },
+    { id:'a_top',      title:'🏆 Mais Bem Avaliados', endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'vote_average.desc',  'vote_count.gte':150, without_genres:'99,10764,10763' }, type:'tv' },
+    { id:'a_acao',     title:'⚔️ Ação & Aventura',    endpoint:'/discover/tv',    params:{ with_genres:'16,10759', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
+    { id:'a_comedia',  title:'😂 Comédia',            endpoint:'/discover/tv',    params:{ with_genres:'16,35',    with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
+    { id:'a_drama',    title:'🎭 Drama',               endpoint:'/discover/tv',    params:{ with_genres:'16,18',    with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763,35,10759' }, type:'tv' },
+    { id:'a_fantasia', title:'🐉 Fantasia & Sci-Fi',  endpoint:'/discover/tv',    params:{ with_genres:'16,10765', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
+    { id:'a_misterio', title:'🔍 Mistério & Suspense',endpoint:'/discover/tv',    params:{ with_genres:'16,9648',  with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
+    { id:'a_kids',     title:'🧒 Para Crianças',      endpoint:'/discover/tv',    params:{ with_genres:'16,10762', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':10, without_genres:'99,10764,10763' }, type:'tv' },
+    { id:'a_filme',    title:'🎬 Filmes de Anime',    endpoint:'/discover/movie',  params:{ with_genres:'16',      with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':30, without_genres:'99' },             type:'movie' },
   ],
   // BRASIL — filmes, séries, novelas
   brasil: [
