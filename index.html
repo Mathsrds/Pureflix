@@ -455,18 +455,18 @@ const SECTIONS_CATS = {
   ],
   // ANIMES — with_genres SEMPRE com vírgula (AND), with_original_language='ja' em todos
   animes: [
-    // Géneros TV TMDB: 16=Animação, 10759=Ação/Aventura, 10762=Kids
-    // 35=Comédia, 18=Drama, 10765=SciFi/Fantasy, 9648=Mistério
-    // SEM with_keywords — evita resultados contaminados
-    { id:'a_pop',      title:'⛩️ Mais Populares',     endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',    'vote_count.gte':20,  without_genres:'99,10764,10763' }, type:'tv' },
-    { id:'a_top',      title:'🏆 Mais Bem Avaliados', endpoint:'/discover/tv',    params:{ with_genres:'16', with_original_language:'ja', sort_by:'vote_average.desc',  'vote_count.gte':150, without_genres:'99,10764,10763' }, type:'tv' },
-    { id:'a_acao',     title:'⚔️ Ação & Aventura',    endpoint:'/discover/tv',    params:{ with_genres:'16,10759', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
-    { id:'a_comedia',  title:'😂 Comédia',            endpoint:'/discover/tv',    params:{ with_genres:'16,35',    with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
-    { id:'a_drama',    title:'🎭 Drama',               endpoint:'/discover/tv',    params:{ with_genres:'16,18',    with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763,35,10759' }, type:'tv' },
-    { id:'a_fantasia', title:'🐉 Fantasia & Sci-Fi',  endpoint:'/discover/tv',    params:{ with_genres:'16,10765', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
-    { id:'a_misterio', title:'🔍 Mistério & Suspense',endpoint:'/discover/tv',    params:{ with_genres:'16,9648',  with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':20, without_genres:'99,10764,10763' }, type:'tv' },
-    { id:'a_kids',     title:'🧒 Para Crianças',      endpoint:'/discover/tv',    params:{ with_genres:'16,10762', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':10, without_genres:'99,10764,10763' }, type:'tv' },
-    { id:'a_filme',    title:'🎬 Filmes de Anime',    endpoint:'/discover/movie',  params:{ with_genres:'16',      with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':30, without_genres:'99' },             type:'movie' },
+    // Todos buscam genre=16 (Animation) + idioma japonês
+    // filterGenre = o item deve ter PELO MENOS UM desses genre_ids (filtro JS)
+    // without_genres exclui documentários(99), reality(10764), notícias(10763)
+    { id:'a_pop',      title:'⛩️ Mais Populares',      endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':30,  without_genres:'99,10764,10763' },                                                   type:'tv' },
+    { id:'a_top',      title:'🏆 Mais Bem Avaliados',  endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'vote_average.desc', 'vote_count.gte':200, without_genres:'99,10764,10763' },                                                   type:'tv' },
+    { id:'a_acao',     title:'⚔️ Ação & Aventura',     endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':30,  without_genres:'99,10764,10763', with_genres_and:'10759' },                         type:'tv',   filterGenre:[10759] },
+    { id:'a_comedia',  title:'😂 Comédia',             endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':20,  without_genres:'99,10764,10763', with_genres_and:'35' },                            type:'tv',   filterGenre:[35]    },
+    { id:'a_drama',    title:'🎭 Drama',                endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':30,  without_genres:'99,10764,10763,35,10759', with_genres_and:'18' },                    type:'tv',   filterGenre:[18]    },
+    { id:'a_fantasia', title:'🐉 Fantasia & Sci-Fi',   endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':30,  without_genres:'99,10764,10763', with_genres_and:'10765' },                         type:'tv',   filterGenre:[10765] },
+    { id:'a_misterio', title:'🔍 Mistério',            endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':20,  without_genres:'99,10764,10763', with_genres_and:'9648' },                          type:'tv',   filterGenre:[9648]  },
+    { id:'a_kids',     title:'🧒 Para Crianças',       endpoint:'/discover/tv',   params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':10,  without_genres:'99,10764,10763', with_genres_and:'10762' },                         type:'tv',   filterGenre:[10762] },
+    { id:'a_filme',    title:'🎬 Filmes de Anime',     endpoint:'/discover/movie', params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':30,  without_genres:'99' },                                                              type:'movie' },
   ],
   // BRASIL — filmes, séries, novelas
   brasil: [
@@ -673,7 +673,11 @@ async function loadSection(sec){
   document.getElementById('sections-container').appendChild(wrap);
   try{
     const d=await api(sec.endpoint,{...sec.params,page:1});
-    const items=(d.results||[]).filter(m=>m.poster_path && !m.adult).slice(0,20);
+    const fg = sec.filterGenre;
+    const items=(d.results||[])
+      .filter(m=>m.poster_path && !m.adult)
+      .filter(m=>!fg || fg.some(g=>(m.genre_ids||[]).includes(g)))
+      .slice(0,20);
     if(!items.length){ wrap.remove(); return; } // remove seção vazia
     secPages[sec.id]={sec, page:1, totalPages:d.total_pages||1};
     const hasMore=(d.total_pages||1)>1;
@@ -688,7 +692,8 @@ async function loadMore(secId){
   try{
     const nextPage=state.page+1;
     const d=await api(state.sec.endpoint,{...state.sec.params, page:nextPage});
-    const items=(d.results||[]).filter(m=>m.poster_path && !m.adult).slice(0,20);
+    const fg2=state.sec.filterGenre;
+    const items=(d.results||[]).filter(m=>m.poster_path&&!m.adult).filter(m=>!fg2||fg2.some(g=>(m.genre_ids||[]).includes(g))).slice(0,20);
     const car=document.getElementById('car-'+secId);
     if(car){
       items.forEach(m=>{
