@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>PureFlix — Calendário de Lançamentos</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════
+   VARIÁVEIS E RESET
+═══════════════════════════════════════ */
+:root{
+  --red:#e50914; --red2:#b20710;
+  --bg:#0a0a0a; --bg2:#141414; --bg3:#1a1a1a; --bg4:#222;
+  --white:#fff; --gray:#aaa; --light:#e5e5e5;
+  --green:#46d369; --gold:#f5c518; --blue:#0071eb;
+  --orange:#f39c12;
+  --today:#e50914;
+  --future:#46d369;
+  --past:#aaa;
+  --delayed:#f39c12;
+  --header-h:60px;
+  --pill-h:44px;
+  --bottom-h:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;overflow-x:hidden;min-height:100vh;}
+::-webkit-scrollbar{height:4px;width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+#header{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--header-h);
+  display:flex;align-items:center;
+  padding:0 4%;
+  z-index:900;
+  background:linear-gradient(to bottom,rgba(10,10,10,.98),transparent);
+  transition:background .3s;
+}
+#header.solid{background:rgba(14,14,14,.97);box-shadow:0 1px 0 rgba(255,255,255,.05);}
+.logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;font-weight:900;
+  color:var(--red);letter-spacing:3px;
+  cursor:pointer;margin-right:16px;
+  text-decoration:none;
+}
+.header-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:700;
+  color:var(--gray);letter-spacing:1px;
+  text-transform:uppercase;
+}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.header-right button{
+  background:none;border:none;color:var(--gray);
+  font-size:18px;cursor:pointer;padding:4px;
+  transition:color .2s;
+}
+.header-right button:hover{color:#fff;}
+
+/* ═══════════════════════════════════════
+   PILLS DE FILTRO — estilo Netflix
+═══════════════════════════════════════ */
+#pills-bar{
+  position:fixed;
+  top:var(--header-h);
+  left:0;right:0;
+  height:var(--pill-h);
+  z-index:800;
+  display:flex;
+  gap:8px;
+  padding:0 4%;
+  align-items:center;
+  overflow-x:auto;
+  background:linear-gradient(to bottom,rgba(10,10,10,.95),rgba(10,10,10,.7));
+  scrollbar-width:none;
+}
+#pills-bar::-webkit-scrollbar{display:none;}
+.pill{
+  flex-shrink:0;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.15);
+  color:#ccc;
+  font-size:13px;font-weight:600;
+  font-family:'Barlow',sans-serif;
+  padding:6px 18px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.pill:hover{background:rgba(255,255,255,.18);color:#fff;}
+.pill.active{background:#fff;border-color:#fff;color:#000;font-weight:700;}
+
+/* ═══════════════════════════════════════
+   CORPO PRINCIPAL
+═══════════════════════════════════════ */
+#main{
+  padding-top:calc(var(--header-h) + var(--pill-h) + 12px);
+  padding-bottom:calc(var(--bottom-h) + 16px);
+  min-height:100vh;
+}
+
+/* ═══════════════════════════════════════
+   ESTADO DE LOADING / ERRO / VAZIO
+═══════════════════════════════════════ */
+#state-box{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  min-height:50vh;gap:16px;color:var(--gray);
+}
+#state-box i{font-size:48px;opacity:.3;}
+#state-box p{font-size:15px;}
+
+/* Skeleton */
+.skel-group{padding:0 4%;margin-bottom:36px;}
+.skel-title{width:140px;height:18px;background:#1e1e1e;border-radius:4px;margin-bottom:14px;animation:pulse 1.2s infinite;}
+.skel-row{display:flex;gap:10px;}
+.skel-card{flex-shrink:0;width:110px;aspect-ratio:2/3;background:#1e1e1e;border-radius:6px;animation:pulse 1.2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* ═══════════════════════════════════════
+   GRUPOS DE DATA
+═══════════════════════════════════════ */
+.day-group{margin-bottom:32px;}
+.day-header{
+  display:flex;align-items:center;gap:12px;
+  padding:0 4%;margin-bottom:14px;
+  position:sticky;top:calc(var(--header-h) + var(--pill-h));
+  z-index:10;
+  background:linear-gradient(to right,var(--bg) 60%,transparent);
+}
+.day-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;
+  letter-spacing:.5px;
+  color:#fff;
+  white-space:nowrap;
+}
+.day-label.today{color:var(--today);}
+.day-label.future{color:var(--future);}
+.day-label.past{color:var(--gray);}
+.day-badge{
+  font-size:10px;font-weight:700;
+  letter-spacing:1.5px;padding:3px 9px;
+  border-radius:12px;text-transform:uppercase;
+}
+.day-badge.hoje{background:var(--red);color:#fff;}
+.day-badge.novo{background:var(--green);color:#000;}
+.day-badge.atrasado{background:var(--orange);color:#000;}
+.day-line{flex:1;height:1px;background:rgba(255,255,255,.08);}
+
+/* ═══════════════════════════════════════
+   CARROSSEL HORIZONTAL
+═══════════════════════════════════════ */
+.h-scroll{
+  display:flex;gap:10px;
+  padding:0 4%;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.h-scroll::-webkit-scrollbar{display:none;}
+
+/* ═══════════════════════════════════════
+   CARD DE EPISÓDIO
+═══════════════════════════════════════ */
+.ep-card{
+  flex-shrink:0;
+  width:110px;
+  cursor:pointer;
+  position:relative;
+}
+.ep-card:active .ep-poster{transform:scale(.96);}
+.ep-poster{
+  width:110px;aspect-ratio:2/3;
+  border-radius:6px;overflow:hidden;
+  background:#1a1a1a;
+  position:relative;
+  transition:transform .2s;
+}
+.ep-poster img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+}
+.ep-poster .no-img{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;color:#333;
+}
+
+/* Status badge no canto */
+.ep-status{
+  position:absolute;top:6px;left:6px;
+  font-size:9px;font-weight:800;
+  letter-spacing:1px;
+  padding:3px 7px;border-radius:3px;
+  text-transform:uppercase;
+  line-height:1;
+}
+.ep-status.hoje{background:var(--red);color:#fff;}
+.ep-status.atualizado{background:var(--green);color:#000;}
+.ep-status.futuro{background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.2);color:#ccc;}
+.ep-status.atrasado{background:var(--orange);color:#000;}
+
+/* Overlay de escurecimento para passados */
+.ep-poster.past::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(0,0,0,.45);border-radius:6px;
+}
+
+/* Info abaixo do card */
+.ep-info{margin-top:7px;padding:0 2px;}
+.ep-title{
+  font-size:12px;font-weight:700;
+  line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;color:#e5e5e5;
+}
+.ep-meta{
+  margin-top:4px;font-size:10px;color:var(--gray);
+  display:flex;flex-direction:column;gap:1px;
+}
+.ep-ep{font-size:10px;color:var(--gray);}
+
+/* Hover desktop */
+@media(hover:hover){
+  .ep-card:hover .ep-poster{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.7);}
+}
+
+/* ═══════════════════════════════════════
+   MODAL DE DETALHES
+═══════════════════════════════════════ */
+#modal-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+}
+#modal-overlay.open{display:flex;}
+#modal-sheet{
+  width:100%;max-width:520px;
+  background:var(--bg3);
+  border-radius:16px 16px 0 0;
+  overflow:hidden;
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.25,.46,.45,.94);
+  max-height:92vh;
+  overflow-y:auto;
+}
+#modal-overlay.open #modal-sheet{transform:translateY(0);}
+.modal-handle{
+  width:40px;height:4px;
+  background:rgba(255,255,255,.2);
+  border-radius:2px;
+  margin:10px auto 0;
+}
+.modal-backdrop{
+  width:100%;height:200px;
+  background:center/cover no-repeat #111;
+  position:relative;flex-shrink:0;
+}
+.modal-backdrop::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,var(--bg3) 0%,transparent 60%);
+}
+.modal-body{padding:0 20px 28px;}
+.modal-poster-row{
+  display:flex;gap:14px;
+  align-items:flex-end;
+  margin-top:-50px;
+  position:relative;z-index:2;
+  margin-bottom:14px;
+}
+.modal-poster{
+  width:80px;aspect-ratio:2/3;
+  border-radius:6px;overflow:hidden;
+  border:2px solid var(--bg3);
+  flex-shrink:0;background:#111;
+}
+.modal-poster img{width:100%;height:100%;object-fit:cover;}
+.modal-titles{padding-bottom:4px;}
+.modal-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:24px;font-weight:900;
+  line-height:1;color:#fff;
+}
+.modal-sub{font-size:12px;color:var(--gray);margin-top:5px;line-height:1.4;}
+.modal-badges{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0;}
+.mbadge{
+  font-size:10px;font-weight:700;
+  letter-spacing:1px;padding:4px 10px;
+  border-radius:3px;text-transform:uppercase;
+}
+.mbadge.hoje{background:var(--red);color:#fff;}
+.mbadge.atualizado{background:var(--green);color:#000;}
+.mbadge.futuro{background:#222;border:1px solid #444;color:#ccc;}
+.mbadge.atrasado{background:var(--orange);color:#000;}
+.mbadge.type{background:#1a1a1a;border:1px solid #333;color:#aaa;}
+.modal-ep-title{
+  font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;
+}
+.modal-date{font-size:13px;color:var(--gray);margin-bottom:16px;}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(0,0,0,.6);border:none;
+  color:#fff;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  z-index:10;
+}
+
+/* ═══════════════════════════════════════
+   CALENDÁRIO MENSAL (MINI GRID)
+═══════════════════════════════════════ */
+.cal-grid-wrap{padding:0 4%;margin-bottom:32px;}
+.cal-grid-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:700;color:var(--gray);
+  letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.cal-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:3px;
+}
+.cal-head{
+  text-align:center;font-size:10px;
+  font-weight:700;color:#555;
+  padding:4px 0;letter-spacing:.5px;
+}
+.cal-day{
+  aspect-ratio:1;border-radius:6px;
+  background:#1a1a1a;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;
+  color:#666;cursor:default;
+  position:relative;
+  transition:all .2s;
+}
+.cal-day.empty{background:transparent;}
+.cal-day.has-content{
+  background:#1e1e1e;color:#ccc;cursor:pointer;
+}
+.cal-day.has-content:hover{background:#2a2a2a;color:#fff;}
+.cal-day.is-today{
+  background:var(--red) !important;
+  color:#fff !important;font-weight:800;
+}
+.cal-day.is-past.has-content{color:#555;}
+.cal-day.is-future.has-content{color:#46d369;}
+.cal-dot{
+  position:absolute;bottom:3px;
+  width:4px;height:4px;border-radius:50%;
+  background:var(--red);
+}
+.cal-day.is-future .cal-dot{background:var(--green);}
+
+/* ═══════════════════════════════════════
+   BOTTOM NAV — Glassmorphism
+═══════════════════════════════════════ */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  height:var(--bottom-h);
+  background:rgba(20,20,20,.85);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,.05);
+  display:flex;justify-content:space-around;align-items:center;
+  z-index:1000;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.bnav-btn{
+  display:flex;flex-direction:column;
+  align-items:center;gap:3px;
+  background:none;border:none;
+  color:#666;font-size:9px;font-weight:600;
+  cursor:pointer;padding:6px 16px;
+  font-family:'Barlow',sans-serif;
+  letter-spacing:.5px;text-transform:uppercase;
+  transition:color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.bnav-btn i{font-size:22px;}
+.bnav-btn.active{color:#fff;}
+.bnav-btn.active i{color:var(--red);}
+
+/* ═══════════════════════════════════════
+   VIEW SELECTOR — lista vs grid
+═══════════════════════════════════════ */
+.view-toggle{
+  display:flex;gap:4px;
+  background:#1a1a1a;border-radius:6px;padding:3px;
+}
+.vtbtn{
+  background:none;border:none;color:#666;
+  font-size:14px;cursor:pointer;
+  padding:4px 8px;border-radius:4px;
+  transition:all .2s;
+}
+.vtbtn.active{background:#333;color:#fff;}
+
+/* ═══════════════════════════════════════
+   CONTAGEM REGRESSIVA (HOJE)
+═══════════════════════════════════════ */
+.countdown-banner{
+  margin:0 4% 20px;
+  background:linear-gradient(135deg,rgba(229,9,20,.15),rgba(229,9,20,.05));
+  border:1px solid rgba(229,9,20,.25);
+  border-radius:10px;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+}
+.countdown-banner i{color:var(--red);font-size:22px;flex-shrink:0;}
+.countdown-text strong{font-size:15px;font-weight:700;}
+.countdown-text p{font-size:12px;color:var(--gray);margin-top:2px;}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+#toast{
+  position:fixed;bottom:calc(var(--bottom-h) + 16px);
+  left:50%;transform:translateX(-50%) translateY(20px);
+  background:#222;border:1px solid #333;
+  color:#fff;padding:10px 20px;border-radius:8px;
+  font-size:13px;white-space:nowrap;
+  opacity:0;transition:all .25s;z-index:3000;
+  pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ═══════════════════════════════════════
+   SEARCH BAR
+═══════════════════════════════════════ */
+#searchbar{
+  position:fixed;
+  top:var(--header-h);left:0;right:0;
+  background:rgba(10,10,10,.98);
+  padding:12px 4%;
+  z-index:850;
+  border-bottom:1px solid #1e1e1e;
+  display:none;
+  gap:10px;
+}
+#searchbar.open{display:flex;}
+#searchbar input{
+  flex:1;background:#1e1e1e;
+  border:1px solid #333;border-radius:8px;
+  padding:10px 16px;color:#fff;
+  font-size:14px;font-family:'Barlow',sans-serif;outline:none;
+}
+#searchbar input:focus{border-color:#555;}
+#searchbar button{
+  background:var(--red);color:#fff;border:none;
+  border-radius:8px;padding:10px 18px;
+  font-size:14px;font-weight:700;cursor:pointer;
+  font-family:'Barlow',sans-serif;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE DESKTOP
+═══════════════════════════════════════ */
+@media(min-width:768px){
+  :root{--header-h:64px;--pill-h:50px;}
+  #bottom-nav{display:none;}
+  #main{padding-bottom:24px;}
+  .ep-card{width:130px;}
+  .ep-poster{width:130px;}
+  .modal-backdrop{height:280px;}
+  .modal-sheet{border-radius:12px;}
+  #modal-overlay{align-items:center;}
+  #modal-sheet{border-radius:12px;margin:20px;max-height:85vh;}
+  .day-header{position:static;}
+  .h-scroll{padding:0 4%;}
+}
+@media(min-width:1200px){
+  .ep-card{width:150px;}
+  .ep-poster{width:150px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <span class="logo">PUREFLIX</span>
+  <span class="header-title">📅 Calendário</span>
+  <div class="header-right">
+    <div class="view-toggle">
+      <button class="vtbtn active" id="vt-scroll" onclick="setView('scroll')" title="Carrossel"><i class="fas fa-grip-lines"></i></button>
+      <button class="vtbtn" id="vt-cal" onclick="setView('cal')" title="Calendário"><i class="fas fa-calendar-alt"></i></button>
+    </div>
+    <button onclick="toggleSearch()" title="Buscar"><i class="fas fa-search"></i></button>
+    <a href="index.html" style="color:var(--gray);font-size:18px;" title="Voltar"><i class="fas fa-home"></i></a>
+  </div>
+</header>
+
+<!-- BARRA DE BUSCA -->
+<div id="searchbar">
+  <input id="search-input" type="text" placeholder="Buscar série, anime, dorama..." oninput="filterSearch(this.value)">
+  <button onclick="toggleSearch()">✕</button>
+</div>
+
+<!-- PILLS DE FILTRO -->
+<div id="pills-bar">
+  <button class="pill active" onclick="setFilter('todos',this)">Todos</button>
+  <button class="pill" onclick="setFilter('hoje',this)">🔴 Hoje</button>
+  <button class="pill" onclick="setFilter('serie',this)">📺 Séries</button>
+  <button class="pill" onclick="setFilter('anime',this)">⛩️ Animes</button>
+  <button class="pill" onclick="setFilter('dorama',this)">🎌 Doramas</button>
+  <button class="pill" onclick="setFilter('futuro',this)">🟢 Futuros</button>
+  <button class="pill" onclick="setFilter('atualizado',this)">✅ Atualizados</button>
+</div>
+
+<!-- CORPO PRINCIPAL -->
+<main id="main">
+  <!-- Skeletons enquanto carrega -->
+  <div id="loading-state">
+    <div class="skel-group">
+      <div class="skel-title"></div>
+      <div class="skel-row">
+        <div class="skel-card"></div><div class="skel-card"></div>
+        <div class="skel-card"></div><div class="skel-card"></div>
+        <div class="skel-card"></div>
+      </div>
+    </div>
+    <div class="skel-group">
+      <div class="skel-title"></div>
+      <div class="skel-row">
+        <div class="skel-card"></div><div class="skel-card"></div>
+        <div class="skel-card"></div><div class="skel-card"></div>
+      </div>
+    </div>
+    <div class="skel-group">
+      <div class="skel-title"></div>
+      <div class="skel-row">
+        <div class="skel-card"></div><div class="skel-card"></div>
+        <div class="skel-card"></div><div class="skel-card"></div>
+        <div class="skel-card"></div><div class="skel-card"></div>
+      </div>
+    </div>
+  </div>
+  <div id="content" style="display:none;"></div>
+  <div id="cal-view" style="display:none;"></div>
+</main>
+
+<!-- MODAL DE DETALHES -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-backdrop" id="modal-backdrop">
+      <button class="modal-close" onclick="closeModalDirect()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-poster-row">
+        <div class="modal-poster"><img id="modal-poster-img" src="" alt=""></div>
+        <div class="modal-titles">
+          <div class="modal-title" id="modal-title">—</div>
+          <div class="modal-sub" id="modal-sub">—</div>
+        </div>
+      </div>
+      <div class="modal-badges" id="modal-badges"></div>
+      <div class="modal-ep-title" id="modal-ep-title"></div>
+      <div class="modal-date" id="modal-date"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav">
+  <button class="bnav-btn active" onclick="setView('scroll');setNavActive(this)">
+    <i class="fas fa-stream"></i><span>Carrossel</span>
+  </button>
+  <button class="bnav-btn" onclick="setView('cal');setNavActive(this)">
+    <i class="fas fa-calendar-alt"></i><span>Calendário</span>
+  </button>
+  <button class="bnav-btn" onclick="window.location.href='index.html'">
+    <i class="fas fa-home"></i><span>Início</span>
+  </button>
+  <button class="bnav-btn" onclick="toggleSearch();setNavActive(this)">
+    <i class="fas fa-search"></i><span>Buscar</span>
+  </button>
+</nav>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════
+   ESTADO GLOBAL
+═══════════════════════════════════════ */
+const API_URL = 'https://superflixapi.best/calendario.php';
+const API_FALLBACKS = [
+  'https://superflixapi.best/calendario.php',
+  'https://superflixapi.help/calendario.php',
+  'https://superflixapi.asia/calendario.php',
+  'https://superflixapi.my/calendario.php',
+];
+
+let allData = [];
+let filteredData = [];
+let currentFilter = 'todos';
+let currentView = 'scroll';
+let searchTerm = '';
+
+/* ═══════════════════════════════════════
+   UTILITÁRIOS
+═══════════════════════════════════════ */
+const TODAY = new Date();
+TODAY.setHours(0,0,0,0);
+
+function fmtDate(str){
+  if(!str) return '';
+  const d = new Date(str+'T00:00:00');
+  const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return `${dias[d.getDay()]}, ${d.getDate()} ${meses[d.getMonth()]}`;
+}
+function fmtFull(str){
+  if(!str) return '';
+  const d = new Date(str+'T00:00:00');
+  const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  return `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+}
+function dayKey(str){ return str ? str.split('T')[0] : ''; }
+function isToday(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d.getTime()===TODAY.getTime(); }
+function isPast(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d<TODAY; }
+function isFuture(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d>TODAY; }
+
+function detectType(item){
+  const t = (item.type||item.category||'').toLowerCase();
+  const title = (item.title||'').toLowerCase();
+  if(t.includes('anime') || item.is_anime) return 'anime';
+  if(t.includes('dorama') || t.includes('kdrama') || t.includes('k-drama')) return 'dorama';
+  return 'serie';
+}
+
+function statusLabel(s){
+  const m = {'Hoje':'hoje','Atualizado':'atualizado','Futuro':'futuro','Atrasado':'atrasado'};
+  return m[s] || s?.toLowerCase() || 'futuro';
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ═══════════════════════════════════════
+   FETCH COM FALLBACK
+═══════════════════════════════════════ */
+async function fetchCalendar(){
+  for(const url of API_FALLBACKS){
+    try{
+      const r = await fetch(url, {mode:'cors'});
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(Array.isArray(d) && d.length) return d;
+      if(d && typeof d === 'object'){
+        const arr = Object.values(d).find(v=>Array.isArray(v));
+        if(arr && arr.length) return arr;
+      }
+    }catch(e){ continue; }
+  }
+  throw new Error('API indisponível');
+}
+
+/* ═══════════════════════════════════════
+   DADOS DEMO (fallback se API offline)
+═══════════════════════════════════════ */
+function demoData(){
+  const today = TODAY.toISOString().split('T')[0];
+  const yesterday = new Date(TODAY); yesterday.setDate(yesterday.getDate()-1);
+  const tomorrow = new Date(TODAY); tomorrow.setDate(tomorrow.getDate()+1);
+  const d2 = new Date(TODAY); d2.setDate(d2.getDate()+2);
+  const d3 = new Date(TODAY); d3.setDate(d3.getDate()+3);
+  const fmt = d => d.toISOString().split('T')[0];
+
+  return [
+    {title:'One Piece',episode_title:'O Despertar do Haki Real',episode_number:1115,season_number:1,air_date:fmt(yesterday),poster_path:'https://image.tmdb.org/t/p/w500/cMD9Ygz11zjJzAovURpO75Qg7rT.jpg',status:'Atualizado',type:'anime',tmdb_id:37854},
+    {title:'Naruto Shippuden',episode_title:'A Batalha Final',episode_number:500,season_number:21,air_date:fmt(yesterday),poster_path:'https://image.tmdb.org/t/p/w500/xppeysfvDKVx775MFuH8Z9ex394.jpg',status:'Atualizado',type:'anime',tmdb_id:31910},
+    {title:'Demon Slayer',episode_title:'O Pilar das Chamas',episode_number:14,season_number:4,air_date:today,poster_path:'https://image.tmdb.org/t/p/w500/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg',status:'Hoje',type:'anime',tmdb_id:85937},
+    {title:'Jujutsu Kaisen',episode_title:'Shibuya — Capítulo Final',episode_number:24,season_number:2,air_date:today,poster_path:'https://image.tmdb.org/t/p/w500/oENcSMBsHasHASnBiAbTAa4bT4j.jpg',status:'Hoje',type:'anime',tmdb_id:95479},
+    {title:'Stranger Things',episode_title:'O Fim do Upside Down',episode_number:9,season_number:5,air_date:today,poster_path:'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg',status:'Hoje',type:'serie',tmdb_id:66732},
+    {title:'The Last of Us',episode_title:'Parte 2 — Começo',episode_number:1,season_number:2,air_date:today,poster_path:'https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg',status:'Hoje',type:'serie',tmdb_id:100088},
+    {title:'Attack on Titan',episode_title:'O Último Rugido',episode_number:88,season_number:4,air_date:fmt(tomorrow),poster_path:'https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg',status:'Futuro',type:'anime',tmdb_id:1429},
+    {title:'Vincenzo',episode_title:'O Confronto Final',episode_number:20,season_number:1,air_date:fmt(tomorrow),poster_path:'https://image.tmdb.org/t/p/w500/ppU1rE6WZSyHjrwRZdBRFhGPGS0.jpg',status:'Futuro',type:'dorama',tmdb_id:106519},
+    {title:'The Bear',episode_title:'Mise en Place',episode_number:4,season_number:3,air_date:fmt(tomorrow),poster_path:'https://image.tmdb.org/t/p/w500/sHFlbKS3WLqMnp9t2ghADIJFnuQ.jpg',status:'Futuro',type:'serie',tmdb_id:136315},
+    {title:'Spy x Family',episode_title:'Operação Strix',episode_number:25,season_number:2,air_date:fmt(d2),poster_path:'https://image.tmdb.org/t/p/w500/vYAF2P4fxBbDsME3ecp53DmN8f1.jpg',status:'Futuro',type:'anime',tmdb_id:120089},
+    {title:'Crash Landing on You',episode_title:'Reencontro nas Nuvens',episode_number:16,season_number:1,air_date:fmt(d2),poster_path:'https://image.tmdb.org/t/p/w500/zBiJYTVKfIJETPqzGCvfBMxiMDI.jpg',status:'Futuro',type:'dorama',tmdb_id:94796},
+    {title:'House of the Dragon',episode_title:'O Dragão Vermelho',episode_number:5,season_number:2,air_date:fmt(d3),poster_path:'https://image.tmdb.org/t/p/w500/z2yahl2uefxDCl0nogcRBstwruJ.jpg',status:'Futuro',type:'serie',tmdb_id:94997},
+    {title:'My Hero Academia',episode_title:'Plus Ultra Final',episode_number:138,season_number:7,air_date:fmt(d3),poster_path:'https://image.tmdb.org/t/p/w500/mKl3ESgO3n8wIrGdGsVknCKuCJD.jpg',status:'Futuro',type:'anime',tmdb_id:65930},
+  ];
+}
+
+/* ═══════════════════════════════════════
+   INICIALIZAÇÃO
+═══════════════════════════════════════ */
+async function init(){
+  try{
+    let data = await fetchCalendar();
+    allData = data;
+    toast('✅ Dados carregados');
+  }catch(e){
+    allData = demoData();
+    toast('⚠️ Modo demonstração (API offline)');
+  }
+  // Ordenar por data
+  allData.sort((a,b)=>{
+    const da=new Date(a.air_date||'2099-01-01');
+    const db=new Date(b.air_date||'2099-01-01');
+    return da-db;
+  });
+  filteredData = [...allData];
+  document.getElementById('loading-state').style.display='none';
+  document.getElementById('content').style.display='block';
+  renderAll();
+}
+
+/* ═══════════════════════════════════════
+   FILTROS
+═══════════════════════════════════════ */
+function setFilter(f, btn){
+  currentFilter=f;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+function filterSearch(v){
+  searchTerm=v.toLowerCase();
+  applyFilters();
+}
+function applyFilters(){
+  filteredData = allData.filter(item=>{
+    const type = detectType(item);
+    const status = statusLabel(item.status);
+    const q = searchTerm;
+    if(q && !item.title?.toLowerCase().includes(q) && !item.episode_title?.toLowerCase().includes(q)) return false;
+    if(currentFilter==='todos') return true;
+    if(currentFilter==='hoje') return status==='hoje';
+    if(currentFilter==='futuro') return status==='futuro';
+    if(currentFilter==='atualizado') return status==='atualizado';
+    if(currentFilter==='serie') return type==='serie';
+    if(currentFilter==='anime') return type==='anime';
+    if(currentFilter==='dorama') return type==='dorama';
+    return true;
+  });
+  renderAll();
+}
+
+/* ═══════════════════════════════════════
+   RENDER PRINCIPAL
+═══════════════════════════════════════ */
+function renderAll(){
+  if(currentView==='scroll') renderScroll();
+  else renderCal();
+}
+
+/* ── VIEW: CARROSSEL AGRUPADO POR DIA ── */
+function renderScroll(){
+  const cont=document.getElementById('content');
+  const calView=document.getElementById('cal-view');
+  cont.style.display='block'; calView.style.display='none';
+  cont.innerHTML='';
+
+  if(!filteredData.length){
+    cont.innerHTML=`<div class="state-box" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:12px;color:var(--gray);">
+      <i class="fas fa-calendar-times" style="font-size:48px;opacity:.3;"></i>
+      <p style="font-size:15px;">Nenhum conteúdo encontrado</p>
+    </div>`;
+    return;
+  }
+
+  // Banner "hoje"
+  const todayItems = filteredData.filter(i=>isToday(i.air_date));
+  if(todayItems.length){
+    const banner=document.createElement('div');
+    banner.className='countdown-banner';
+    banner.innerHTML=`<i class="fas fa-bell"></i>
+      <div class="countdown-text">
+        <strong>${todayItems.length} lançamento${todayItems.length>1?'s':''} hoje!</strong>
+        <p>Novos episódios disponíveis agora</p>
+      </div>`;
+    cont.appendChild(banner);
+  }
+
+  // Agrupar por data
+  const groups = {};
+  filteredData.forEach(item=>{
+    const k = dayKey(item.air_date) || 'sem-data';
+    if(!groups[k]) groups[k]=[];
+    groups[k].push(item);
+  });
+
+  Object.keys(groups).sort().forEach(dateKey=>{
+    const items = groups[dateKey];
+    const group = document.createElement('div');
+    group.className='day-group';
+
+    // Header do dia
+    const dh=document.createElement('div');
+    dh.className='day-header';
+    const today=isToday(dateKey);
+    const past=isPast(dateKey);
+    const future=isFuture(dateKey);
+    const labelCls=today?'today':future?'future':'past';
+    const badge=today?'<span class="day-badge hoje">HOJE</span>'
+                :past?'<span class="day-badge atrasado">PASSADO</span>':'';
+    dh.innerHTML=`
+      <span class="day-label ${labelCls}">${today?'📅 Hoje':fmtDate(dateKey)}</span>
+      ${badge}
+      <span class="day-badge" style="background:rgba(255,255,255,.06);color:#777;font-size:9px;font-weight:600;padding:3px 8px;border-radius:10px;">${items.length} ep${items.length>1?'s':''}</span>
+      <div class="day-line"></div>`;
+    group.appendChild(dh);
+
+    // Carrossel
+    const scroll=document.createElement('div');
+    scroll.className='h-scroll';
+    items.forEach(item=>scroll.appendChild(makeCard(item)));
+    group.appendChild(scroll);
+    cont.appendChild(group);
+  });
+}
+
+/* ── CARD ── */
+function makeCard(item){
+  const card=document.createElement('div');
+  card.className='ep-card';
+  const status=statusLabel(item.status);
+  const type=detectType(item);
+  const typeIcon=type==='anime'?'⛩️':type==='dorama'?'🎌':'📺';
+  const posterSrc=item.poster_path||'';
+  const pastClass=isPast(item.air_date)&&!isToday(item.air_date)?'past':'';
+  const statusMap={hoje:'HOJE',atualizado:'✓ Atualizado',futuro:'Em breve',atrasado:'⚠ Atrasado'};
+
+  card.innerHTML=`
+    <div class="ep-poster ${pastClass}">
+      ${posterSrc
+        ?`<img src="${posterSrc}" alt="${item.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>${typeIcon}</div>'">`
+        :`<div class="no-img">${typeIcon}</div>`}
+      <span class="ep-status ${status}">${statusMap[status]||status}</span>
+    </div>
+    <div class="ep-info">
+      <div class="ep-title">${item.title||'—'}</div>
+      <div class="ep-meta">
+        <span class="ep-ep">${item.season_number?'T'+item.season_number+' ':''}${item.episode_number?'Ep '+item.episode_number:''}</span>
+        <span>${typeIcon} ${type.charAt(0).toUpperCase()+type.slice(1)}</span>
+      </div>
+    </div>`;
+  card.onclick=()=>openModal(item);
+  return card;
+}
+
+/* ── VIEW: CALENDÁRIO MENSAL ── */
+function renderCal(){
+  const cont=document.getElementById('content');
+  const calView=document.getElementById('cal-view');
+  cont.style.display='none'; calView.style.display='block';
+  calView.innerHTML='';
+
+  // Descobrir meses presentes nos dados
+  const months={};
+  filteredData.forEach(item=>{
+    if(!item.air_date) return;
+    const d=new Date(item.air_date+'T00:00:00');
+    const key=`${d.getFullYear()}-${d.getMonth()}`;
+    if(!months[key]) months[key]={year:d.getFullYear(),month:d.getMonth(),items:{}};
+    const dk=dayKey(item.air_date);
+    if(!months[key].items[dk]) months[key].items[dk]=[];
+    months[key].items[dk].push(item);
+  });
+
+  if(!Object.keys(months).length){
+    calView.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:12px;color:var(--gray);">
+      <i class="fas fa-calendar-times" style="font-size:48px;opacity:.3;"></i>
+      <p>Nenhum conteúdo encontrado</p></div>`;
+    return;
+  }
+
+  const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const dias=['D','S','T','Q','Q','S','S'];
+
+  Object.keys(months).sort().forEach(mk=>{
+    const {year,month,items}=months[mk];
+    const wrap=document.createElement('div');
+    wrap.className='cal-grid-wrap';
+
+    const title=document.createElement('div');
+    title.className='cal-grid-title';
+    title.textContent=`${meses[month]} ${year}`;
+    wrap.appendChild(title);
+
+    const grid=document.createElement('div');
+    grid.className='cal-grid';
+    // Cabeçalhos
+    dias.forEach(d=>{const h=document.createElement('div');h.className='cal-head';h.textContent=d;grid.appendChild(h);});
+
+    const firstDay=new Date(year,month,1).getDay();
+    const daysInMonth=new Date(year,month+1,0).getDate();
+
+    for(let i=0;i<firstDay;i++){
+      const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e);
+    }
+    for(let d=1;d<=daysInMonth;d++){
+      const cell=document.createElement('div');
+      const dk=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const cellDate=new Date(year,month,d); cellDate.setHours(0,0,0,0);
+      const isT=cellDate.getTime()===TODAY.getTime();
+      const isP=cellDate<TODAY;
+      const isF=cellDate>TODAY;
+      const hasContent=!!items[dk];
+      cell.className=`cal-day${hasContent?' has-content':''}${isT?' is-today':''}${isP?' is-past':''}${isF?' is-future':''}`;
+      cell.textContent=d;
+      if(hasContent){
+        const dot=document.createElement('div');dot.className='cal-dot';cell.appendChild(dot);
+        cell.title=`${items[dk].length} lançamento(s)`;
+        cell.onclick=()=>showDayDetail(dk,items[dk]);
+      }
+      grid.appendChild(cell);
+    }
+    wrap.appendChild(grid);
+    calView.appendChild(wrap);
+  });
+}
+
+/* ── DETAIL DO DIA (no modo calendário) ── */
+function showDayDetail(dateKey, items){
+  // Muda para view scroll com filtro de data
+  const saved=filteredData;
+  filteredData=items;
+  currentView='scroll';
+  document.getElementById('vt-scroll').classList.add('active');
+  document.getElementById('vt-cal').classList.remove('active');
+  renderScroll();
+  filteredData=saved;
+  // Scroll para topo
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast(`📅 ${fmtDate(dateKey)} — ${items.length} lançamento(s)`);
+}
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+function openModal(item){
+  const overlay=document.getElementById('modal-overlay');
+  const status=statusLabel(item.status);
+  const type=detectType(item);
+  const typeIcon=type==='anime'?'⛩️ Anime':type==='dorama'?'🎌 Dorama':'📺 Série';
+  const statusText={hoje:'🔴 Hoje',atualizado:'✅ Atualizado',futuro:'🟢 Em breve',atrasado:'⚠️ Atrasado'};
+
+  // Backdrop
+  const bd=document.getElementById('modal-backdrop');
+  bd.style.backgroundImage=item.backdrop_path?`url(${item.backdrop_path})`:
+    item.poster_path?`url(${item.poster_path})`:'';
+
+  // Poster
+  const pi=document.getElementById('modal-poster-img');
+  pi.src=item.poster_path||''; pi.onerror=()=>pi.style.display='none';
+
+  // Textos
+  document.getElementById('modal-title').textContent=item.title||'—';
+  document.getElementById('modal-sub').textContent=
+    `${item.season_number?'Temporada '+item.season_number+' · ':''}${item.episode_number?'Episódio '+item.episode_number:''}`;
+  document.getElementById('modal-ep-title').textContent=item.episode_title||'';
+  document.getElementById('modal-date').textContent=item.air_date?`📅 ${fmtFull(item.air_date)}`:'';
+
+  // Badges
+  const badges=document.getElementById('modal-badges');
+  badges.innerHTML=`
+    <span class="mbadge ${status}">${statusText[status]||item.status}</span>
+    <span class="mbadge type">${typeIcon}</span>`;
+
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(e.target===document.getElementById('modal-overlay')) closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ═══════════════════════════════════════
+   VIEW TOGGLE
+═══════════════════════════════════════ */
+function setView(v){
+  currentView=v;
+  document.getElementById('vt-scroll').classList.toggle('active',v==='scroll');
+  document.getElementById('vt-cal').classList.toggle('active',v==='cal');
+  renderAll();
+}
+
+/* ═══════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════ */
+function toggleSearch(){
+  const s=document.getElementById('searchbar');
+  s.classList.toggle('open');
+  if(s.classList.contains('open')) document.getElementById('search-input').focus();
+  else{ document.getElementById('search-input').value=''; searchTerm=''; applyFilters(); }
+}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+function setNavActive(btn){
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ═══════════════════════════════════════
+   SCROLL HEADER
+═══════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('header').classList.toggle('solid',window.scrollY>20);
+});
+
+/* ── SWIPE PARA FECHAR MODAL ── */
+let startY=0;
+document.getElementById('modal-sheet').addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});
+document.getElementById('modal-sheet').addEventListener('touchend',e=>{
+  if(e.changedTouches[0].clientY - startY > 80) closeModalDirect();
+},{passive:true});
+
+/* ─ START ─ */
+init();
+</script>
+</body>
+</html>
