@@ -408,7 +408,7 @@ const SECTIONS_HOME = [
   { id:'animacao_h',  title:'🧸 Animação & Família',     endpoint:'/discover/movie',       params:{ with_genres:'16|10751', region:'BR', sort_by:'popularity.desc', without_keywords:'210024' },                                      type:'movie' },
   { id:'acao_h',      title:'💥 Ação & Aventura',        endpoint:'/discover/movie',       params:{ with_genres:'28', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                       type:'movie' },
   { id:'comedia_h',   title:'😂 Comédias',               endpoint:'/discover/movie',       params:{ with_genres:'35', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                       type:'movie' },
-  { id:'anime_h',     title:'⛩️ Animes em Alta',         endpoint:'/discover/tv',          params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc' },                                                       type:'tv'    },
+  { id:'anime_h',     title:'⛩️ Animes em Alta',         endpoint:'/discover/tv',          params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':50 },                                      type:'tv'    },
   { id:'scifi_h',     title:'🚀 Ficção Científica',      endpoint:'/discover/movie',       params:{ with_genres:'878', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                      type:'movie' },
   { id:'terror_h',    title:'👻 Terror & Suspense',      endpoint:'/discover/movie',       params:{ with_genres:'27|53', region:'BR', sort_by:'popularity.desc', without_keywords:'210024' },                                         type:'movie' },
   { id:'series_pop',  title:'🎭 Séries de Drama',        endpoint:'/discover/tv',          params:{ with_genres:'18', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' }, type:'tv' },
@@ -453,18 +453,18 @@ const SECTIONS_CATS = {
     { id:'s_western',  title:'🤠 Western',               endpoint:'/discover/tv',       params:{ with_genres:'37',    sort_by:'popularity.desc', without_keywords:'210024', without_original_language:'ja' },                                      type:'tv' },
     { id:'s_doc',      title:'🎓 Documentários',         endpoint:'/discover/tv',       params:{ with_genres:'99',    sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },                  type:'tv' },
   ],
-  // ANIMES — ordem: populares → ação → comédia → romance → fantasia → terror → docs
+  // ANIMES — with_genres SEMPRE com vírgula (AND), with_original_language='ja' em todos
   animes: [
-    { id:'a_pop',      title:'⛩️ Mais Populares',        endpoint:'/discover/tv',       params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc' },            type:'tv' },
-    { id:'a_top',      title:'🏆 Mais Bem Avaliados',    endpoint:'/discover/tv',       params:{ with_genres:'16', with_original_language:'ja', sort_by:'vote_average.desc', 'vote_count.gte':200 }, type:'tv' },
-    { id:'a_kids',     title:'🧒 Para Crianças',         endpoint:'/discover/tv',       params:{ with_genres:'16|10762', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_comedia',  title:'😂 Comédia',               endpoint:'/discover/tv',       params:{ with_genres:'16|35',    with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_romance',  title:'💕 Romance',               endpoint:'/discover/tv',       params:{ with_genres:'16|10749', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_acao',     title:'⚔️ Ação & Luta',           endpoint:'/discover/tv',       params:{ with_genres:'16|10759', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_fantasia', title:'🐉 Fantasia',              endpoint:'/discover/tv',       params:{ with_genres:'16|14',    with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_scifi',    title:'🚀 Ficção Científica',     endpoint:'/discover/tv',       params:{ with_genres:'16|10765', with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_terror',   title:'👻 Terror & Horror',       endpoint:'/discover/tv',       params:{ with_genres:'16|27',    with_original_language:'ja', sort_by:'popularity.desc' },      type:'tv' },
-    { id:'a_filme',    title:'🎬 Filmes de Anime',       endpoint:'/discover/movie',    params:{ with_genres:'16',       with_original_language:'ja', sort_by:'popularity.desc' },      type:'movie' },
+    { id:'a_pop',      title:'⛩️ Mais Populares',        endpoint:'/discover/tv',       params:{ with_genres:'16',     with_original_language:'ja', sort_by:'popularity.desc' },                                                     type:'tv' },
+    { id:'a_top',      title:'🏆 Mais Bem Avaliados',    endpoint:'/discover/tv',       params:{ with_genres:'16',     with_original_language:'ja', sort_by:'vote_average.desc', 'vote_count.gte':100 },                             type:'tv' },
+    { id:'a_kids',     title:'🧒 Para Crianças',         endpoint:'/discover/tv',       params:{ with_genres:'16,10762', with_original_language:'ja', sort_by:'popularity.desc' },                                                   type:'tv' },
+    { id:'a_comedia',  title:'😂 Comédia',               endpoint:'/discover/tv',       params:{ with_genres:'16,35',   with_original_language:'ja', sort_by:'popularity.desc' },                                                    type:'tv' },
+    { id:'a_romance',  title:'💕 Romance',               endpoint:'/discover/tv',       params:{ with_genres:'16,10749',with_original_language:'ja', sort_by:'popularity.desc' },                                                    type:'tv' },
+    { id:'a_acao',     title:'⚔️ Ação & Luta',           endpoint:'/discover/tv',       params:{ with_genres:'16,10759',with_original_language:'ja', sort_by:'popularity.desc' },                                                    type:'tv' },
+    { id:'a_fantasia', title:'🐉 Fantasia',              endpoint:'/discover/tv',       params:{ with_genres:'16,14',   with_original_language:'ja', sort_by:'popularity.desc' },                                                    type:'tv' },
+    { id:'a_scifi',    title:'🚀 Ficção Científica',     endpoint:'/discover/tv',       params:{ with_genres:'16,10765',with_original_language:'ja', sort_by:'popularity.desc' },                                                    type:'tv' },
+    { id:'a_terror',   title:'👻 Terror & Horror',       endpoint:'/discover/tv',       params:{ with_genres:'16,27',   with_original_language:'ja', sort_by:'popularity.desc' },                                                    type:'tv' },
+    { id:'a_filme',    title:'🎬 Filmes de Anime',       endpoint:'/discover/movie',    params:{ with_genres:'16',      with_original_language:'ja', sort_by:'popularity.desc' },                                                    type:'movie' },
   ],
   // BRASIL — filmes, séries, novelas
   brasil: [
@@ -499,9 +499,17 @@ async function api(path, params={}) {
   try {
     const r = await fetch(url, OPTS);
     const d = await r.json();
-    // Filtro pós-fetch: remove itens marcados como adulto pelo TMDB
     if(d && d.results){
+      // Filtro 1: remove adultos
       d.results = d.results.filter(item => !item.adult);
+      // Filtro 2: se pediu with_original_language=ja, garante que só japonês entra
+      if(params.with_original_language === 'ja'){
+        d.results = d.results.filter(item => item.original_language === 'ja');
+      }
+      // Filtro 3: se pediu with_genres contendo '16' com AND (vírgula), garante animação
+      if(params.with_genres && params.with_genres.includes('16') && params.with_genres.includes(',')){
+        d.results = d.results.filter(item => (item.genre_ids||[]).includes(16));
+      }
     }
     MEM[key] = d;
     return d;
