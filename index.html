@@ -644,7 +644,7 @@ function makeCarousel(sec, items, type, hasMore){
         <div class="card-actions">
           <div class="card-btn" onclick="event.stopPropagation();openDetails(${m.id},'${itemType}')"><i class="fas fa-play"></i></div>
           <div class="card-btn fav ${isFav?'fav-on':''}" data-id="${m.id}" title="${isFav?'Remover':'Favoritar'}"
-            onclick="event.stopPropagation();toggleFav(${m.id},'${itemType}','${name.replace(/'/g,"\\'")}','${poster}')">
+            onclick="event.stopPropagation();toggleFav(${m.id},'${itemType}','${name.replace(/'/g,"\'")}','${poster}')">
             <i class="fas fa-heart"></i>
           </div>
         </div>
@@ -1062,7 +1062,7 @@ async function openDetails(id,type){
     document.getElementById('det-btns').innerHTML=`
       <button class="btn-watch" onclick="loadServer(0)"><i class="fas fa-play"></i> Assistir</button>
       ${trailer?`<button class="btn-more" onclick="openTrailer('${trailer.key}')"><i class="fab fa-youtube"></i> Trailer</button>`:''}
-      <button class="btn-more" onclick="toggleFav(${id},'${type}','${name.replace(/'/g,"\\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
+      <button class="btn-more" onclick="toggleFav(${id},'${type}','${name.replace(/'/g,"\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
         <i class="fas fa-heart"></i> ${getFavs()[id]?'Remover':'Favoritar'}
       </button>
     `;
