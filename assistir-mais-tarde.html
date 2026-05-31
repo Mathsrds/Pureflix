@@ -12,6 +12,7 @@
   --bg:#0a0a0a; --bg2:#141414; --bg3:#1a1a1a;
   --white:#fff; --gray:#aaa;
   --green:#46d369; --gold:#f5c518;
+  --orange:#f39c12;
   --card-w:160px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -28,8 +29,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 .back-btn{
   background:none;border:none;color:var(--gray);
   font-size:18px;cursor:pointer;padding:6px;
-  display:flex;align-items:center;
-  transition:color .2s;
+  display:flex;align-items:center;transition:color .2s;
 }
 .back-btn:hover{color:#fff;}
 .logo{
@@ -43,15 +43,30 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
   letter-spacing:1px;
 }
 .header-count{
-  margin-left:auto;
-  font-size:13px;color:var(--gray);
-  background:#1a1a1a;border-radius:20px;
-  padding:4px 12px;
+  margin-left:auto;font-size:13px;color:var(--gray);
+  background:#1a1a1a;border-radius:20px;padding:4px 12px;
 }
 
-/* ── FILTROS ── */
+/* ── ABAS ── */
+#tab-bar{
+  display:flex;border-bottom:1px solid #1e1e1e;
+  position:sticky;top:60px;z-index:99;
+  background:rgba(10,10,10,.97);
+}
+.tab-btn{
+  flex:1;background:none;border:none;color:var(--gray);
+  font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;
+  padding:14px 0;cursor:pointer;letter-spacing:.5px;
+  border-bottom:2px solid transparent;
+  transition:all .2s;display:flex;align-items:center;
+  justify-content:center;gap:7px;
+}
+.tab-btn:hover{color:#fff;}
+.tab-btn.active{color:#fff;border-bottom-color:var(--red);}
+
+/* ── FILTROS (aba lista) ── */
 #filter-bar{
-  display:flex;gap:8px;padding:16px 4%;
+  display:flex;gap:8px;padding:14px 4%;
   overflow-x:auto;scrollbar-width:none;
 }
 #filter-bar::-webkit-scrollbar{display:none;}
@@ -70,8 +85,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 #grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(var(--card-w),1fr));
-  gap:16px;
-  padding:0 4% 24px;
+  gap:16px;padding:0 4% 24px;
 }
 
 /* ── CARD ── */
@@ -83,29 +97,14 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 }
 .wl-card:hover{transform:scale(1.04);box-shadow:0 12px 32px rgba(0,0,0,.7);}
 .wl-card:active{transform:scale(.97);}
-
-.wl-poster{
-  width:100%;aspect-ratio:2/3;
-  object-fit:cover;display:block;
-  background:#111;
-}
-.wl-no-poster{
-  width:100%;aspect-ratio:2/3;
-  background:#111;display:flex;
-  align-items:center;justify-content:center;
-  font-size:48px;
-}
-
-/* badge de tipo */
+.wl-poster{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#111;}
+.wl-no-poster{width:100%;aspect-ratio:2/3;background:#111;display:flex;align-items:center;justify-content:center;font-size:48px;}
 .type-badge{
   position:absolute;top:8px;left:8px;
   font-size:9px;font-weight:800;letter-spacing:1px;
-  padding:3px 7px;border-radius:3px;
-  text-transform:uppercase;background:rgba(0,0,0,.8);
-  border:1px solid rgba(255,255,255,.2);color:#ccc;
+  padding:3px 7px;border-radius:3px;text-transform:uppercase;
+  background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.2);color:#ccc;
 }
-
-/* botão remover */
 .remove-btn{
   position:absolute;top:8px;right:8px;
   width:28px;height:28px;border-radius:50%;
@@ -116,67 +115,136 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 }
 .wl-card:hover .remove-btn{opacity:1;}
 .remove-btn:hover{background:var(--red);border-color:var(--red);}
-
-/* barra de countdown */
 .wl-countdown{
   position:absolute;bottom:0;left:0;right:0;
   padding:28px 8px 8px;
   background:linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 100%);
-  font-size:11px;color:var(--green);font-weight:700;
-  text-align:center;
+  font-size:11px;color:var(--green);font-weight:700;text-align:center;
 }
 .wl-countdown.past{color:var(--gray);}
-
 .wl-info{padding:10px 10px 12px;}
 .wl-title{
-  font-size:13px;font-weight:700;
-  line-height:1.3;color:#e5e5e5;
-  display:-webkit-box;-webkit-line-clamp:2;
-  -webkit-box-orient:vertical;overflow:hidden;
-  margin-bottom:4px;
+  font-size:13px;font-weight:700;line-height:1.3;color:#e5e5e5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;margin-bottom:4px;
 }
 .wl-meta{font-size:11px;color:var(--gray);}
-
-.wl-actions{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:6px;padding:0 10px 12px;
-}
+.wl-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 10px 12px;}
 .btn-watch-now{
   background:var(--red);color:#fff;border:none;
-  border-radius:5px;padding:8px 4px;font-size:12px;
-  font-weight:700;font-family:'Barlow',sans-serif;
-  cursor:pointer;display:flex;align-items:center;
-  justify-content:center;gap:5px;transition:background .2s;
+  border-radius:5px;padding:8px 4px;font-size:12px;font-weight:700;
+  font-family:'Barlow',sans-serif;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;transition:background .2s;
 }
 .btn-watch-now:hover{background:var(--red2);}
 .btn-remove{
   background:#222;color:var(--gray);border:1px solid #333;
-  border-radius:5px;padding:8px 4px;font-size:12px;
-  font-weight:700;font-family:'Barlow',sans-serif;
-  cursor:pointer;display:flex;align-items:center;
-  justify-content:center;gap:5px;transition:all .2s;
+  border-radius:5px;padding:8px 4px;font-size:12px;font-weight:700;
+  font-family:'Barlow',sans-serif;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s;
 }
-.btn-remove:hover{background:#333;color:#fff;border-color:var(--red);color:var(--red);}
+.btn-remove:hover{background:#333;border-color:var(--red);color:var(--red);}
 
 /* ── VAZIO ── */
 #empty{
-  display:none;flex-direction:column;
-  align-items:center;justify-content:center;
-  min-height:60vh;gap:16px;color:var(--gray);
-  text-align:center;padding:0 4%;
+  display:none;flex-direction:column;align-items:center;
+  justify-content:center;min-height:55vh;gap:16px;
+  color:var(--gray);text-align:center;padding:0 4%;
 }
 #empty i{font-size:64px;opacity:.2;}
 #empty h2{font-size:22px;font-weight:700;color:#555;}
 #empty p{font-size:14px;line-height:1.6;max-width:280px;}
 #empty a{
   display:inline-flex;align-items:center;gap:8px;
-  background:var(--red);color:#fff;
-  border-radius:6px;padding:12px 24px;
-  font-size:14px;font-weight:700;
-  text-decoration:none;margin-top:8px;
-  transition:background .2s;
+  background:var(--red);color:#fff;border-radius:6px;
+  padding:12px 24px;font-size:14px;font-weight:700;
+  text-decoration:none;margin-top:8px;transition:background .2s;
 }
 #empty a:hover{background:var(--red2);}
+
+/* ══════════════════════════════════
+   ABA CALENDÁRIO
+══════════════════════════════════ */
+#tab-cal{display:none;}
+
+/* Filtros de tipo do calendário */
+#cal-filter-bar{
+  display:flex;gap:8px;padding:14px 4%;
+  overflow-x:auto;scrollbar-width:none;
+}
+#cal-filter-bar::-webkit-scrollbar{display:none;}
+
+/* Skeleton */
+.skel-group{padding:0 4%;margin-bottom:28px;}
+.skel-title-bar{width:130px;height:16px;background:#1e1e1e;border-radius:4px;margin-bottom:12px;animation:sk 1.2s infinite;}
+.skel-row{display:flex;gap:10px;}
+.skel-c{flex-shrink:0;width:110px;aspect-ratio:2/3;background:#1e1e1e;border-radius:6px;animation:sk 1.2s infinite;}
+@keyframes sk{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+/* Grupos de dia */
+.day-group{margin-bottom:28px;}
+.day-header{
+  display:flex;align-items:center;gap:10px;
+  padding:0 4%;margin-bottom:12px;
+}
+.day-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:900;letter-spacing:.5px;
+  white-space:nowrap;
+}
+.day-label.hoje-lbl{color:var(--red);}
+.day-label.futuro-lbl{color:var(--green);}
+.day-label.passado-lbl{color:var(--gray);}
+.day-badge-hoje{background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:3px 8px;border-radius:10px;letter-spacing:1px;text-transform:uppercase;}
+.day-line{flex:1;height:1px;background:rgba(255,255,255,.07);}
+
+/* Carrossel horizontal */
+.h-scroll{display:flex;gap:10px;padding:0 4%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.h-scroll::-webkit-scrollbar{display:none;}
+
+/* Card de episódio */
+.ep-card{flex-shrink:0;width:110px;cursor:pointer;position:relative;}
+.ep-card:active .ep-poster-img{transform:scale(.96);}
+.ep-poster-img{
+  width:110px;aspect-ratio:2/3;border-radius:6px;overflow:hidden;
+  background:#1a1a1a;position:relative;transition:transform .2s;
+}
+.ep-poster-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.ep-poster-img .no-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;color:#333;}
+@media(hover:hover){.ep-card:hover .ep-poster-img{transform:scale(1.04);box-shadow:0 8px 20px rgba(0,0,0,.7);}}
+.ep-status-badge{
+  position:absolute;top:5px;left:5px;
+  font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:3px 7px;border-radius:3px;text-transform:uppercase;line-height:1;
+}
+.ep-status-badge.hoje{background:var(--red);color:#fff;}
+.ep-status-badge.atualizado{background:var(--green);color:#000;}
+.ep-status-badge.futuro{background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.2);color:#ccc;}
+.ep-status-badge.atrasado{background:var(--orange);color:#000;}
+.ep-poster-img.past-poster::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.42);border-radius:6px;}
+
+/* Botão de marcar na lista — canto inferior direito do card */
+.ep-wl-btn{
+  position:absolute;bottom:42px;right:4px;
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(0,0,0,.85);border:1px solid #555;
+  color:#aaa;font-size:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;z-index:5;
+  opacity:0;
+}
+.ep-card:hover .ep-wl-btn{opacity:1;}
+.ep-wl-btn.in-list{background:rgba(229,9,20,.2);border-color:var(--red);color:var(--red);opacity:1;}
+@media(max-width:768px){.ep-wl-btn{opacity:1;}}
+
+.ep-info-cal{margin-top:6px;padding:0 2px;}
+.ep-title-cal{font-size:12px;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#e5e5e5;}
+.ep-meta-cal{margin-top:3px;font-size:10px;color:var(--gray);}
+
+/* Estado vazio/erro calendário */
+#cal-state{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;gap:14px;color:var(--gray);text-align:center;padding:0 4%;}
+#cal-state i{font-size:52px;opacity:.2;}
+#cal-state p{font-size:14px;}
 
 /* ── TOAST ── */
 #toast{
@@ -185,8 +253,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
   background:#222;border:1px solid #333;
   color:#fff;padding:10px 20px;border-radius:8px;
   font-size:13px;white-space:nowrap;
-  opacity:0;transition:all .25s;z-index:9999;
-  pointer-events:none;
+  opacity:0;transition:all .25s;z-index:9999;pointer-events:none;
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -194,20 +261,15 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 #mobile-nav{
   display:none;position:fixed;
   bottom:0;left:0;right:0;height:56px;
-  background:rgba(14,14,14,.95);
-  backdrop-filter:blur(16px);
-  border-top:1px solid #1a1a1a;
-  z-index:500;align-items:center;
-  justify-content:space-around;
+  background:rgba(14,14,14,.95);backdrop-filter:blur(16px);
+  border-top:1px solid #1a1a1a;z-index:500;
+  align-items:center;justify-content:space-around;
 }
 .mnav-btn{
   display:flex;flex-direction:column;align-items:center;
-  gap:3px;background:none;border:none;
-  color:#666;font-size:9px;font-weight:600;
-  cursor:pointer;padding:6px 12px;
-  font-family:'Barlow',sans-serif;
-  text-transform:uppercase;letter-spacing:.5px;
-  -webkit-tap-highlight-color:transparent;
+  gap:3px;background:none;border:none;color:#666;
+  font-size:9px;font-weight:600;cursor:pointer;padding:6px 12px;
+  font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.5px;
 }
 .mnav-btn i{font-size:20px;}
 .mnav-btn.active{color:#fff;}
@@ -218,10 +280,12 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
   #mobile-nav{display:flex;}
   .remove-btn{opacity:1;}
 }
-@media(min-width:500px){--card-w:180px;}
+@media(min-width:500px){:root{--card-w:180px;}}
 @media(min-width:768px){
   :root{--card-w:180px;}
   #mobile-nav{display:none;}
+  .ep-card{width:130px;}
+  .ep-poster-img{width:130px;}
 }
 </style>
 </head>
@@ -237,25 +301,64 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
   <span class="header-count" id="count">0 títulos</span>
 </div>
 
-<!-- FILTROS -->
-<div id="filter-bar">
-  <button class="filter-btn active" onclick="setFilter('todos',this)">Todos</button>
-  <button class="filter-btn" onclick="setFilter('movie',this)">🎬 Filmes</button>
-  <button class="filter-btn" onclick="setFilter('tv',this)">📺 Séries</button>
-  <button class="filter-btn" onclick="setFilter('anime',this)">⛩️ Animes</button>
-  <button class="filter-btn" onclick="setFilter('futuro',this)">🟢 Ainda não lançou</button>
-  <button class="filter-btn" onclick="setFilter('disponivel',this)">✅ Disponível</button>
+<!-- ABAS -->
+<div id="tab-bar">
+  <button class="tab-btn active" id="tab-lista-btn" onclick="switchTab('lista')">
+    <i class="fas fa-bookmark"></i> Minha Lista
+  </button>
+  <button class="tab-btn" id="tab-cal-btn" onclick="switchTab('cal')">
+    <i class="fas fa-calendar-alt"></i> Calendário
+  </button>
 </div>
 
-<!-- GRID -->
-<div id="grid"></div>
+<!-- ══ ABA: MINHA LISTA ══ -->
+<div id="tab-lista">
+  <div id="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('todos',this)">Todos</button>
+    <button class="filter-btn" onclick="setFilter('movie',this)">🎬 Filmes</button>
+    <button class="filter-btn" onclick="setFilter('tv',this)">📺 Séries</button>
+    <button class="filter-btn" onclick="setFilter('anime',this)">⛩️ Animes</button>
+    <button class="filter-btn" onclick="setFilter('futuro',this)">🟢 Ainda não lançou</button>
+    <button class="filter-btn" onclick="setFilter('disponivel',this)">✅ Disponível</button>
+  </div>
+  <div id="grid"></div>
+  <div id="empty">
+    <i class="fas fa-bookmark"></i>
+    <h2>Sua lista está vazia</h2>
+    <p>Adicione filmes, séries e animes clicando em "Assistir Mais Tarde" no calendário ou nos detalhes.</p>
+    <a href="index.html"><i class="fas fa-home"></i> Voltar ao início</a>
+  </div>
+</div>
 
-<!-- VAZIO -->
-<div id="empty">
-  <i class="fas fa-bookmark"></i>
-  <h2>Sua lista está vazia</h2>
-  <p>Adicione filmes, séries e animes ao clicar em "Assistir Mais Tarde" no calendário ou nos detalhes.</p>
-  <a href="index.html"><i class="fas fa-home"></i> Voltar ao início</a>
+<!-- ══ ABA: CALENDÁRIO ══ -->
+<div id="tab-cal">
+
+  <!-- Filtros de tipo -->
+  <div id="cal-filter-bar">
+    <button class="filter-btn active" onclick="setCalFilter('todos',this)">Todos</button>
+    <button class="filter-btn" onclick="setCalFilter('serie',this)">📺 Séries</button>
+    <button class="filter-btn" onclick="setCalFilter('anime',this)">⛩️ Animes</button>
+    <button class="filter-btn" onclick="setCalFilter('dorama',this)">🎌 Doramas</button>
+    <button class="filter-btn" onclick="setCalFilter('hoje',this)">🔴 Hoje</button>
+    <button class="filter-btn" onclick="setCalFilter('futuro',this)">🟢 Futuros</button>
+  </div>
+
+  <!-- Skeleton de carregamento -->
+  <div id="cal-loading">
+    <div class="skel-group"><div class="skel-title-bar"></div><div class="skel-row"><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div></div></div>
+    <div class="skel-group"><div class="skel-title-bar"></div><div class="skel-row"><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div></div></div>
+    <div class="skel-group"><div class="skel-title-bar"></div><div class="skel-row"><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div></div></div>
+  </div>
+
+  <!-- Conteúdo do calendário -->
+  <div id="cal-content"></div>
+
+  <!-- Estado vazio/erro -->
+  <div id="cal-state">
+    <i class="fas fa-calendar-times"></i>
+    <p id="cal-state-msg">Nenhum conteúdo encontrado</p>
+  </div>
+
 </div>
 
 <!-- BOTTOM NAV MOBILE -->
@@ -263,7 +366,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
   <button class="mnav-btn" onclick="window.location.href='index.html'">
     <i class="fas fa-home"></i><span>Início</span>
   </button>
-  <button class="mnav-btn" onclick="window.location.href='calendario.html'">
+  <button class="mnav-btn" onclick="switchTab('cal');document.getElementById('tab-cal-btn').click()">
     <i class="fas fa-calendar-alt"></i><span>Calendário</span>
   </button>
   <button class="mnav-btn active">
@@ -280,48 +383,52 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 const IMG = 'https://image.tmdb.org/t/p';
 let currentFilter = 'todos';
 
-/* ── Utilitários ── */
+/* ══ UTILITÁRIOS GERAIS ══ */
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2400);
 }
-
 function formatCountdown(dateStr){
   if(!dateStr) return '';
-  const d = new Date(dateStr+'T00:00:00');
-  const now = new Date(); now.setHours(0,0,0,0);
-  const diff = Math.floor((d-now)/86400000);
-  if(diff < 0) return `Disponível há ${Math.abs(diff)} dia${Math.abs(diff)>1?'s':''}`;
-  if(diff === 0) return '🔴 Lança hoje!';
-  if(diff === 1) return '⏰ Amanhã!';
+  const d=new Date(dateStr+'T00:00:00');
+  const now=new Date(); now.setHours(0,0,0,0);
+  const diff=Math.floor((d-now)/86400000);
+  if(diff<0) return `Disponível há ${Math.abs(diff)} dia${Math.abs(diff)>1?'s':''}`;
+  if(diff===0) return '🔴 Lança hoje!';
+  if(diff===1) return '⏰ Amanhã!';
   return `⏳ Em ${diff} dias`;
 }
-
 function isAvailable(dateStr){
   if(!dateStr) return true;
-  const d = new Date(dateStr+'T00:00:00');
-  return d <= new Date();
+  return new Date(dateStr+'T00:00:00') <= new Date();
 }
-
 function typeLabel(item){
-  const t = (item.type||'').toLowerCase();
-  if(t.includes('anime') || t==='anime') return 'anime';
+  const t=(item.type||'').toLowerCase();
+  if(t.includes('anime')||t==='anime') return 'anime';
   if(t==='tv') return 'tv';
   return 'movie';
 }
-
 function typeIcon(item){
   const t=typeLabel(item);
   if(t==='anime') return '⛩️';
-  if(t==='tv')    return '📺';
+  if(t==='tv') return '📺';
   return '🎬';
 }
 
-/* ── Render ── */
+/* ══ TROCA DE ABAS ══ */
+function switchTab(tab){
+  document.getElementById('tab-lista').style.display = tab==='lista' ? 'block' : 'none';
+  document.getElementById('tab-cal').style.display   = tab==='cal'   ? 'block' : 'none';
+  document.getElementById('tab-lista-btn').classList.toggle('active', tab==='lista');
+  document.getElementById('tab-cal-btn').classList.toggle('active',   tab==='cal');
+  if(tab==='cal' && !calLoaded) loadCalendar();
+}
+
+/* ══ ABA: MINHA LISTA ══ */
 function render(){
-  const list = getWatchLater();
-  const filtered = list.filter(item=>{
+  const list=getWatchLater();
+  const filtered=list.filter(item=>{
     if(currentFilter==='todos') return true;
     if(currentFilter==='movie') return typeLabel(item)==='movie';
     if(currentFilter==='tv')    return typeLabel(item)==='tv';
@@ -330,35 +437,23 @@ function render(){
     if(currentFilter==='disponivel') return isAvailable(item.release);
     return true;
   });
-
-  document.getElementById('count').textContent = `${list.length} título${list.length!==1?'s':''}`;
-
-  const grid = document.getElementById('grid');
-  const empty = document.getElementById('empty');
-
-  if(!filtered.length){
-    grid.innerHTML='';
-    empty.style.display='flex';
-    return;
-  }
+  document.getElementById('count').textContent=`${list.length} título${list.length!==1?'s':''}`;
+  const grid=document.getElementById('grid');
+  const empty=document.getElementById('empty');
+  if(!filtered.length){ grid.innerHTML=''; empty.style.display='flex'; return; }
   empty.style.display='none';
-
   grid.innerHTML='';
   filtered.forEach(item=>{
-    const poster = item.poster
-      ? (item.poster.startsWith('http') ? item.poster : `${IMG}/w500${item.poster}`)
-      : '';
-    const countdown = formatCountdown(item.release);
-    const available = isAvailable(item.release);
-    const tLabel = typeLabel(item);
-    const tIcon  = typeIcon(item);
-
-    const card = document.createElement('div');
+    const poster=item.poster?(item.poster.startsWith('http')?item.poster:`${IMG}/w500${item.poster}`):'';
+    const countdown=formatCountdown(item.release);
+    const available=isAvailable(item.release);
+    const tLabel=typeLabel(item); const tIcon=typeIcon(item);
+    const card=document.createElement('div');
     card.className='wl-card';
     card.innerHTML=`
       ${poster
-        ? `<img class="wl-poster" src="${poster}" alt="${item.title}" loading="lazy" onerror="this.outerHTML='<div class=\\'wl-no-poster\\'>${tIcon}</div>'">`
-        : `<div class="wl-no-poster">${tIcon}</div>`}
+        ?`<img class="wl-poster" src="${poster}" alt="${item.title}" loading="lazy" onerror="this.outerHTML='<div class=\\'wl-no-poster\\'>${tIcon}</div>'">`
+        :`<div class="wl-no-poster">${tIcon}</div>`}
       <span class="type-badge">${tIcon} ${tLabel==='movie'?'Filme':tLabel==='anime'?'Anime':'Série'}</span>
       <button class="remove-btn" onclick="event.stopPropagation();doRemove('${item.id}')" title="Remover">✕</button>
       ${countdown?`<div class="wl-countdown${available?' past':''}">${countdown}</div>`:''}
@@ -374,37 +469,200 @@ function render(){
           <i class="fas fa-trash"></i> Remover
         </button>
       </div>`;
-    card.onclick = () => goDetail(item.id, item.type||'movie');
+    card.onclick=()=>goDetail(item.id,item.type||'movie');
     grid.appendChild(card);
   });
 }
-
-function doRemove(id){
-  removeWatchLater(id);
-  removeNotification(id);
-  toast('🗑️ Removido da lista');
-  render();
-}
-
-function goDetail(id, type){
-  window.location.href = `detalhes.html?id=${id}&type=${type}`;
-}
-
-function goWatch(id, type){
-  window.location.href = `detalhes.html?id=${id}&type=${type}&autoplay=1`;
-}
-
-function setFilter(f, btn){
+function doRemove(id){ removeWatchLater(id); removeNotification(id); toast('🗑️ Removido da lista'); render(); }
+function goDetail(id,type){ window.location.href=`detalhes.html?id=${id}&type=${type}`; }
+function goWatch(id,type){ window.location.href=`detalhes.html?id=${id}&type=${type}&autoplay=1`; }
+function setFilter(f,btn){
   currentFilter=f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#filter-bar .filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   render();
 }
 
-/* ── Permissão de notificação ao entrar na página ── */
-requestNotifPermission();
+/* ══ ABA: CALENDÁRIO ══ */
+const CAL_APIS=[
+  'https://warezcdn.lat/calendario.php',
+  'https://superflixapi.best/calendario.php',
+  'https://superflixapi.help/calendario.php',
+  'https://superflixapi.asia/calendario.php',
+  'https://superflixapi.my/calendario.php',
+];
+let calLoaded=false;
+let calAllData=[];
+let calFilter='todos';
+const CAL_TODAY=new Date(); CAL_TODAY.setHours(0,0,0,0);
 
+function dayKey(str){ return str?str.split('T')[0]:''; }
+function calIsToday(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d.getTime()===CAL_TODAY.getTime(); }
+function calIsPast(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d<CAL_TODAY; }
+function calIsFuture(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d>CAL_TODAY; }
+function fmtCalDate(str){
+  if(!str) return '';
+  const d=new Date(str+'T00:00:00');
+  const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]}`;
+}
+function detectCalType(item){
+  const t=(item.type||item.category||'').toLowerCase();
+  if(t.includes('anime')||item.is_anime) return 'anime';
+  if(t.includes('dorama')||t.includes('kdrama')||t.includes('k-drama')) return 'dorama';
+  return 'serie';
+}
+function calStatusLabel(s){
+  const m={'Hoje':'hoje','Atualizado':'atualizado','Futuro':'futuro','Atrasado':'atrasado'};
+  return m[s]||s?.toLowerCase()||'futuro';
+}
+function calTypeIcon(type){ return type==='anime'?'⛩️':type==='dorama'?'🎌':'📺'; }
+
+async function loadCalendar(){
+  calLoaded=true;
+  document.getElementById('cal-loading').style.display='block';
+  document.getElementById('cal-content').style.display='none';
+  document.getElementById('cal-state').style.display='none';
+  let data=null;
+  for(const url of CAL_APIS){
+    try{
+      const r=await fetch(url,{mode:'cors'});
+      if(!r.ok) continue;
+      const d=await r.json();
+      if(Array.isArray(d)&&d.length){ data=d; break; }
+      if(d&&typeof d==='object'){
+        const arr=Object.values(d).find(v=>Array.isArray(v));
+        if(arr&&arr.length){ data=arr; break; }
+      }
+    }catch(e){ continue; }
+  }
+  document.getElementById('cal-loading').style.display='none';
+  if(!data||!data.length){
+    document.getElementById('cal-state-msg').textContent='Não foi possível carregar o calendário. Tente novamente mais tarde.';
+    document.getElementById('cal-state').style.display='flex';
+    return;
+  }
+  calAllData=data.sort((a,b)=>new Date(a.air_date||'2099-01-01')-new Date(b.air_date||'2099-01-01'));
+  renderCalendar();
+}
+
+function setCalFilter(f,btn){
+  calFilter=f;
+  document.querySelectorAll('#cal-filter-bar .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCalendar();
+}
+
+function renderCalendar(){
+  const filtered=calAllData.filter(item=>{
+    const type=detectCalType(item);
+    const status=calStatusLabel(item.status);
+    if(calFilter==='todos') return true;
+    if(calFilter==='serie') return type==='serie';
+    if(calFilter==='anime') return type==='anime';
+    if(calFilter==='dorama') return type==='dorama';
+    if(calFilter==='hoje') return status==='hoje';
+    if(calFilter==='futuro') return status==='futuro'||calIsFuture(item.air_date);
+    return true;
+  });
+
+  const cont=document.getElementById('cal-content');
+  const state=document.getElementById('cal-state');
+  cont.innerHTML='';
+
+  if(!filtered.length){
+    document.getElementById('cal-state-msg').textContent='Nenhum conteúdo encontrado para este filtro.';
+    state.style.display='flex'; cont.style.display='none'; return;
+  }
+  state.style.display='none'; cont.style.display='block';
+
+  // Agrupar por dia
+  const groups={};
+  filtered.forEach(item=>{
+    const k=dayKey(item.air_date)||'sem-data';
+    if(!groups[k]) groups[k]=[];
+    groups[k].push(item);
+  });
+
+  Object.keys(groups).sort().forEach(dk=>{
+    const items=groups[dk];
+    const group=document.createElement('div');
+    group.className='day-group';
+
+    // Header do dia
+    const today=calIsToday(dk);
+    const future=calIsFuture(dk);
+    const past=calIsPast(dk);
+    const labelCls=today?'hoje-lbl':future?'futuro-lbl':'passado-lbl';
+    const dh=document.createElement('div'); dh.className='day-header';
+    dh.innerHTML=`
+      <span class="day-label ${labelCls}">${today?'📅 Hoje':fmtCalDate(dk)}</span>
+      ${today?'<span class="day-badge-hoje">HOJE</span>':''}
+      <span style="font-size:10px;color:#555;font-weight:600;">${items.length} ep${items.length>1?'s':''}</span>
+      <div class="day-line"></div>`;
+    group.appendChild(dh);
+
+    // Carrossel
+    const scroll=document.createElement('div'); scroll.className='h-scroll';
+    items.forEach(item=>scroll.appendChild(makeCalCard(item)));
+    group.appendChild(scroll);
+    cont.appendChild(group);
+  });
+}
+
+function makeCalCard(item){
+  const card=document.createElement('div'); card.className='ep-card';
+  const type=detectCalType(item);
+  const tIcon=calTypeIcon(type);
+  const status=calStatusLabel(item.status);
+  const past=calIsPast(item.air_date)&&!calIsToday(item.air_date);
+  const statusMap={hoje:'HOJE',atualizado:'✓',futuro:'Em breve',atrasado:'⚠'};
+  const wlId=item.tmdb_id||item.id||(item.title+'_'+item.episode_number);
+  const inList=isInWatchLater(wlId);
+
+  card.innerHTML=`
+    <div class="ep-poster-img${past?' past-poster':''}">
+      ${item.poster_path
+        ?`<img src="${item.poster_path}" alt="${item.title||''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>${tIcon}</div>'">`
+        :`<div class="no-img">${tIcon}</div>`}
+      <span class="ep-status-badge ${status}">${statusMap[status]||status}</span>
+    </div>
+    <button class="ep-wl-btn${inList?' in-list':''}" title="${inList?'Remover da lista':'Assistir Mais Tarde'}"
+      onclick="event.stopPropagation();toggleCalItem(this,'${wlId}',${JSON.stringify(item).replace(/'/g,"&#39;")})">
+      <i class="fas fa-bookmark"></i>
+    </button>
+    <div class="ep-info-cal">
+      <div class="ep-title-cal">${item.title||'—'}</div>
+      <div class="ep-meta-cal">${item.season_number?'T'+item.season_number+' ':''}${item.episode_number?'Ep '+item.episode_number:''} ${tIcon}</div>
+    </div>`;
+  return card;
+}
+
+function toggleCalItem(btn, wlId, item){
+  const wlItem={
+    id: wlId,
+    type: 'tv',
+    title: item.title||'',
+    poster: item.poster_path||'',
+    release: item.air_date||'',
+    overview: item.episode_title||'',
+    rating: ''
+  };
+  const added=toggleWatchLater(wlItem);
+  btn.classList.toggle('in-list', added);
+  btn.title=added?'Remover da lista':'Assistir Mais Tarde';
+  if(added){ addNotification(wlItem); toast(`🔖 "${item.title}" adicionado à Minha Lista!`); }
+  else { removeNotification(wlId); toast('🗑️ Removido da Minha Lista'); }
+  render(); // atualiza contador
+}
+
+/* ══ INIT ══ */
+requestNotifPermission();
 render();
+// Inicia na aba lista por padrão
+document.getElementById('tab-lista').style.display='block';
+document.getElementById('tab-cal').style.display='none';
 </script>
 </body>
 </html>
