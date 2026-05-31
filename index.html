@@ -303,6 +303,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
     <button class="nav-btn" onclick="showSection('brasil', event)">🇧🇷 Brasil</button>
     <button class="nav-btn" onclick="showFav(event)">Favoritos</button>
     <button class="nav-btn" onclick="showContinue(event)">Continuar</button>
+    <button class="nav-btn" onclick="window.location.href='assistir-mais-tarde.html'">🔖 Minha Lista</button>
   </div>
   <div class="header-right">
     <button onclick="toggleSearch()" title="Buscar"><i class="fas fa-search"></i></button>
@@ -324,6 +325,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   <button class="mob-cat" onclick="mobCat(this,'brasil')">🇧🇷 Brasil</button>
   <button class="mob-cat" onclick="mobCat(this,'fav')">Favoritos</button>
   <button class="mob-cat" onclick="mobCat(this,'continue')">Continuar</button>
+  <button class="mob-cat" onclick="window.location.href='assistir-mais-tarde.html'">🔖 Minha Lista</button>
 </div>
 
 <div id="page-home">
@@ -380,6 +382,8 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 
 <div id="toast"></div>
 
+<script src="watchlater.js"></script>
+<script src="notifications.js"></script>
 <script>
 // 1. DADOS DE ACESSO À API
 const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
@@ -1065,6 +1069,9 @@ async function openDetails(id,type){
       <button class="btn-more" onclick="toggleFav(${id},'${type}','${name.replace(/'/g,"\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
         <i class="fas fa-heart"></i> ${getFavs()[id]?'Remover':'Favoritar'}
       </button>
+      <button class="btn-more" id="wl-btn-${id}" onclick="doToggleWatchLater(${id},'${type}','${name.replace(/'/g,"\\'")}','${m.poster_path||''}','${m.release_date||m.first_air_date||''}','${m.overview||''}',${m.vote_average||0})">
+        <i class="fas fa-bookmark"></i> ${isInWatchLater(id)?'Na Lista':'Minha Lista'}
+      </button>
     `;
 
     buildServerBtns(); loadServer(0);
@@ -1251,8 +1258,31 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 // 15. START DO SITE
 (async()=>{
+  requestNotifPermission();
   loadHero(); goHome(null); window.onhashchange();
 })();
+
+// Função para toggling da Minha Lista diretamente do index
+function doToggleWatchLater(id, type, title, poster_path, release, overview, rating){
+  const item = {
+    id, type, title,
+    poster: poster_path ? (poster_path.startsWith('http') ? poster_path : poster_path) : '',
+    release, overview, rating
+  };
+  const added = toggleWatchLater(item);
+  const btn = document.getElementById('wl-btn-'+id);
+  if(btn){
+    btn.innerHTML = added
+      ? '<i class="fas fa-bookmark"></i> Na Lista'
+      : '<i class="fas fa-bookmark"></i> Minha Lista';
+  }
+  toast(added ? '🔖 Adicionado à Minha Lista!' : '🗑️ Removido da Minha Lista');
+  if(added){
+    addNotification(item);
+  } else {
+    removeNotification(id);
+  }
+}
 </script>
 
 <!-- Bottom Navigation Bar mobile -->
@@ -1269,8 +1299,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
   <button class="mob-nav-btn" id="mbn-continue" onclick="mobNav(this,'continue')">
     <i class="fas fa-play-circle"></i>Continuar
   </button>
-  <button class="mob-nav-btn" id="mbn-profile" onclick="">
-    <i class="fas fa-user-circle"></i>Perfil
+  <button class="mob-nav-btn" onclick="window.location.href='assistir-mais-tarde.html'">
+    <i class="fas fa-bookmark"></i>Minha Lista
   </button>
 </nav>
 </body>
