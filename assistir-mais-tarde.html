@@ -551,19 +551,58 @@ function calDemoData(){
   ];
 }
 
-/* Fetch idêntico ao calendario.html original que funciona */
-async function fetchCalAPI(){
-  for(const url of CAL_APIS){
-    try{
-      const r=await fetch(url,{mode:'cors'});
-      if(!r.ok) continue;
-      const d=await r.json();
-      if(Array.isArray(d)&&d.length) return d;
-      if(d&&typeof d==='object'){
-        const arr=Object.values(d).find(v=>Array.isArray(v));
-        if(arr&&arr.length) return arr;
+/* Tenta buscar a URL diretamente ou via proxy CORS */
+async function tryFetch(url){
+  // 1. Tentativa direta
+  try{
+    const r = await fetch(url, {mode:'cors'});
+    if(r.ok){
+      const d = await r.json();
+      if(Array.isArray(d) && d.length) return d;
+      if(d && typeof d==='object'){
+        const arr = Object.values(d).find(v=>Array.isArray(v));
+        if(arr && arr.length) return arr;
       }
-    }catch(e){ continue; }
+    }
+  }catch(e){}
+
+  // 2. Via proxy allorigins (contorna CORS)
+  try{
+    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const r = await fetch(proxy);
+    if(r.ok){
+      const wrap = await r.json();
+      const d = JSON.parse(wrap.contents);
+      if(Array.isArray(d) && d.length) return d;
+      if(d && typeof d==='object'){
+        const arr = Object.values(d).find(v=>Array.isArray(v));
+        if(arr && arr.length) return arr;
+      }
+    }
+  }catch(e){}
+
+  // 3. Via proxy corsproxy.io
+  try{
+    const proxy2 = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    const r = await fetch(proxy2);
+    if(r.ok){
+      const d = await r.json();
+      if(Array.isArray(d) && d.length) return d;
+      if(d && typeof d==='object'){
+        const arr = Object.values(d).find(v=>Array.isArray(v));
+        if(arr && arr.length) return arr;
+      }
+    }
+  }catch(e){}
+
+  return null;
+}
+
+async function fetchCalAPI(){
+  // Tenta cada endpoint com as 3 estratégias de fetch
+  for(const url of CAL_APIS){
+    const data = await tryFetch(url);
+    if(data) return data;
   }
   throw new Error('todas as APIs falharam');
 }
