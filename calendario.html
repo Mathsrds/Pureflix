@@ -612,9 +612,12 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 /* ═══════════════════════════════════════
    ESTADO GLOBAL
 ═══════════════════════════════════════ */
-const API_URL = 'calendario-proxy.php';
+// URL do seu Cloudflare Worker — troque pela URL real após o deploy
+const CAL_WORKER = 'https://pureflix-calendario.SEU-USUARIO.workers.dev';
+
+const API_URL = CAL_WORKER;
 const API_FALLBACKS = [
-  'calendario-proxy.php',
+  CAL_WORKER,
   'https://warezcdn.lat/calendario.php',
   'https://superflixapi.best/calendario.php',
   'https://superflixapi.help/calendario.php',
