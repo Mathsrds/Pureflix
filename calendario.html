@@ -675,18 +675,41 @@ function toast(msg){
 /* ═══════════════════════════════════════
    FETCH COM FALLBACK
 ═══════════════════════════════════════ */
+async function tryFetchCal(url){
+  // 1. Direto
+  try{
+    const r=await fetch(url,{mode:'cors'});
+    if(r.ok){
+      const d=await r.json();
+      if(Array.isArray(d)&&d.length) return d;
+      if(d&&typeof d==='object'){ const a=Object.values(d).find(v=>Array.isArray(v)); if(a&&a.length) return a; }
+    }
+  }catch(e){}
+  // 2. allorigins
+  try{
+    const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    if(r.ok){
+      const d=JSON.parse((await r.json()).contents);
+      if(Array.isArray(d)&&d.length) return d;
+      if(d&&typeof d==='object'){ const a=Object.values(d).find(v=>Array.isArray(v)); if(a&&a.length) return a; }
+    }
+  }catch(e){}
+  // 3. corsproxy.io
+  try{
+    const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+    if(r.ok){
+      const d=await r.json();
+      if(Array.isArray(d)&&d.length) return d;
+      if(d&&typeof d==='object'){ const a=Object.values(d).find(v=>Array.isArray(v)); if(a&&a.length) return a; }
+    }
+  }catch(e){}
+  return null;
+}
+
 async function fetchCalendar(){
   for(const url of API_FALLBACKS){
-    try{
-      const r = await fetch(url, {mode:'cors'});
-      if(!r.ok) continue;
-      const d = await r.json();
-      if(Array.isArray(d) && d.length) return d;
-      if(d && typeof d === 'object'){
-        const arr = Object.values(d).find(v=>Array.isArray(v));
-        if(arr && arr.length) return arr;
-      }
-    }catch(e){ continue; }
+    const data=await tryFetchCal(url);
+    if(data) return data;
   }
   throw new Error('API indisponível');
 }
