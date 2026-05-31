@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PureFlix - Minha Lista</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root{
+  --red:#e50914;
+  --bg:#141414;
+  --card:#1f1f1f;
+  --text:#fff;
+  --gray:#999;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#111;
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.logo{
+  color:var(--red);
+  font-size:28px;
+  font-weight:700;
+}
+
+.title{
+  font-size:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:20px;
+  padding:20px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+}
+
+.info{
+  padding:10px;
+}
+
+.info h3{
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.countdown{
+  color:#46d369;
+  font-size:12px;
+}
+
+.actions{
+  display:flex;
+  gap:5px;
+  margin-top:10px;
+}
+
+.btn{
+  flex:1;
+  border:none;
+  padding:8px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.watch{
+  background:var(--red);
+  color:white;
+}
+
+.remove{
+  background:#333;
+  color:white;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+
+  <div class="logo">PUREFLIX</div>
+  <div class="title">Minha Lista</div>
+</header>
+
+<div class="grid" id="watchlist"></div>
+
+<script src="watchlater.js"></script>
+</body>
+</html>
