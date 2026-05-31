@@ -487,8 +487,11 @@ function setFilter(f,btn){
 }
 
 /* ══ ABA: CALENDÁRIO ══ */
+// URL do seu Cloudflare Worker — troque pela URL real após o deploy
+const CAL_WORKER = 'https://pureflix-calendario.SEU-USUARIO.workers.dev';
+
 const CAL_APIS=[
-  'calendario-proxy.php',                        // proxy local (PHP no seu servidor)
+  CAL_WORKER,
   'https://warezcdn.lat/calendario.php',
   'https://superflixapi.best/calendario.php',
   'https://superflixapi.help/calendario.php',
