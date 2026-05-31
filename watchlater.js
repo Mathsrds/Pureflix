@@ -1,90 +1,54 @@
-function getWatchList(){
-  return JSON.parse(
-    localStorage.getItem("watchLater") || "[]"
-  );
+/* ═══════════════════════════════════════
+   watchlater.js — Gerencia "Assistir Mais Tarde"
+   Usado por: assistir-mais-tarde.html, calendario.html, detalhes.html
+═══════════════════════════════════════ */
+
+const WL_KEY = 'pf_watchlater';
+
+function getWatchLater(){
+  try{ return JSON.parse(localStorage.getItem(WL_KEY) || '[]'); }
+  catch(e){ return []; }
 }
 
-function saveWatchList(list){
-  localStorage.setItem(
-    "watchLater",
-    JSON.stringify(list)
-  );
+function saveWatchLater(list){
+  localStorage.setItem(WL_KEY, JSON.stringify(list));
 }
 
-function removeWatch(id){
-
-  let list = getWatchList();
-
-  list = list.filter(
-    item => item.id !== id
-  );
-
-  saveWatchList(list);
-
-  renderWatchList();
+function isInWatchLater(id){
+  return getWatchLater().some(x => String(x.id) === String(id));
 }
 
-function renderWatchList(){
-
-  const container =
-    document.getElementById("watchlist");
-
-  if(!container) return;
-
-  const list = getWatchList();
-
-  container.innerHTML = "";
-
-  if(list.length === 0){
-
-    container.innerHTML = `
-      <h2>Nenhum título salvo</h2>
-    `;
-
-    return;
+function addWatchLater(item){
+  const list = getWatchLater();
+  if(list.some(x => String(x.id) === String(item.id))){
+    return false; // já existe
   }
-
-  list.forEach(item=>{
-
-    container.innerHTML += `
-      <div class="card">
-
-        <img src="${item.poster}">
-
-        <div class="info">
-
-          <h3>${item.title}</h3>
-
-          <div class="countdown">
-            ${item.release || "Sem data"}
-          </div>
-
-          <div class="actions">
-
-            <button
-              class="btn watch"
-              onclick="watchNow('${item.link}')">
-              Assistir
-            </button>
-
-            <button
-              class="btn remove"
-              onclick="removeWatch(${item.id})">
-              Remover
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-    `;
+  list.unshift({
+    id:       item.id,
+    type:     item.type || item.media_type || 'movie',
+    title:    item.title || item.name || '',
+    poster:   item.poster || item.poster_path || '',
+    backdrop: item.backdrop || item.backdrop_path || '',
+    release:  item.release || item.release_date || item.first_air_date || '',
+    overview: item.overview || '',
+    rating:   item.rating || item.vote_average || '',
+    savedAt:  Date.now()
   });
+  saveWatchLater(list);
+  return true;
 }
 
-function watchNow(url){
-
-  location.href = url;
+function removeWatchLater(id){
+  const list = getWatchLater().filter(x => String(x.id) !== String(id));
+  saveWatchLater(list);
 }
 
-renderWatchList();
+function toggleWatchLater(item){
+  if(isInWatchLater(item.id)){
+    removeWatchLater(item.id);
+    return false; // removido
+  } else {
+    addWatchLater(item);
+    return true;  // adicionado
+  }
+}
