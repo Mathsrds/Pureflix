@@ -377,9 +377,41 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 <!-- TOAST -->
 <div id="toast"></div>
 
-<script src="watchlater.js"></script>
-<script src="notifications.js"></script>
 <script>
+/* ══ WATCHLATER (inline) ══ */
+const WL_KEY='pf_watchlater';
+function getWatchLater(){try{return JSON.parse(localStorage.getItem(WL_KEY)||'[]');}catch(e){return[];}}
+function saveWatchLater(list){localStorage.setItem(WL_KEY,JSON.stringify(list));}
+function isInWatchLater(id){return getWatchLater().some(x=>String(x.id)===String(id));}
+function addWatchLater(item){
+  const list=getWatchLater();
+  if(list.some(x=>String(x.id)===String(item.id))) return false;
+  list.unshift({id:item.id,type:item.type||item.media_type||'movie',title:item.title||item.name||'',poster:item.poster||item.poster_path||'',backdrop:item.backdrop||item.backdrop_path||'',release:item.release||item.release_date||item.first_air_date||'',overview:item.overview||'',rating:item.rating||item.vote_average||'',savedAt:Date.now()});
+  saveWatchLater(list); return true;
+}
+function removeWatchLater(id){saveWatchLater(getWatchLater().filter(x=>String(x.id)!==String(id)));}
+function toggleWatchLater(item){if(isInWatchLater(item.id)){removeWatchLater(item.id);return false;}else{addWatchLater(item);return true;}}
+
+/* ══ NOTIFICATIONS (inline) ══ */
+const NOTIF_KEY='pf_notifications';
+function getNotifications(){try{return JSON.parse(localStorage.getItem(NOTIF_KEY)||'[]');}catch(e){return[];}}
+function addNotification(item){
+  let list=getNotifications();
+  if(list.some(x=>String(x.id)===String(item.id))) return false;
+  list.push({id:item.id,type:item.type||'movie',title:item.title||item.name||'',poster:item.poster||item.poster_path||'',release:item.release||item.release_date||item.first_air_date||''});
+  localStorage.setItem(NOTIF_KEY,JSON.stringify(list)); return true;
+}
+function removeNotification(id){localStorage.setItem(NOTIF_KEY,JSON.stringify(getNotifications().filter(x=>String(x.id)!==String(id))));}
+function isNotifying(id){return getNotifications().some(x=>String(x.id)===String(id));}
+function toggleNotification(item){if(isNotifying(item.id)){removeNotification(item.id);return false;}else{addNotification(item);return true;}}
+async function requestNotifPermission(){
+  if(!('Notification' in window)) return false;
+  if(Notification.permission==='granted') return true;
+  if(Notification.permission==='denied') return false;
+  const p=await Notification.requestPermission();
+  return p==='granted';
+}
+
 const IMG = 'https://image.tmdb.org/t/p';
 let currentFilter = 'todos';
 
