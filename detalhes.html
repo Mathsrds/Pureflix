@@ -408,11 +408,11 @@ const IMG   = 'https://image.tmdb.org/t/p';
 const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 const SERVERS = [
-  { label:'VidSrc',    fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'VidSrc.me', fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'WarezCDN',  fn:(id,t,s,e)=>t==='tv'?`https://warezcdn.site/serie/${id}/${s||1}/${e||1}`:`https://warezcdn.site/filme/${id}` },
-  { label:'MultiEmbed',fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
-  { label:'AutoEmbed', fn:(id,t,s,e)=>t==='movie'?`https://autoembed.co/movie/tmdb/${id}`:`https://autoembed.co/tv/tmdb/${id}-${s||1}-${e||1}` },
+  { label:'WarezCDN',    fn:(id,t,s,e)=>t==='tv'?`https://warezcdn.lat/serie/${id}/${s||1}/${e||1}/`:`https://warezcdn.site/filme/${id}/` },
+  { label:'VidSrc',      fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'VidSrc.me',   fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'MultiEmbed',  fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
+  { label:'AutoEmbed',   fn:(id,t,s,e)=>t==='movie'?`https://autoembed.co/movie/tmdb/${id}`:`https://autoembed.co/tv/tmdb/${id}-${s||1}-${e||1}` },
 ];
 
 /* ═══════════════════════════════
