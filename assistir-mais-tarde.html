@@ -605,10 +605,24 @@ async function tryFetch(url){
 }
 
 async function fetchCalAPI(){
-  // Tenta cada endpoint com as 3 estratégias de fetch
   for(const url of CAL_APIS){
-    const data = await tryFetch(url);
-    if(data) return data;
+    try{
+      console.log('[Cal] tentando:', url);
+      const r = await fetch(url, {mode:'cors'});
+      if(!r.ok){ console.warn('[Cal] HTTP', r.status, url); continue; }
+      const text = await r.text();
+      console.log('[Cal] resposta bruta (200 chars):', text.slice(0,200));
+      let d;
+      try{ d=JSON.parse(text); }catch(e){ console.warn('[Cal] não é JSON:', url); continue; }
+      // Array direto
+      if(Array.isArray(d) && d.length){ console.log('[Cal] array direto, itens:', d.length); return d; }
+      // Objeto com chave array
+      if(d && typeof d==='object'){
+        const arr=Object.values(d).find(v=>Array.isArray(v)&&v.length>0);
+        if(arr){ console.log('[Cal] array dentro de objeto, itens:', arr.length); return arr; }
+      }
+      console.warn('[Cal] JSON sem array:', url, JSON.stringify(d).slice(0,100));
+    }catch(e){ console.warn('[Cal] erro em', url, e.message); }
   }
   throw new Error('todas as APIs falharam');
 }
