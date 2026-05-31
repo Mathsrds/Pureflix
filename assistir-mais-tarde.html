@@ -522,34 +522,64 @@ function calTypeIcon(type){ return type==='anime'?'⛩️':type==='dorama'?'🎌
 // Mapa de itens indexados por _calKey — evita passar objetos via atributos HTML
 const calItemMap={};
 
+/* Dados demo — usados quando todas as APIs falham */
+function calDemoData(){
+  const fmt=d=>d.toISOString().split('T')[0];
+  const t=new Date(CAL_TODAY);
+  const yst=new Date(t); yst.setDate(t.getDate()-1);
+  const tom=new Date(t); tom.setDate(t.getDate()+1);
+  const d2=new Date(t);  d2.setDate(t.getDate()+2);
+  const d3=new Date(t);  d3.setDate(t.getDate()+3);
+  return [
+    {title:'One Piece',episode_title:'O Despertar do Haki Real',episode_number:1115,season_number:1,air_date:fmt(yst),poster_path:'https://image.tmdb.org/t/p/w500/cMD9Ygz11zjJzAovURpO75Qg7rT.jpg',status:'Atualizado',type:'anime',tmdb_id:37854},
+    {title:'Naruto Shippuden',episode_title:'A Batalha Final',episode_number:500,season_number:21,air_date:fmt(yst),poster_path:'https://image.tmdb.org/t/p/w500/xppeysfvDKVx775MFuH8Z9ex394.jpg',status:'Atualizado',type:'anime',tmdb_id:31910},
+    {title:'Demon Slayer',episode_title:'O Pilar das Chamas',episode_number:14,season_number:4,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg',status:'Hoje',type:'anime',tmdb_id:85937},
+    {title:'Jujutsu Kaisen',episode_title:'Shibuya — Capítulo Final',episode_number:24,season_number:2,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/oENcSMBsHasHASnBiAbTAa4bT4j.jpg',status:'Hoje',type:'anime',tmdb_id:95479},
+    {title:'Stranger Things',episode_title:'O Fim do Upside Down',episode_number:9,season_number:5,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg',status:'Hoje',type:'serie',tmdb_id:66732},
+    {title:'The Last of Us',episode_title:'Parte 2 — Começo',episode_number:1,season_number:2,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg',status:'Hoje',type:'serie',tmdb_id:100088},
+    {title:'Attack on Titan',episode_title:'O Último Rugido',episode_number:88,season_number:4,air_date:fmt(tom),poster_path:'https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg',status:'Futuro',type:'anime',tmdb_id:1429},
+    {title:'Vincenzo',episode_title:'O Confronto Final',episode_number:20,season_number:1,air_date:fmt(tom),poster_path:'https://image.tmdb.org/t/p/w500/ppU1rE6WZSyHjrwRZdBRFhGPGS0.jpg',status:'Futuro',type:'dorama',tmdb_id:106519},
+    {title:'The Bear',episode_title:'Mise en Place',episode_number:4,season_number:3,air_date:fmt(tom),poster_path:'https://image.tmdb.org/t/p/w500/sHFlbKS3WLqMnp9t2ghADIJFnuQ.jpg',status:'Futuro',type:'serie',tmdb_id:136315},
+    {title:'Spy x Family',episode_title:'Operação Strix',episode_number:25,season_number:2,air_date:fmt(d2),poster_path:'https://image.tmdb.org/t/p/w500/vYAF2P4fxBbDsME3ecp53DmN8f1.jpg',status:'Futuro',type:'anime',tmdb_id:120089},
+    {title:'Crash Landing on You',episode_title:'Reencontro nas Nuvens',episode_number:16,season_number:1,air_date:fmt(d2),poster_path:'https://image.tmdb.org/t/p/w500/zBiJYTVKfIJETPqzGCvfBMxiMDI.jpg',status:'Futuro',type:'dorama',tmdb_id:94796},
+    {title:'House of the Dragon',episode_title:'O Dragão Vermelho',episode_number:5,season_number:2,air_date:fmt(d3),poster_path:'https://image.tmdb.org/t/p/w500/z2yahl2uefxDCl0nogcRBstwruJ.jpg',status:'Futuro',type:'serie',tmdb_id:94997},
+    {title:'My Hero Academia',episode_title:'Plus Ultra Final',episode_number:138,season_number:7,air_date:fmt(d3),poster_path:'https://image.tmdb.org/t/p/w500/mKl3ESgO3n8wIrGdGsVknCKuCJD.jpg',status:'Futuro',type:'anime',tmdb_id:65930},
+  ];
+}
+
+/* Fetch idêntico ao calendario.html original que funciona */
+async function fetchCalAPI(){
+  for(const url of CAL_APIS){
+    try{
+      const r=await fetch(url,{mode:'cors'});
+      if(!r.ok) continue;
+      const d=await r.json();
+      if(Array.isArray(d)&&d.length) return d;
+      if(d&&typeof d==='object'){
+        const arr=Object.values(d).find(v=>Array.isArray(v));
+        if(arr&&arr.length) return arr;
+      }
+    }catch(e){ continue; }
+  }
+  throw new Error('todas as APIs falharam');
+}
+
 async function loadCalendar(){
   calLoaded=true;
   document.getElementById('cal-loading').style.display='block';
   document.getElementById('cal-content').style.display='none';
   document.getElementById('cal-state').style.display='none';
-  let data=null;
 
-  for(const url of CAL_APIS){
-    try{
-      let r;
-      try{ r=await fetch(url,{mode:'cors',credentials:'omit'}); }
-      catch(e){ r=await fetch(url); }
-      if(!r||!r.ok) continue;
-      const d=await r.json();
-      if(Array.isArray(d)&&d.length){ data=d; break; }
-      if(d&&typeof d==='object'){
-        const arr=Object.values(d).find(v=>Array.isArray(v));
-        if(arr&&arr.length){ data=arr; break; }
-      }
-    }catch(e){ console.warn('[Cal] falhou:',url,e.message); continue; }
+  let data;
+  try{
+    data=await fetchCalAPI();
+    toast('✅ Calendário carregado');
+  }catch(e){
+    data=calDemoData();
+    toast('⚠️ Modo demonstração (API offline)');
   }
 
   document.getElementById('cal-loading').style.display='none';
-  if(!data||!data.length){
-    document.getElementById('cal-state-msg').textContent='Não foi possível carregar o calendário. Verifique sua conexão.';
-    document.getElementById('cal-state').style.display='flex';
-    return;
-  }
 
   // Indexa cada item pelo ID único para uso seguro no onclick
   data.forEach(item=>{
