@@ -570,7 +570,20 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
       <div class="modal-badges" id="modal-badges"></div>
       <div class="modal-ep-title" id="modal-ep-title"></div>
       <div class="modal-date" id="modal-date"></div>
+      <div style="display:flex;gap:10px;margin-top:4px;padding-bottom:8px;">
+        <button id="modal-wl-btn"
+          style="flex:1;background:#1a1a1a;border:1px solid #333;color:#ccc;border-radius:8px;
+                 padding:12px;font-size:13px;font-weight:700;font-family:'Barlow',sans-serif;
+                 cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+                 transition:all .2s;"
+          onmouseover="this.style.borderColor='var(--red)';this.style.color='#fff';"
+          onmouseout="this.style.borderColor='#333';this.style.color='#ccc';">
+          <i class="fas fa-bookmark"></i> <span id="modal-wl-label">Assistir Mais Tarde</span>
+        </button>
+      </div>
     </div>
+  </div>
+</div>
   </div>
 </div>
 
@@ -593,12 +606,15 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <!-- TOAST -->
 <div id="toast"></div>
 
+<script src="watchlater.js"></script>
+<script src="notifications.js"></script>
 <script>
 /* ═══════════════════════════════════════
    ESTADO GLOBAL
 ═══════════════════════════════════════ */
-const API_URL = 'https://superflixapi.best/calendario.php';
+const API_URL = 'https://warezcdn.lat/calendario.php';
 const API_FALLBACKS = [
+  'https://warezcdn.lat/calendario.php',
   'https://superflixapi.best/calendario.php',
   'https://superflixapi.help/calendario.php',
   'https://superflixapi.asia/calendario.php',
@@ -706,6 +722,7 @@ function demoData(){
    INICIALIZAÇÃO
 ═══════════════════════════════════════ */
 async function init(){
+  requestNotifPermission();
   try{
     let data = await fetchCalendar();
     allData = data;
@@ -978,6 +995,34 @@ function openModal(item){
   badges.innerHTML=`
     <span class="mbadge ${status}">${statusText[status]||item.status}</span>
     <span class="mbadge type">${typeIcon}</span>`;
+
+  // Botão Assistir Mais Tarde
+  const wlId = item.tmdb_id || item.id || (item.title+'_'+item.episode_number);
+  const wlItem = {
+    id:      wlId,
+    type:    type === 'anime' ? 'tv' : type === 'dorama' ? 'tv' : 'tv',
+    title:   item.title || '',
+    poster:  item.poster_path || '',
+    release: item.air_date || '',
+    overview: item.episode_title || '',
+    rating:  ''
+  };
+  const wlBtn   = document.getElementById('modal-wl-btn');
+  const wlLabel = document.getElementById('modal-wl-label');
+  const inList  = isInWatchLater(wlId);
+  wlLabel.textContent = inList ? 'Na Minha Lista ✓' : 'Assistir Mais Tarde';
+  wlBtn.style.background   = inList ? 'rgba(229,9,20,.15)' : '#1a1a1a';
+  wlBtn.style.borderColor  = inList ? 'var(--red)'         : '#333';
+  wlBtn.style.color        = inList ? '#ff7070'            : '#ccc';
+  wlBtn.onclick = () => {
+    const added = toggleWatchLater(wlItem);
+    wlLabel.textContent      = added ? 'Na Minha Lista ✓' : 'Assistir Mais Tarde';
+    wlBtn.style.background   = added ? 'rgba(229,9,20,.15)' : '#1a1a1a';
+    wlBtn.style.borderColor  = added ? 'var(--red)'         : '#333';
+    wlBtn.style.color        = added ? '#ff7070'            : '#ccc';
+    if(added){ addNotification(wlItem); toast('🔖 Adicionado à Minha Lista!'); }
+    else      { removeNotification(wlId); toast('🗑️ Removido da Minha Lista'); }
+  };
 
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
