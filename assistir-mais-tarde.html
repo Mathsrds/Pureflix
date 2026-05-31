@@ -3,289 +3,281 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>PureFlix — Minha Lista</title>
+<title>Pureflix</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+/* ═══════════════════════════════════════════════════════
+   1. VARIÁVEIS E GERAIS
+   ═══════════════════════════════════════════════════════ */
 :root{
   --red:#e50914; --red2:#b20710;
   --bg:#0a0a0a; --bg2:#141414; --bg3:#1a1a1a;
-  --white:#fff; --gray:#aaa;
+  --white:#fff; --gray:#aaa; --light:#e5e5e5;
   --green:#46d369; --gold:#f5c518;
-  --orange:#f39c12;
-  --card-w:160px;
+  --card-w:180px; --card-h:270px;
+  --header-h:64px;
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min-height:100vh;padding-bottom:80px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;overflow-x:hidden;}
+::-webkit-scrollbar{height:4px;width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
 
-/* ── HEADER ── */
-#header{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;gap:16px;
-  padding:0 4%;height:60px;
-  background:rgba(10,10,10,.97);
-  border-bottom:1px solid #1a1a1a;
-}
-.back-btn{
-  background:none;border:none;color:var(--gray);
-  font-size:18px;cursor:pointer;padding:6px;
-  display:flex;align-items:center;transition:color .2s;
-}
-.back-btn:hover{color:#fff;}
-.logo{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:24px;font-weight:900;color:var(--red);
-  letter-spacing:3px;text-decoration:none;
-}
-.page-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:20px;font-weight:700;color:var(--gray);
-  letter-spacing:1px;
-}
-.header-count{
-  margin-left:auto;font-size:13px;color:var(--gray);
-  background:#1a1a1a;border-radius:20px;padding:4px 12px;
-}
+/* ═══════════════════════════════════════════════════════
+   2. CABEÇALHO (HEADER) INTELIGENTE
+   ═══════════════════════════════════════════════════════ */
+#header{position:fixed;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;padding:0 4%;z-index:900;transition: background 0.4s, transform 0.3s ease-in-out;}
+#header.solid{background:var(--bg2);box-shadow:0 2px 20px rgba(0,0,0,.6);}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--red);letter-spacing:3px;cursor:pointer;margin-right:30px;flex-shrink:0;}
+.nav{display:flex;gap:6px;align-items:center;}
+.nav-btn{background:none;border:none;color:var(--gray);font-family:'Barlow',sans-serif;font-size:13px;padding:6px 10px;cursor:pointer;border-radius:4px;transition:all .2s;white-space:nowrap;}
+.nav-btn:hover,.nav-btn.active{color:var(--white);background:rgba(255,255,255,.08);}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
+.header-right button{background:none;border:none;color:var(--gray);font-size:16px;cursor:pointer;transition:color .2s;padding:4px;}
+.header-right button:hover{color:var(--white);}
+.avatar{width:30px;height:30px;background:var(--red);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
 
-/* ── ABAS ── */
-#tab-bar{
-  display:flex;border-bottom:1px solid #1e1e1e;
-  position:sticky;top:60px;z-index:99;
-  background:rgba(10,10,10,.97);
-}
-.tab-btn{
-  flex:1;background:none;border:none;color:var(--gray);
-  font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;
-  padding:14px 0;cursor:pointer;letter-spacing:.5px;
-  border-bottom:2px solid transparent;
-  transition:all .2s;display:flex;align-items:center;
-  justify-content:center;gap:7px;
-}
-.tab-btn:hover{color:#fff;}
-.tab-btn.active{color:#fff;border-bottom-color:var(--red);}
+/* Busca */
+#searchbar{position:fixed;top:var(--header-h);left:0;right:0;background:rgba(10,10,10,.97);padding:14px 4%;z-index:899;border-bottom:1px solid #222;display:none;}
+#searchbar.open{display:flex;gap:10px;}
+#searchbar input{flex:1;background:#1e1e1e;border:1px solid #333;border-radius:6px;padding:10px 16px;color:#fff;font-size:15px;font-family:'Barlow',sans-serif;outline:none;}
+#searchbar input:focus{border-color:#555;}
+#searchbar button{background:var(--red);color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;}
 
-/* ── FILTROS (aba lista) ── */
-#filter-bar{
-  display:flex;gap:8px;padding:14px 4%;
-  overflow-x:auto;scrollbar-width:none;
-}
-#filter-bar::-webkit-scrollbar{display:none;}
-.filter-btn{
-  flex-shrink:0;background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  color:#ccc;font-size:12px;font-weight:600;
-  font-family:'Barlow',sans-serif;
-  padding:6px 16px;border-radius:20px;
-  cursor:pointer;transition:all .2s;white-space:nowrap;
-}
-.filter-btn:hover{background:rgba(255,255,255,.15);color:#fff;}
-.filter-btn.active{background:#fff;border-color:#fff;color:#000;font-weight:700;}
+/* ═══════════════════════════════════════════════════════
+   3. HERO (BANNER PRINCIPAL) E CARROSSÉIS
+   ═══════════════════════════════════════════════════════ */
+#hero{height:90vh;position:relative;overflow:hidden;}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s;background:center/cover no-repeat;}
+.hero-slide.active{opacity:1;}
+.hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.4) 40%,transparent 70%), linear-gradient(to right,rgba(10,10,10,.85) 0%,transparent 55%);}
+.hero-content{position:absolute;bottom:18%;left:4%;max-width:540px;z-index:10;}
+.hero-grad{background:linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,.6) 40%, transparent 100%);}
+.hero-tags{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.hero-tag{font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:2px;text-transform:uppercase;}
+.hero-tag.red{background:var(--red);}
+.hero-tag.outline{border:1px solid rgba(255,255,255,.4);color:#ddd;}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:62px;font-weight:900;line-height:.95;letter-spacing:1px;margin-bottom:12px;text-shadow:0 2px 20px rgba(0,0,0,.5);}
+.hero-meta{font-size:13px;color:var(--gray);margin-bottom:12px;display:flex;gap:12px;align-items:center;}
+.hero-meta .score{color:var(--green);font-weight:700;}
+.hero-desc{font-size:15px;color:#ccc;line-height:1.6;max-height:72px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+.hero-btns{display:flex;gap:12px;margin-top:20px;}
+.btn-watch{background:var(--red);color:#fff;border:none;padding:11px 28px;border-radius:4px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Barlow',sans-serif;transition:background .2s;}
+.btn-watch:hover{background:var(--red2);}
+.btn-more{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);padding:11px 24px;border-radius:4px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Barlow',sans-serif;backdrop-filter:blur(4px);transition:background .2s;}
+.btn-more:hover{background:rgba(255,255,255,.25);}
+.hero-dots{position:absolute;bottom:6%;left:4%;display:flex;gap:6px;z-index:10;}
+.hero-dot{width:6px;height:6px;background:rgba(255,255,255,.3);border-radius:50%;cursor:pointer;transition:all .3s;}
+.hero-dot.active{width:20px;border-radius:3px;background:var(--red);}
 
-/* ── GRID DE CARDS ── */
-#grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(var(--card-w),1fr));
-  gap:16px;padding:0 4% 24px;
-}
+#page-home{padding-bottom:60px;}
+.section{padding:0 4%;margin-top:48px;}
+.section-header{display:flex;align-items:baseline;gap:14px;margin-bottom:16px;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;}
 
-/* ── CARD ── */
-.wl-card{
-  background:var(--bg3);border-radius:8px;
-  overflow:hidden;cursor:pointer;
-  transition:transform .25s,box-shadow .25s;
-  position:relative;
-}
-.wl-card:hover{transform:scale(1.04);box-shadow:0 12px 32px rgba(0,0,0,.7);}
-.wl-card:active{transform:scale(.97);}
-.wl-poster{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#111;}
-.wl-no-poster{width:100%;aspect-ratio:2/3;background:#111;display:flex;align-items:center;justify-content:center;font-size:48px;}
-.type-badge{
-  position:absolute;top:8px;left:8px;
-  font-size:9px;font-weight:800;letter-spacing:1px;
-  padding:3px 7px;border-radius:3px;text-transform:uppercase;
-  background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.2);color:#ccc;
-}
-.remove-btn{
-  position:absolute;top:8px;right:8px;
-  width:28px;height:28px;border-radius:50%;
-  background:rgba(0,0,0,.8);border:1px solid #555;
-  color:#fff;font-size:12px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:all .2s;
-}
-.wl-card:hover .remove-btn{opacity:1;}
-.remove-btn:hover{background:var(--red);border-color:var(--red);}
-.wl-countdown{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:28px 8px 8px;
-  background:linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 100%);
-  font-size:11px;color:var(--green);font-weight:700;text-align:center;
-}
-.wl-countdown.past{color:var(--gray);}
-.wl-info{padding:10px 10px 12px;}
-.wl-title{
-  font-size:13px;font-weight:700;line-height:1.3;color:#e5e5e5;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-  overflow:hidden;margin-bottom:4px;
-}
-.wl-meta{font-size:11px;color:var(--gray);}
-.wl-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 10px 12px;}
-.btn-watch-now{
-  background:var(--red);color:#fff;border:none;
-  border-radius:5px;padding:8px 4px;font-size:12px;font-weight:700;
-  font-family:'Barlow',sans-serif;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:5px;transition:background .2s;
-}
-.btn-watch-now:hover{background:var(--red2);}
-.btn-remove{
-  background:#222;color:var(--gray);border:1px solid #333;
-  border-radius:5px;padding:8px 4px;font-size:12px;font-weight:700;
-  font-family:'Barlow',sans-serif;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s;
-}
-.btn-remove:hover{background:#333;border-color:var(--red);color:var(--red);}
+.carousel-wrap{position:relative;}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;background:rgba(10,10,10,.85);border:1px solid #333;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:all .2s;opacity:0;}
+.carousel-wrap:hover .carousel-btn{opacity:1;}
+.carousel-btn:hover{background:rgba(229,9,20,.8);border-color:var(--red);}
+.carousel-btn.prev{left:-22px;}
+.carousel-btn.next{right:-22px;}
+.carousel{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:6px;}
+.carousel::-webkit-scrollbar{height:0;}
 
-/* ── VAZIO ── */
-#empty{
-  display:none;flex-direction:column;align-items:center;
-  justify-content:center;min-height:55vh;gap:16px;
-  color:var(--gray);text-align:center;padding:0 4%;
-}
-#empty i{font-size:64px;opacity:.2;}
-#empty h2{font-size:22px;font-weight:700;color:#555;}
-#empty p{font-size:14px;line-height:1.6;max-width:280px;}
-#empty a{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--red);color:#fff;border-radius:6px;
-  padding:12px 24px;font-size:14px;font-weight:700;
-  text-decoration:none;margin-top:8px;transition:background .2s;
-}
-#empty a:hover{background:var(--red2);}
+.card{flex:0 0 var(--card-w);width:var(--card-w);background:var(--bg3);border-radius:6px;overflow:hidden;cursor:pointer;position:relative;scroll-snap-align:start;transition:transform .25s,box-shadow .25s;}
+.card-thumb{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#1a1a1a;transition:transform .3s;}
+.card:hover{transform:scale(1.07);z-index:20;box-shadow:0 14px 40px rgba(0,0,0,.7);}
+.card img{width:100%;height:100%;object-fit:cover;display:block;}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.97));opacity:0;transition:opacity .25s;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;}
+.card:hover .card-overlay{opacity:1;}
+.card-title{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:4px;}
+.card-meta{font-size:11px;color:var(--green);font-weight:700;}
+.card-actions{display:flex;gap:8px;margin-top:8px;}
+.card-btn{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.6);color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.card-btn:hover{background:var(--red);border-color:var(--red);}
+.card-btn.fav-on{background:var(--red);border-color:var(--red);}
+.card-badge{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:2px;letter-spacing:.5px;text-transform:uppercase;}
+.card-continue{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--red);}
+.skel{background:linear-gradient(90deg,#1a1a1a 25%,#262626 50%,#1a1a1a 75%);background-size:400% 100%;animation:skel 1.4s infinite;border-radius:6px;flex:0 0 var(--card-w);height:var(--card-h);}
+@keyframes skel{0%{background-position:400% 0}100%{background-position:-400% 0}}
 
-/* ══════════════════════════════════
-   ABA CALENDÁRIO
-══════════════════════════════════ */
-#tab-cal{display:none;}
+/* ═══════════════════════════════════════════════════════
+   4. PÁGINA DE DETALHES E PLAYER
+   ═══════════════════════════════════════════════════════ */
+#page-details{position:fixed;inset:0;background:var(--bg);z-index:950;display:none;overflow-y:auto;padding-top:0;}
+.det-backdrop{width:100%;height:calc(420px + var(--header-h));position:relative;background:center/cover no-repeat;flex-shrink:0;}
+.det-backdrop::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.3) 55%,transparent 85%);}
+.det-body{max-width:1100px;margin:0 auto;padding:0 4% 60px;display:flex;gap:36px;margin-top:-160px;position:relative;z-index:5;}
+.det-poster{width:210px;flex-shrink:0;border-radius:8px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.7);}
+.det-poster img{width:100%;display:block;}
+.det-info{flex:1;min-width:0;}
+.det-title{font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:900;letter-spacing:1px;line-height:.95;margin-bottom:14px;}
+.det-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.det-tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 12px;border-radius:3px;font-size:12px;color:#ccc;}
+.det-tag.green{color:var(--green);border-color:rgba(70,211,105,.3);}
+.det-tag.red{background:rgba(229,9,20,.15);border-color:rgba(229,9,20,.3);color:#ff7070;}
+.det-synopsis{font-size:15px;line-height:1.7;color:#bbb;margin-bottom:24px;}
+.det-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;}
 
-/* Filtros de tipo do calendário */
-#cal-filter-bar{
-  display:flex;gap:8px;padding:14px 4%;
-  overflow-x:auto;scrollbar-width:none;
-}
-#cal-filter-bar::-webkit-scrollbar{display:none;}
+/* Player e Servidores */
+.player-section{margin-bottom:20px;}
+.player-label{font-size:11px;color:var(--gray);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+.server-grid{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px;margin-bottom:14px;flex-wrap:nowrap;}
+.server-grid::-webkit-scrollbar{display:none;}
+.srv-btn{background:transparent;border:1px solid #444;color:#ccc;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;font-family:'Barlow',sans-serif;white-space:nowrap;flex-shrink:0;}
+.srv-btn:hover:not(.active){border-color:#fff;color:#fff;}
+.srv-btn.active{background:var(--red);border-color:var(--red);color:#fff;}
+.srv-btn.trying{border-color:orange;color:orange;animation:pulse .8s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.player-box{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;position:relative;}
+.player-box iframe{width:100%;height:100%;border:none;display:block;position:absolute;inset:0;}
+.player-loader{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:2;}
+.spinner{width:48px;height:48px;border:3px solid #222;border-top-color:var(--red);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.player-loader p{font-size:13px;color:#555;}
+/* Botão de play falso */
+#fake-play-btn{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#000;cursor:pointer;transition:background .2s;}
+#fake-play-btn:hover,#fake-play-btn:active{background:#111;}
+#fake-play-btn .play-circle{width:72px;height:72px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(229,9,20,.5);transition:transform .15s;}
+#fake-play-btn:hover .play-circle,#fake-play-btn:active .play-circle{transform:scale(1.1);}
+#fake-play-btn .play-circle i{font-size:28px;color:#fff;margin-left:4px;}
+#fake-play-btn .play-label{font-size:13px;color:#aaa;font-weight:600;letter-spacing:.5px;}
+#fake-play-btn .play-title{font-size:15px;color:#fff;font-weight:700;text-align:center;padding:0 20px;max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fallback-bar{margin-top:10px;display:none;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);border-radius:6px;padding:10px 16px;font-size:13px;color:orange;align-items:center;justify-content:space-between;gap:10px;}
+.fallback-bar.show{display:flex;}
+.fallback-bar button{background:orange;color:#000;border:none;border-radius:4px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;}
 
-/* Skeleton */
-.skel-group{padding:0 4%;margin-bottom:28px;}
-.skel-title-bar{width:130px;height:16px;background:#1e1e1e;border-radius:4px;margin-bottom:12px;animation:sk 1.2s infinite;}
-.skel-row{display:flex;gap:10px;}
-.skel-c{flex-shrink:0;width:110px;aspect-ratio:2/3;background:#1e1e1e;border-radius:6px;animation:sk 1.2s infinite;}
-@keyframes sk{0%,100%{opacity:1;}50%{opacity:.35;}}
+/* Temporadas (Apenas Séries) */
+.seasons-section{margin-top:24px;}
+.seasons-label{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.season-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.season-tab{background:var(--bg3);border:1px solid #2a2a2a;color:#ccc;padding:6px 16px;border-radius:4px;font-size:13px;cursor:pointer;transition:all .2s;font-family:'Barlow',sans-serif;}
+.season-tab:hover{border-color:#555;}
+.season-tab.active{background:var(--red);border-color:var(--red);color:#fff;}
+.episodes-grid{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding-right:4px;}
+.episode-card{display:flex;gap:14px;background:var(--bg3);border-radius:6px;padding:10px;cursor:pointer;border:1px solid transparent;transition:all .2s;}
+.episode-card:hover,.episode-card.active{border-color:#333;background:#222;}
+.episode-card.active{border-color:var(--red);}
+.ep-thumb{width:120px;height:68px;background:#111;border-radius:4px;overflow:hidden;flex-shrink:0;position:relative;}
+.ep-thumb img{width:100%;height:100%;object-fit:cover;}
+.ep-thumb .play-over{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.episode-card:hover .play-over{opacity:1;}
+.ep-info{flex:1;min-width:0;}
+.ep-num{font-size:11px;color:var(--gray);margin-bottom:4px;}
+.ep-title{font-size:14px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ep-desc{font-size:12px;color:#777;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 
-/* Grupos de dia */
-.day-group{margin-bottom:28px;}
-.day-header{
-  display:flex;align-items:center;gap:10px;
-  padding:0 4%;margin-bottom:12px;
-}
-.day-label{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:18px;font-weight:900;letter-spacing:.5px;
-  white-space:nowrap;
-}
-.day-label.hoje-lbl{color:var(--red);}
-.day-label.futuro-lbl{color:var(--green);}
-.day-label.passado-lbl{color:var(--gray);}
-.day-badge-hoje{background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:3px 8px;border-radius:10px;letter-spacing:1px;text-transform:uppercase;}
-.day-line{flex:1;height:1px;background:rgba(255,255,255,.07);}
+/* ═══════════════════════════════════════════════════════
+   5. COMPONENTES EXTRAS
+   ═══════════════════════════════════════════════════════ */
+.empty-row{text-align:center;padding:30px;color:#444;font-size:14px;}
+.ver-mais-wrap{text-align:center;margin-top:14px;}
+.ver-mais-btn{background:transparent;border:1px solid #333;color:#aaa;padding:8px 28px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;}
+.ver-mais-btn:hover{border-color:var(--red);color:#fff;background:rgba(229,9,20,.1);}
+.ver-mais-btn:disabled{opacity:.4;cursor:default;}
+#toast{position:fixed;bottom:30px;right:30px;background:#222;border:1px solid #333;border-radius:8px;padding:12px 20px;font-size:14px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
+#toast.show{opacity:1;transform:translateY(0);}
+.btn-close{position:fixed;top:16px;right:4%;width:38px;height:38px;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;z-index:960;transition:background .2s;}
+.btn-close:hover{background:var(--red);}
 
-/* Carrossel horizontal */
-.h-scroll{display:flex;gap:10px;padding:0 4%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.h-scroll::-webkit-scrollbar{display:none;}
-
-/* Card de episódio */
-.ep-card{flex-shrink:0;width:110px;cursor:pointer;position:relative;}
-.ep-card:active .ep-poster-img{transform:scale(.96);}
-.ep-poster-img{
-  width:110px;aspect-ratio:2/3;border-radius:6px;overflow:hidden;
-  background:#1a1a1a;position:relative;transition:transform .2s;
-}
-.ep-poster-img img{width:100%;height:100%;object-fit:cover;display:block;}
-.ep-poster-img .no-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;color:#333;}
-@media(hover:hover){.ep-card:hover .ep-poster-img{transform:scale(1.04);box-shadow:0 8px 20px rgba(0,0,0,.7);}}
-.ep-status-badge{
-  position:absolute;top:5px;left:5px;
-  font-size:9px;font-weight:800;letter-spacing:1px;
-  padding:3px 7px;border-radius:3px;text-transform:uppercase;line-height:1;
-}
-.ep-status-badge.hoje{background:var(--red);color:#fff;}
-.ep-status-badge.atualizado{background:var(--green);color:#000;}
-.ep-status-badge.futuro{background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.2);color:#ccc;}
-.ep-status-badge.atrasado{background:var(--orange);color:#000;}
-.ep-poster-img.past-poster::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.42);border-radius:6px;}
-
-/* Botão de marcar na lista — canto inferior direito do card */
-.ep-wl-btn{
-  position:absolute;bottom:42px;right:4px;
-  width:26px;height:26px;border-radius:50%;
-  background:rgba(0,0,0,.85);border:1px solid #555;
-  color:#aaa;font-size:10px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;z-index:5;
-  opacity:0;
-}
-.ep-card:hover .ep-wl-btn{opacity:1;}
-.ep-wl-btn.in-list{background:rgba(229,9,20,.2);border-color:var(--red);color:var(--red);opacity:1;}
-@media(max-width:768px){.ep-wl-btn{opacity:1;}}
-
-.ep-info-cal{margin-top:6px;padding:0 2px;}
-.ep-title-cal{font-size:12px;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#e5e5e5;}
-.ep-meta-cal{margin-top:3px;font-size:10px;color:var(--gray);}
-
-/* Estado vazio/erro calendário */
-#cal-state{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;gap:14px;color:var(--gray);text-align:center;padding:0 4%;}
-#cal-state i{font-size:52px;opacity:.2;}
-#cal-state p{font-size:14px;}
-
-/* ── TOAST ── */
-#toast{
-  position:fixed;bottom:80px;left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:#222;border:1px solid #333;
-  color:#fff;padding:10px 20px;border-radius:8px;
-  font-size:13px;white-space:nowrap;
-  opacity:0;transition:all .25s;z-index:9999;pointer-events:none;
-}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* ── MOBILE NAV ── */
-#mobile-nav{
-  display:none;position:fixed;
-  bottom:0;left:0;right:0;height:56px;
-  background:rgba(14,14,14,.95);backdrop-filter:blur(16px);
-  border-top:1px solid #1a1a1a;z-index:500;
-  align-items:center;justify-content:space-around;
-}
-.mnav-btn{
-  display:flex;flex-direction:column;align-items:center;
-  gap:3px;background:none;border:none;color:#666;
-  font-size:9px;font-weight:600;cursor:pointer;padding:6px 12px;
-  font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.5px;
-}
-.mnav-btn i{font-size:20px;}
-.mnav-btn.active{color:#fff;}
-
+/* Mobile Adapts */
+/* ═══════════════════════════════════════
+   MOBILE — Estilo Netflix App
+   ═══════════════════════════════════════ */
 @media(max-width:768px){
-  :root{--card-w:140px;}
-  body{padding-bottom:70px;}
-  #mobile-nav{display:flex;}
-  .remove-btn{opacity:1;}
+  :root{--card-w:130px;--card-h:195px;--header-h:56px;}
+
+  /* Header mobile: transparente no topo, escuro ao rolar */
+  #header{padding:0 16px;background:transparent;transform:none!important;}
+  #header.solid{background:rgba(10,10,10,.97)!important;box-shadow:0 2px 12px rgba(0,0,0,.6);}
+  .logo{font-size:26px;margin-right:0;}
+  .nav{display:none!important;}
+  .header-right{gap:12px;}
+  .header-right button{font-size:18px;}
+  .avatar{width:28px;height:28px;font-size:12px;border-radius:4px;}
+
+  /* Barra de busca mobile */
+  #searchbar{top:var(--header-h);padding:10px 16px;}
+  #searchbar input{font-size:14px;padding:9px 14px;}
+
+  /* Pills de categoria horizontais (abaixo do header) */
+  #mobile-cats{
+    display:flex;gap:8px;padding:10px 16px 4px;
+    overflow-x:auto;scrollbar-width:none;
+    position:sticky;top:var(--header-h);z-index:800;
+    background:linear-gradient(var(--bg) 80%,transparent);
+  }
+  #mobile-cats::-webkit-scrollbar{display:none;}
+  .mob-cat{
+    flex-shrink:0;padding:5px 16px;border-radius:20px;
+    border:1px solid #444;background:rgba(255,255,255,.08);
+    color:#ccc;font-size:13px;font-weight:600;cursor:pointer;
+    white-space:nowrap;transition:all .2s;font-family:'Barlow',sans-serif;
+  }
+  .mob-cat.active,.mob-cat:active{background:#fff;color:#000;border-color:#fff;}
+
+  /* Hero mobile: tela quase cheia */
+  #hero{height:82vw;min-height:280px;max-height:480px;}
+  .hero-title{font-size:32px;line-height:1.1;}
+  .hero-content{bottom:10%;left:16px;right:16px;max-width:100%;}
+  .hero-btns{flex-wrap:wrap;gap:8px;}
+  .hero-btns button{font-size:13px;padding:9px 18px;}
+
+  /* Carrosséis */
+  .section{margin-bottom:28px;margin-top:0;}
+  .section-title{font-size:16px;padding:0 0;margin-bottom:12px;}
+  .carousel-wrap{padding:0 16px;}
+  .carousel{gap:8px;}
+  .carousel-btn{display:none;}
+  .card-thumb{border-radius:6px;}
+
+  /* Página de detalhes mobile */
+  .det-body{flex-direction:column;margin-top:-50px;padding:0 16px 100px;}
+  .det-poster{width:110px;margin:0 auto;}
+  .det-title{font-size:26px;text-align:center;}
+  .det-tags{justify-content:center;}
+  .det-synopsis{font-size:13px;}
+  .det-btns{justify-content:center;}
+  .player-section{margin-top:20px;}
+  .server-grid{gap:6px;flex-wrap:nowrap;}
+  .srv-btn{font-size:12px;padding:7px 14px;border-radius:20px;}
+
+  /* Episódios */
+  .episode-card{padding:10px;}
+  .ep-thumb{width:100px;height:56px;}
+
+  /* Espaço para bottom nav */
+  #page-home{padding-bottom:70px;}
+
+  /* Bottom Navigation Bar — estilo Netflix */
+  #mobile-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    height:60px;background:rgba(10,10,10,.97);
+    border-top:1px solid #1f1f1f;z-index:1000;
+    justify-content:space-around;align-items:center;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .mob-nav-btn{
+    display:flex;flex-direction:column;align-items:center;
+    gap:3px;background:none;border:none;color:#777;
+    font-size:10px;font-weight:600;cursor:pointer;
+    font-family:'Barlow',sans-serif;padding:6px 10px;
+    transition:color .2s;min-width:48px;
+  }
+  .mob-nav-btn i{font-size:20px;}
+  .mob-nav-btn.active,.mob-nav-btn:active{color:#fff;}
+  .mob-nav-btn.active i{color:#fff;}
+
+  /* Esconde bottom nav na página de detalhes */
+  #page-details ~ #mobile-nav{display:none;}
 }
-@media(min-width:500px){:root{--card-w:180px;}}
-@media(min-width:768px){
-  :root{--card-w:180px;}
+
+/* Desktop: esconde elementos mobile */
+@media(min-width:769px){
+  #mobile-cats{display:none;}
   #mobile-nav{display:none;}
-  .ep-card{width:130px;}
-  .ep-poster-img{width:130px;}
 }
 </style>
 <script src="watchlater.js" defer></script>
@@ -293,501 +285,1013 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;min
 </head>
 <body>
 
-<!-- HEADER -->
 <div id="header">
-  <button class="back-btn" onclick="history.back()" title="Voltar">
-    <i class="fas fa-arrow-left"></i>
-  </button>
-  <a href="index.html" class="logo">PUREFLIX</a>
-  <span class="page-title">🔖 Minha Lista</span>
-  <span class="header-count" id="count">0 títulos</span>
-</div>
-
-<!-- ABAS -->
-<div id="tab-bar">
-  <button class="tab-btn active" id="tab-lista-btn" onclick="switchTab('lista')">
-    <i class="fas fa-bookmark"></i> Minha Lista
-  </button>
-  <button class="tab-btn" id="tab-cal-btn" onclick="switchTab('cal')">
-    <i class="fas fa-calendar-alt"></i> Calendário
-  </button>
-</div>
-
-<!-- ══ ABA: MINHA LISTA ══ -->
-<div id="tab-lista">
-  <div id="filter-bar">
-    <button class="filter-btn active" onclick="setFilter('todos',this)">Todos</button>
-    <button class="filter-btn" onclick="setFilter('movie',this)">🎬 Filmes</button>
-    <button class="filter-btn" onclick="setFilter('tv',this)">📺 Séries</button>
-    <button class="filter-btn" onclick="setFilter('anime',this)">⛩️ Animes</button>
-    <button class="filter-btn" onclick="setFilter('futuro',this)">🟢 Ainda não lançou</button>
-    <button class="filter-btn" onclick="setFilter('disponivel',this)">✅ Disponível</button>
+  <div class="logo" onclick="goHome(event)">PUREFLIX</div>
+  <div class="nav">
+    <button class="nav-btn active" onclick="goHome(event)">Início</button>
+    <button class="nav-btn" onclick="showSection('movies', event)">Filmes</button>
+    <button class="nav-btn" onclick="showSection('series', event)">Séries</button>
+    <button class="nav-btn" onclick="showSection('animes', event)">Animes</button>
+    <button class="nav-btn" onclick="showSection('brasil', event)">🇧🇷 Brasil</button>
+    <button class="nav-btn" onclick="showFav(event)">Favoritos</button>
+    <button class="nav-btn" onclick="showContinue(event)">Continuar</button>
+    <button class="nav-btn" onclick="window.location.href='assistir-mais-tarde.html'">🔖 Minha Lista</button>
   </div>
-  <div id="grid"></div>
-  <div id="empty">
-    <i class="fas fa-bookmark"></i>
-    <h2>Sua lista está vazia</h2>
-    <p>Adicione filmes, séries e animes clicando em "Assistir Mais Tarde" no calendário ou nos detalhes.</p>
-    <a href="index.html"><i class="fas fa-home"></i> Voltar ao início</a>
+  <div class="header-right">
+    <button onclick="toggleSearch()" title="Buscar"><i class="fas fa-search"></i></button>
+    <div class="avatar">P</div>
   </div>
 </div>
 
-<!-- ══ ABA: CALENDÁRIO ══ -->
-<div id="tab-cal">
-
-  <!-- Filtros de tipo -->
-  <div id="cal-filter-bar">
-    <button class="filter-btn active" onclick="setCalFilter('todos',this)">Todos</button>
-    <button class="filter-btn" onclick="setCalFilter('serie',this)">📺 Séries</button>
-    <button class="filter-btn" onclick="setCalFilter('anime',this)">⛩️ Animes</button>
-    <button class="filter-btn" onclick="setCalFilter('dorama',this)">🎌 Doramas</button>
-    <button class="filter-btn" onclick="setCalFilter('hoje',this)">🔴 Hoje</button>
-    <button class="filter-btn" onclick="setCalFilter('futuro',this)">🟢 Futuros</button>
-  </div>
-
-  <!-- Skeleton de carregamento -->
-  <div id="cal-loading" style="display:none;">
-    <div class="skel-group"><div class="skel-title-bar"></div><div class="skel-row"><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div></div></div>
-    <div class="skel-group"><div class="skel-title-bar"></div><div class="skel-row"><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div></div></div>
-    <div class="skel-group"><div class="skel-title-bar"></div><div class="skel-row"><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div><div class="skel-c"></div></div></div>
-  </div>
-
-  <!-- Conteúdo do calendário -->
-  <div id="cal-content" style="display:none;"></div>
-
-  <!-- Estado vazio/erro -->
-  <div id="cal-state" style="display:none;">
-    <i class="fas fa-calendar-times"></i>
-    <p id="cal-state-msg">Nenhum conteúdo encontrado</p>
-  </div>
-
+<div id="searchbar">
+  <input id="searchInput" type="text" placeholder="Buscar filmes, séries, animes..." onkeydown="if(event.key==='Enter')doSearch()">
+  <button onclick="doSearch()"><i class="fas fa-search"></i> Buscar</button>
 </div>
 
-<!-- BOTTOM NAV MOBILE -->
-<nav id="mobile-nav">
-  <button class="mnav-btn" onclick="window.location.href='index.html'">
-    <i class="fas fa-home"></i><span>Início</span>
-  </button>
-  <button class="mnav-btn" onclick="switchTab('cal');document.getElementById('tab-cal-btn').click()">
-    <i class="fas fa-calendar-alt"></i><span>Calendário</span>
-  </button>
-  <button class="mnav-btn active">
-    <i class="fas fa-bookmark"></i><span>Minha Lista</span>
-  </button>
-</nav>
+<!-- Pills de categoria mobile -->
+<div id="mobile-cats">
+  <button class="mob-cat active" onclick="mobCat(this,'home')">Início</button>
+  <button class="mob-cat" onclick="mobCat(this,'series')">Séries</button>
+  <button class="mob-cat" onclick="mobCat(this,'movies')">Filmes</button>
+  <button class="mob-cat" onclick="mobCat(this,'animes')">Animes</button>
+  <button class="mob-cat" onclick="mobCat(this,'brasil')">🇧🇷 Brasil</button>
+  <button class="mob-cat" onclick="mobCat(this,'fav')">Favoritos</button>
+  <button class="mob-cat" onclick="mobCat(this,'continue')">Continuar</button>
+  <button class="mob-cat" onclick="window.location.href='assistir-mais-tarde.html'">🔖 Minha Lista</button>
+</div>
 
-<!-- TOAST -->
+<div id="page-home">
+  <div id="hero">
+    <div class="hero-dots" id="hero-dots"></div>
+  </div>
+  <div id="sections-container"></div>
+</div>
+
+<div id="page-details">
+  <div class="btn-close" onclick="closeDetails()"><i class="fas fa-times"></i></div>
+  <div class="det-backdrop" id="det-backdrop"></div>
+  <div class="det-body">
+    <div class="det-poster"><img id="det-poster" src="" alt=""></div>
+    <div class="det-info">
+      <h1 class="det-title" id="det-title"></h1>
+      <div class="det-tags" id="det-tags"></div>
+      <p class="det-synopsis" id="det-synopsis"></p>
+      <div class="det-btns" id="det-btns"></div>
+
+      <div class="player-section">
+        <div class="player-box" id="player-box">
+          <!-- iframe e fake-play são injetados dinamicamente pelo JS -->
+        </div>
+        <div class="fallback-bar" id="fallback-bar" style="margin-top:10px;">
+          <span id="fallback-msg">⚠️ Tela preta detectada. Trocando servidor...</span>
+          <button onclick="nextServer()">Trocar agora</button>
+        </div>
+        <div style="margin-top:16px;">
+          <p class="player-label"><i class="fas fa-film"></i> Fontes de Vídeo</p>
+          <div class="server-grid" id="server-grid"></div>
+          <p style="color:var(--gray);font-size:12px;margin-top:8px;line-height:1.5;">
+            Se o vídeo não carregar ou estiver sem dublagem, tente outra fonte acima. As fontes com 🇧🇷 têm opção de dublagem em português.
+          </p>
+        </div>
+      </div>
+
+      <div class="seasons-section" id="seasons-section" style="display:none">
+        <div class="seasons-label"><i class="fas fa-tv"></i> Temporadas e Episódios</div>
+        <div class="season-tabs" id="season-tabs"></div>
+        <div class="episodes-grid" id="episodes-grid"></div>
+      </div>
+
+      <div class="seasons-section" id="recommendations-section" style="display:none; margin-top:40px;">
+        <div class="seasons-label"><i class="fas fa-star"></i> Títulos Semelhantes Recomendados</div>
+        <div class="carousel-wrap">
+          <div class="carousel" id="recommendations-carousel"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const IMG = 'https://image.tmdb.org/t/p';
-let currentFilter = 'todos';
+// 1. DADOS DE ACESSO À API
+const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
+const BASE  = 'https://api.themoviedb.org/3';
+const IMG   = 'https://image.tmdb.org/t/p';
+const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
-/* ══ UTILITÁRIOS GERAIS ══ */
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2400);
-}
-function formatCountdown(dateStr){
-  if(!dateStr) return '';
-  const d=new Date(dateStr+'T00:00:00');
-  const now=new Date(); now.setHours(0,0,0,0);
-  const diff=Math.floor((d-now)/86400000);
-  if(diff<0) return `Disponível há ${Math.abs(diff)} dia${Math.abs(diff)>1?'s':''}`;
-  if(diff===0) return '🔴 Lança hoje!';
-  if(diff===1) return '⏰ Amanhã!';
-  return `⏳ Em ${diff} dias`;
-}
-function isAvailable(dateStr){
-  if(!dateStr) return true;
-  return new Date(dateStr+'T00:00:00') <= new Date();
-}
-function typeLabel(item){
-  const t=(item.type||'').toLowerCase();
-  if(t.includes('anime')||t==='anime') return 'anime';
-  if(t==='tv') return 'tv';
-  return 'movie';
-}
-function typeIcon(item){
-  const t=typeLabel(item);
-  if(t==='anime') return '⛩️';
-  if(t==='tv') return '📺';
-  return '🎬';
-}
-
-/* ══ TROCA DE ABAS ══ */
-function switchTab(tab){
-  document.getElementById('tab-lista').style.display = tab==='lista' ? 'block' : 'none';
-  document.getElementById('tab-cal').style.display   = tab==='cal'   ? 'block' : 'none';
-  document.getElementById('tab-lista-btn').classList.toggle('active', tab==='lista');
-  document.getElementById('tab-cal-btn').classList.toggle('active',   tab==='cal');
-  if(tab==='cal' && !calLoaded){
-    // Pequeno delay para garantir que o DOM está visível antes do fetch
-    setTimeout(loadCalendar, 50);
-  }
-}
-
-/* ══ ABA: MINHA LISTA ══ */
-function render(){
-  const list=getWatchLater();
-  const filtered=list.filter(item=>{
-    if(currentFilter==='todos') return true;
-    if(currentFilter==='movie') return typeLabel(item)==='movie';
-    if(currentFilter==='tv')    return typeLabel(item)==='tv';
-    if(currentFilter==='anime') return typeLabel(item)==='anime';
-    if(currentFilter==='futuro') return !isAvailable(item.release);
-    if(currentFilter==='disponivel') return isAvailable(item.release);
-    return true;
-  });
-  document.getElementById('count').textContent=`${list.length} título${list.length!==1?'s':''}`;
-  const grid=document.getElementById('grid');
-  const empty=document.getElementById('empty');
-  if(!filtered.length){ grid.innerHTML=''; empty.style.display='flex'; return; }
-  empty.style.display='none';
-  grid.innerHTML='';
-  filtered.forEach(item=>{
-    const poster=item.poster?(item.poster.startsWith('http')?item.poster:`${IMG}/w500${item.poster}`):'';
-    const countdown=formatCountdown(item.release);
-    const available=isAvailable(item.release);
-    const tLabel=typeLabel(item); const tIcon=typeIcon(item);
-    const card=document.createElement('div');
-    card.className='wl-card';
-    card.innerHTML=`
-      ${poster
-        ?`<img class="wl-poster" src="${poster}" alt="${item.title}" loading="lazy" onerror="this.outerHTML='<div class=\\'wl-no-poster\\'>${tIcon}</div>'">`
-        :`<div class="wl-no-poster">${tIcon}</div>`}
-      <span class="type-badge">${tIcon} ${tLabel==='movie'?'Filme':tLabel==='anime'?'Anime':'Série'}</span>
-      <button class="remove-btn" onclick="event.stopPropagation();doRemove('${item.id}')" title="Remover">✕</button>
-      ${countdown?`<div class="wl-countdown${available?' past':''}">${countdown}</div>`:''}
-      <div class="wl-info">
-        <div class="wl-title">${item.title}</div>
-        <div class="wl-meta">${item.release||'Sem data'}</div>
-      </div>
-      <div class="wl-actions">
-        <button class="btn-watch-now" onclick="event.stopPropagation();goWatch('${item.id}','${item.type||'movie'}')">
-          <i class="fas fa-play"></i> Assistir
-        </button>
-        <button class="btn-remove" onclick="event.stopPropagation();doRemove('${item.id}')">
-          <i class="fas fa-trash"></i> Remover
-        </button>
-      </div>`;
-    card.onclick=()=>goDetail(item.id,item.type||'movie');
-    grid.appendChild(card);
-  });
-}
-function doRemove(id){ removeWatchLater(id); removeNotification(id); toast('🗑️ Removido da lista'); render(); }
-function goDetail(id,type){ window.location.href=`detalhes.html?id=${id}&type=${type}`; }
-function goWatch(id,type){ window.location.href=`detalhes.html?id=${id}&type=${type}&autoplay=1`; }
-function setFilter(f,btn){
-  currentFilter=f;
-  document.querySelectorAll('#filter-bar .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
-}
-
-/* ══ ABA: CALENDÁRIO ══ */
-// URL do seu Cloudflare Worker — troque pela URL real após o deploy
-const CAL_WORKER = 'https://cloudflare-workerjs-e425.mathsrds.workers.dev';
-
-const CAL_APIS=[
-  CAL_WORKER,
-  'https://warezcdn.lat/calendario.php',
-  'https://superflixapi.best/calendario.php',
-  'https://superflixapi.help/calendario.php',
-  'https://superflixapi.asia/calendario.php',
-  'https://superflixapi.my/calendario.php',
+// 2. SERVIDORES DE VÍDEO (Foco em Dublados)
+const SERVERS = [
+  { label:'VidSrc',         fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'VidSrc.me',      fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'VidSrc Pro',     fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}/`:`https://warezcdn.lat/serie/${id}/${s||1}/${e||1}/` },
+  { label:'2Embed 🇧🇷',      fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
+  { label:'MultiEmbed',     fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
+  { label:'AutoEmbed',      fn:(id,t,s,e)=>t==='movie'?`https://autoembed.co/movie/tmdb/${id}`:`https://autoembed.co/tv/tmdb/${id}-${s||1}-${e||1}` },
 ];
-let calLoaded=false;
-let calAllData=[];
-let calFilter='todos';
-const CAL_TODAY=new Date(); CAL_TODAY.setHours(0,0,0,0);
 
-function dayKey(str){ return str?str.split('T')[0]:''; }
-function calIsToday(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d.getTime()===CAL_TODAY.getTime(); }
-function calIsPast(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d<CAL_TODAY; }
-function calIsFuture(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d>CAL_TODAY; }
-function fmtCalDate(str){
-  if(!str) return '';
-  const d=new Date(str+'T00:00:00');
-  const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  return `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]}`;
-}
-function detectCalType(item){
-  // Tenta vários campos possíveis que a API pode usar
-  const t=(item.type||item.category||item.genre||item.media_type||'').toLowerCase();
-  const title=(item.title||item.name||'').toLowerCase();
-  if(t.includes('anime')||item.is_anime||t==='anime') return 'anime';
-  if(t.includes('dorama')||t.includes('kdrama')||t.includes('k-drama')) return 'dorama';
-  // Se não tem campo type, trata tudo como serie (API só retorna series/animes/doramas)
-  return 'serie';
-}
-function calStatusLabel(s){
-  const m={'Hoje':'hoje','Atualizado':'atualizado','Futuro':'futuro','Atrasado':'atrasado'};
-  return m[s]||s?.toLowerCase()||'futuro';
-}
-function calTypeIcon(type){ return type==='anime'?'⛩️':type==='dorama'?'🎌':'📺'; }
+// 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
+const SECTIONS_HOME = [
+  { id:'trending',    title:'🔥 Bombando Agora',         endpoint:'/trending/all/week',   params:{ region:'BR' },                                                                                                                    type:'mixed' },
+  { id:'mais_vistos', title:'👁️ Mais Assistidos',        endpoint:'/movie/popular',        params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                    type:'movie' },
+  { id:'tv_popular',  title:'📺 Séries Mais Assistidas', endpoint:'/discover/tv',          params:{ sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },                      type:'tv'    },
+  { id:'lancamentos', title:'🆕 Lançamentos',             endpoint:'/movie/upcoming',       params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                    type:'movie' },
+  { id:'top_filmes',  title:'🏆 Top Filmes Avaliados',   endpoint:'/movie/top_rated',      params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                    type:'movie' },
+  { id:'animacao_h',  title:'🧸 Animação & Família',     endpoint:'/discover/movie',       params:{ with_genres:'16|10751', region:'BR', sort_by:'popularity.desc', without_keywords:'210024' },                                      type:'movie' },
+  { id:'acao_h',      title:'💥 Ação & Aventura',        endpoint:'/discover/movie',       params:{ with_genres:'28', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                       type:'movie' },
+  { id:'comedia_h',   title:'😂 Comédias',               endpoint:'/discover/movie',       params:{ with_genres:'35', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                       type:'movie' },
+  { id:'anime_h',     title:'⛩️ Animes em Alta',         endpoint:'/discover/tv',          params:{ with_genres:'16', with_original_language:'ja', sort_by:'popularity.desc', 'vote_count.gte':50 },                                      type:'tv'    },
+  { id:'scifi_h',     title:'🚀 Ficção Científica',      endpoint:'/discover/movie',       params:{ with_genres:'878', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                      type:'movie' },
+  { id:'terror_h',    title:'👻 Terror & Suspense',      endpoint:'/discover/movie',       params:{ with_genres:'27|53', region:'BR', sort_by:'popularity.desc', without_keywords:'210024' },                                         type:'movie' },
+  { id:'series_pop',  title:'🎭 Séries de Drama',        endpoint:'/discover/tv',          params:{ with_genres:'18', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' }, type:'tv' },
+  { id:'brasil_h',    title:'🇧🇷 Produções Brasileiras', endpoint:'/discover/movie',       params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' },                                                            type:'movie' },
+  { id:'doc_h',       title:'🎓 Documentários',          endpoint:'/discover/movie',       params:{ with_genres:'99', region:'BR', sort_by:'popularity.desc', without_keywords:'210024' },                                            type:'movie' },
+];
 
-// Mapa de itens indexados por _calKey — evita passar objetos via atributos HTML
-const calItemMap={};
+const SECTIONS_CATS = {
+  movies: [
+    { id:'m_pop',      title:'🎬 Mais Populares',        endpoint:'/movie/popular',     params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                                    type:'movie' },
+    { id:'m_top',      title:'🏆 Mais Bem Avaliados',    endpoint:'/movie/top_rated',   params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                                    type:'movie' },
+    { id:'m_lanc',     title:'🆕 Lançamentos',           endpoint:'/movie/upcoming',    params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                                    type:'movie' },
+    { id:'m_familia',  title:'👨‍👩‍👧 Família',             endpoint:'/discover/movie',    params:{ with_genres:'10751',  region:'BR', sort_by:'popularity.desc', without_genres:'16,27,28,53,878,80,99', without_keywords:'210024' },               type:'movie' },
+    { id:'m_anim',     title:'🧸 Animação',              endpoint:'/discover/movie',    params:{ with_genres:'16',     region:'BR', sort_by:'popularity.desc', without_keywords:'210024' },                                                        type:'movie' },
+    { id:'m_comedia',  title:'😂 Comédia',               endpoint:'/discover/movie',    params:{ with_genres:'35',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,28,10749', without_keywords:'210024' },                       type:'movie' },
+    { id:'m_romance',  title:'💕 Romance',               endpoint:'/discover/movie',    params:{ with_genres:'10749', region:'BR', sort_by:'popularity.desc', without_genres:'16,27,28', without_keywords:'210024' },                              type:'movie' },
+    { id:'m_aventura', title:'🌍 Aventura',              endpoint:'/discover/movie',    params:{ with_genres:'12',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,53', without_keywords:'210024' },                             type:'movie' },
+    { id:'m_acao',     title:'💥 Ação',                  endpoint:'/discover/movie',    params:{ with_genres:'28',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,53,12', without_keywords:'210024' },                          type:'movie' },
+    { id:'m_fantasia', title:'🧙 Fantasia',              endpoint:'/discover/movie',    params:{ with_genres:'14',     region:'BR', sort_by:'popularity.desc', without_genres:'16,28', without_keywords:'210024' },                                type:'movie' },
+    { id:'m_scifi',    title:'👽 Ficção Científica',     endpoint:'/discover/movie',    params:{ with_genres:'878',    region:'BR', sort_by:'popularity.desc', without_genres:'16,28,27', without_keywords:'210024' },                             type:'movie' },
+    { id:'m_drama',    title:'🎭 Drama',                 endpoint:'/discover/movie',    params:{ with_genres:'18',     region:'BR', sort_by:'popularity.desc', without_genres:'16,10749,35,27', without_keywords:'210024' },                       type:'movie' },
+    { id:'m_crime',    title:'🕵️ Crime',                endpoint:'/discover/movie',    params:{ with_genres:'80',     region:'BR', sort_by:'popularity.desc', without_genres:'16,28', without_keywords:'210024' },                                type:'movie' },
+    { id:'m_suspense', title:'🔪 Suspense & Thriller',   endpoint:'/discover/movie',    params:{ with_genres:'53',     region:'BR', sort_by:'popularity.desc', without_genres:'16,27,80', without_keywords:'210024' },                             type:'movie' },
+    { id:'m_terror',   title:'👻 Terror',                endpoint:'/discover/movie',    params:{ with_genres:'27',     region:'BR', sort_by:'popularity.desc', without_genres:'16,53', without_keywords:'210024' },                                type:'movie' },
+    { id:'m_guerra',   title:'⚔️ Guerra & História',     endpoint:'/discover/movie',    params:{ with_genres:'10752', region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                                    type:'movie' },
+    { id:'m_musical',  title:'🎵 Musical',               endpoint:'/discover/movie',    params:{ with_genres:'10402', region:'BR', sort_by:'popularity.desc', without_keywords:'210024' },                                                        type:'movie' },
+    { id:'m_doc',      title:'🎓 Documentários',         endpoint:'/discover/movie',    params:{ with_genres:'99',     region:'BR', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024' },                                   type:'movie' },
+  ],
+  series: [
+    { id:'s_pop',      title:'📺 Mais Populares',        endpoint:'/discover/tv',       params:{ sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },                                      type:'tv' },
+    { id:'s_top',      title:'🏆 Mais Bem Avaliadas',    endpoint:'/discover/tv',       params:{ sort_by:'vote_average.desc', 'vote_count.gte':'200', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },             type:'tv' },
+    { id:'s_ar',       title:'📡 No Ar Hoje',            endpoint:'/tv/airing_today',   params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                                    type:'tv' },
+    { id:'s_familia',  title:'👨‍👩‍👧 Família',             endpoint:'/discover/tv',       params:{ with_genres:'10751', sort_by:'popularity.desc', without_genres:'16,10766,18,80', without_keywords:'210024', without_original_language:'ja' },    type:'tv' },
+    { id:'s_comedia',  title:'😂 Comédia',               endpoint:'/discover/tv',       params:{ with_genres:'35',    sort_by:'popularity.desc', without_genres:'16,10766,18', without_keywords:'210024', without_original_language:'ja' },         type:'tv' },
+    { id:'s_reality',  title:'🎤 Reality Shows',         endpoint:'/discover/tv',       params:{ with_genres:'10764', sort_by:'popularity.desc', without_keywords:'210024', without_original_language:'ja' },                                      type:'tv' },
+    { id:'s_drama',    title:'🎭 Drama',                 endpoint:'/discover/tv',       params:{ with_genres:'18',    sort_by:'popularity.desc', without_genres:'16,10766,35,80', without_keywords:'210024', without_original_language:'ja' },      type:'tv' },
+    { id:'s_acao',     title:'💥 Ação & Aventura',       endpoint:'/discover/tv',       params:{ with_genres:'10759', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },                  type:'tv' },
+    { id:'s_scifi',    title:'🚀 Ficção Científica',     endpoint:'/discover/tv',       params:{ with_genres:'10765', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },                  type:'tv' },
+    { id:'s_crime',    title:'🕵️ Crime & Mistério',     endpoint:'/discover/tv',       params:{ with_genres:'80|9648', sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },                type:'tv' },
+    { id:'s_talk',     title:'🎙️ Talk Shows',            endpoint:'/discover/tv',       params:{ with_genres:'10767', sort_by:'popularity.desc', without_keywords:'210024', without_original_language:'ja' },                                      type:'tv' },
+    { id:'s_guerra',   title:'⚔️ Guerra & Política',     endpoint:'/discover/tv',       params:{ with_genres:'10768', sort_by:'popularity.desc', without_keywords:'210024', without_original_language:'ja' },                                      type:'tv' },
+    { id:'s_western',  title:'🤠 Western',               endpoint:'/discover/tv',       params:{ with_genres:'37',    sort_by:'popularity.desc', without_keywords:'210024', without_original_language:'ja' },                                      type:'tv' },
+    { id:'s_doc',      title:'🎓 Documentários',         endpoint:'/discover/tv',       params:{ with_genres:'99',    sort_by:'popularity.desc', without_genres:'16', without_keywords:'210024', without_original_language:'ja' },                  type:'tv' },
+  ],
+  // ANIMES — with_genres SEMPRE com vírgula (AND), with_original_language='ja' em todos
+  animes: [
+    { id:'a_pop',      title:'⛩️ Mais Populares',     endpoint:'/discover/tv',    params:{ with_genres:'16',       with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':20  }, type:'tv' },
+    { id:'a_top',      title:'🏆 Mais Bem Avaliados', endpoint:'/discover/tv',    params:{ with_genres:'16',       with_original_language:'ja', sort_by:'vote_average.desc', 'vote_count.gte':200 }, type:'tv' },
+    { id:'a_acao',     title:'⚔️ Ação & Luta',        endpoint:'/discover/tv',    params:{ with_genres:'16,10759', with_original_language:'ja', sort_by:'popularity.desc'                       }, type:'tv' },
+    { id:'a_comedia',  title:'😂 Comédia',            endpoint:'/discover/tv',    params:{ with_genres:'16,35',    with_original_language:'ja', sort_by:'popularity.desc'                       }, type:'tv' },
+    { id:'a_drama',    title:'🎭 Drama',               endpoint:'/discover/tv',    params:{ with_genres:'16,18',    with_original_language:'ja', sort_by:'popularity.desc'                       }, type:'tv' },
+    { id:'a_fantasia', title:'🐉 Fantasia & Sci-Fi',  endpoint:'/discover/tv',    params:{ with_genres:'16,10765', with_original_language:'ja', sort_by:'popularity.desc'                       }, type:'tv' },
+    { id:'a_misterio', title:'🔍 Mistério',           endpoint:'/discover/tv',    params:{ with_genres:'16,9648',  with_original_language:'ja', sort_by:'popularity.desc'                       }, type:'tv' },
+    { id:'a_kids',     title:'🧒 Para Crianças',      endpoint:'/discover/tv',    params:{ with_genres:'16,10762', with_original_language:'ja', sort_by:'popularity.desc'                       }, type:'tv' },
+    { id:'a_filme',    title:'🎬 Filmes de Anime',    endpoint:'/discover/movie',  params:{ with_genres:'16',       with_original_language:'ja', sort_by:'popularity.desc',   'vote_count.gte':20  }, type:'movie' },
+  ],
+  // BRASIL — filmes, séries, novelas
+  brasil: [
+    { id:'br_filmes',  title:'🎬 Filmes Brasileiros',    endpoint:'/discover/movie',    params:{ with_original_language:'pt', region:'BR', sort_by:'popularity.desc' },                 type:'movie' },
+    { id:'br_top',     title:'🏆 Filmes BR Mais Avaliados', endpoint:'/discover/movie', params:{ with_original_language:'pt', region:'BR', sort_by:'vote_average.desc', 'vote_count.gte':50 }, type:'movie' },
+    { id:'br_comedia', title:'😂 Comédias BR',           endpoint:'/discover/movie',    params:{ with_genres:'35', with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' },
+    { id:'br_series',  title:'📺 Séries Brasileiras',   endpoint:'/discover/tv',       params:{ with_original_language:'pt', origin_country:'BR', sort_by:'popularity.desc' },          type:'tv' },
+    { id:'br_novelas', title:'💔 Novelas',               endpoint:'/discover/tv',       params:{ with_genres:'10766', with_original_language:'pt', origin_country:'BR', sort_by:'popularity.desc' }, type:'tv' },
+    { id:'br_doc',     title:'🎓 Documentários BR',      endpoint:'/discover/movie',    params:{ with_genres:'99', with_original_language:'pt', region:'BR', sort_by:'popularity.desc' }, type:'movie' },
+  ],
+};
 
-/* Dados demo — usados quando todas as APIs falham */
-function calDemoData(){
-  const fmt=d=>d.toISOString().split('T')[0];
-  const t=new Date(CAL_TODAY);
-  const yst=new Date(t); yst.setDate(t.getDate()-1);
-  const tom=new Date(t); tom.setDate(t.getDate()+1);
-  const d2=new Date(t);  d2.setDate(t.getDate()+2);
-  const d3=new Date(t);  d3.setDate(t.getDate()+3);
-  return [
-    {title:'One Piece',episode_title:'O Despertar do Haki Real',episode_number:1115,season_number:1,air_date:fmt(yst),poster_path:'https://image.tmdb.org/t/p/w500/cMD9Ygz11zjJzAovURpO75Qg7rT.jpg',status:'Atualizado',type:'anime',tmdb_id:37854},
-    {title:'Naruto Shippuden',episode_title:'A Batalha Final',episode_number:500,season_number:21,air_date:fmt(yst),poster_path:'https://image.tmdb.org/t/p/w500/xppeysfvDKVx775MFuH8Z9ex394.jpg',status:'Atualizado',type:'anime',tmdb_id:31910},
-    {title:'Demon Slayer',episode_title:'O Pilar das Chamas',episode_number:14,season_number:4,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg',status:'Hoje',type:'anime',tmdb_id:85937},
-    {title:'Jujutsu Kaisen',episode_title:'Shibuya — Capítulo Final',episode_number:24,season_number:2,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/oENcSMBsHasHASnBiAbTAa4bT4j.jpg',status:'Hoje',type:'anime',tmdb_id:95479},
-    {title:'Stranger Things',episode_title:'O Fim do Upside Down',episode_number:9,season_number:5,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg',status:'Hoje',type:'serie',tmdb_id:66732},
-    {title:'The Last of Us',episode_title:'Parte 2 — Começo',episode_number:1,season_number:2,air_date:fmt(t),poster_path:'https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg',status:'Hoje',type:'serie',tmdb_id:100088},
-    {title:'Attack on Titan',episode_title:'O Último Rugido',episode_number:88,season_number:4,air_date:fmt(tom),poster_path:'https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg',status:'Futuro',type:'anime',tmdb_id:1429},
-    {title:'Vincenzo',episode_title:'O Confronto Final',episode_number:20,season_number:1,air_date:fmt(tom),poster_path:'https://image.tmdb.org/t/p/w500/ppU1rE6WZSyHjrwRZdBRFhGPGS0.jpg',status:'Futuro',type:'dorama',tmdb_id:106519},
-    {title:'The Bear',episode_title:'Mise en Place',episode_number:4,season_number:3,air_date:fmt(tom),poster_path:'https://image.tmdb.org/t/p/w500/sHFlbKS3WLqMnp9t2ghADIJFnuQ.jpg',status:'Futuro',type:'serie',tmdb_id:136315},
-    {title:'Spy x Family',episode_title:'Operação Strix',episode_number:25,season_number:2,air_date:fmt(d2),poster_path:'https://image.tmdb.org/t/p/w500/vYAF2P4fxBbDsME3ecp53DmN8f1.jpg',status:'Futuro',type:'anime',tmdb_id:120089},
-    {title:'Crash Landing on You',episode_title:'Reencontro nas Nuvens',episode_number:16,season_number:1,air_date:fmt(d2),poster_path:'https://image.tmdb.org/t/p/w500/zBiJYTVKfIJETPqzGCvfBMxiMDI.jpg',status:'Futuro',type:'dorama',tmdb_id:94796},
-    {title:'House of the Dragon',episode_title:'O Dragão Vermelho',episode_number:5,season_number:2,air_date:fmt(d3),poster_path:'https://image.tmdb.org/t/p/w500/z2yahl2uefxDCl0nogcRBstwruJ.jpg',status:'Futuro',type:'serie',tmdb_id:94997},
-    {title:'My Hero Academia',episode_title:'Plus Ultra Final',episode_number:138,season_number:7,air_date:fmt(d3),poster_path:'https://image.tmdb.org/t/p/w500/mKl3ESgO3n8wIrGdGsVknCKuCJD.jpg',status:'Futuro',type:'anime',tmdb_id:65930},
-  ];
-}
+// 4. SISTEMA DE API E CACHE (Evita travar o site)
+const MEM = {};
+// Keywords e genres adultos a bloquear globalmente
+const ADULT_KEYWORDS = '156564,9951,282939,155477,6917'; // 210024 removido: é keyword de anime, não adulto
+const ADULT_GENRES   = ''; // não excluímos genres pois Romance(10749) é legítimo
 
-/* Tenta buscar a URL diretamente ou via proxy CORS */
-async function tryFetch(url){
-  // 1. Tentativa direta
-  try{
-    const r = await fetch(url, {mode:'cors'});
-    if(r.ok){
-      const d = await r.json();
-      if(Array.isArray(d) && d.length) return d;
-      if(d && typeof d==='object'){
-        const arr = Object.values(d).find(v=>Array.isArray(v));
-        if(arr && arr.length) return arr;
-      }
-    }
-  }catch(e){}
-
-  // 2. Via proxy allorigins (contorna CORS)
-  try{
-    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const r = await fetch(proxy);
-    if(r.ok){
-      const wrap = await r.json();
-      const d = JSON.parse(wrap.contents);
-      if(Array.isArray(d) && d.length) return d;
-      if(d && typeof d==='object'){
-        const arr = Object.values(d).find(v=>Array.isArray(v));
-        if(arr && arr.length) return arr;
-      }
-    }
-  }catch(e){}
-
-  // 3. Via proxy corsproxy.io
-  try{
-    const proxy2 = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-    const r = await fetch(proxy2);
-    if(r.ok){
-      const d = await r.json();
-      if(Array.isArray(d) && d.length) return d;
-      if(d && typeof d==='object'){
-        const arr = Object.values(d).find(v=>Array.isArray(v));
-        if(arr && arr.length) return arr;
-      }
-    }
-  }catch(e){}
-
-  return null;
-}
-
-async function fetchCalAPI(){
-  // Tenta cada endpoint com as 3 estratégias de fetch
-  for(const url of CAL_APIS){
-    const data = await tryFetch(url);
-    if(data) return data;
+async function api(path, params={}) {
+  const url = new URL(BASE+path);
+  url.searchParams.set('language','pt-BR');
+  url.searchParams.set('include_adult','false');     // bloqueia conteúdo adulto
+  Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+  // Adiciona exclusão de keywords adultas em endpoints /discover e /trending
+  if(path.includes('/discover') || path.includes('/trending') || path.includes('/popular') || path.includes('/top_rated') || path.includes('/upcoming') || path.includes('/airing')){
+    const curKw = url.searchParams.get('without_keywords') || '';
+    const merged = curKw ? curKw+','+ADULT_KEYWORDS : ADULT_KEYWORDS;
+    url.searchParams.set('without_keywords', merged);
   }
-  throw new Error('todas as APIs falharam');
+  const key = url.toString();
+  if (MEM[key]) return MEM[key];
+  try {
+    const r = await fetch(url, OPTS);
+    const d = await r.json();
+    if(d && d.results){
+      // Filtro 1: remove adultos
+      d.results = d.results.filter(item => !item.adult);
+      // Filtro 2: conteúdo japonês deve ser obrigatoriamente Animação (genre 16)
+      // Elimina live-action japonês, variety shows e qualquer não-anime
+      if(params.with_original_language === 'ja'){
+        d.results = d.results.filter(item =>
+          item.original_language === 'ja' &&
+          (item.genre_ids || []).includes(16)
+        );
+      }
+    }
+    MEM[key] = d;
+    return d;
+  } catch(e) { return {}; }
 }
 
-async function loadCalendar(){
-  calLoaded=true;
+// 5. BANCO DE DADOS LOCAL (Favoritos e Continuar)
+const store = {
+  get:(k)=>{ try{ return JSON.parse(localStorage.getItem(k)||'{}') }catch{ return {} } },
+  set:(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)) }catch{} },
+};
+function getFavs(){ return store.get('pf_favs'); }
+function toggleFav(id,type,name,poster){
+  const f=getFavs();
+  if(f[id]){ delete f[id]; toast('Removido dos favoritos'); }
+  else{ f[id]={id,type,name,poster}; toast('⭐ Adicionado aos favoritos!'); }
+  store.set('pf_favs',f);
+  document.querySelectorAll(`.card-btn.fav[data-id="${id}"]`).forEach(b=>{
+    b.classList.toggle('fav-on',!!f[id]); b.title = f[id]?'Remover':'Favoritar';
+  });
+}
+function getContinue(){ return store.get('pf_cont'); }
+function saveContinue(id,type,name,poster,season,ep){
+  const c=getContinue(); c[id]={id,type,name,poster,season,ep,ts:Date.now()};
+  store.set('pf_cont',c);
+}
 
-  const elLoading = document.getElementById('cal-loading');
-  const elContent = document.getElementById('cal-content');
-  const elState   = document.getElementById('cal-state');
+// Mensagens Toast (Pop-ups)
+let toastT;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2500);
+}
 
-  if(!elLoading||!elContent||!elState){ calLoaded=false; return; } // segurança
-
-  elLoading.style.display='block';
-  elContent.style.display='none';
-  elContent.innerHTML='';
-  elState.style.display='none';
-
-  let data;
+// 6. HERO (BANNER ROTATIVO NO TOPO) — atualiza a cada 1 hora
+let heroItems=[], heroIdx=0, heroTimer;
+async function loadHero(){
   try{
-    data=await fetchCalAPI();
+    // Cache de 1h no localStorage
+    const HERO_KEY='pf_hero_cache', HERO_TTL=3600000;
+    const cached=store.get(HERO_KEY);
+    let results;
+    if(cached.ts && Date.now()-cached.ts < HERO_TTL && cached.items?.length){
+      results=cached.items;
+    } else {
+      const d=await api('/trending/all/week',{region:'BR'});
+      results=(d.results||[]).filter(m=>m.backdrop_path && m.poster_path && !m.adult).slice(0,8);
+      store.set(HERO_KEY,{ts:Date.now(),items:results});
+    }
+    heroItems=results;
+    const hero=document.getElementById('hero');
+    const dots=document.getElementById('hero-dots');
+    hero.querySelectorAll('.hero-slide').forEach(s=>s.remove());
+    dots.innerHTML='';
+    heroItems.forEach((m,i)=>{
+      const s=document.createElement('div');
+      s.className='hero-slide'+(i===0?' active':'');
+      s.style.backgroundImage=`url('${IMG}/w1280${m.backdrop_path}')`;
+      hero.insertBefore(s,dots);
+      const d2=document.createElement('div');
+      d2.className='hero-dot'+(i===0?' active':'');
+      d2.onclick=()=>setHero(i);
+      dots.appendChild(d2);
+    });
+    renderHeroContent(0);
+    heroTimer=setInterval(()=>setHero((heroIdx+1)%heroItems.length),7000);
+  }catch(err){}
+}
+function setHero(i){
+  heroIdx=i;
+  document.querySelectorAll('.hero-slide').forEach((s,j)=>s.classList.toggle('active',j===i));
+  document.querySelectorAll('.hero-dot').forEach((d,j)=>d.classList.toggle('active',j===i));
+  renderHeroContent(i);
+}
+function renderHeroContent(i){
+  const m=heroItems[i]; if(!m) return;
+  const hero=document.getElementById('hero');
+  let c=hero.querySelector('.hero-content');
+  if(!c){ c=document.createElement('div'); c.className='hero-content'; hero.insertBefore(c,hero.querySelector('.hero-dots')); }
+  const y=(m.release_date||m.first_air_date||'').split('-')[0];
+  const r=m.vote_average?m.vote_average.toFixed(1):'N/A';
+  const mtype=m.media_type||'movie';
+  const typeLabel=mtype==='tv'?'SÉRIE':'FILME';
+  c.innerHTML=`
+    <div class="hero-tags">
+      <span class="hero-tag red">🔥 Em Alta</span>
+      <span class="hero-tag outline">${typeLabel}</span>
+      <span class="hero-tag outline">${y}</span>
+      <span class="hero-tag outline">⭐ ${r}</span>
+    </div>
+    <h1 class="hero-title">${m.title||m.name}</h1>
+    <div class="hero-meta"><span class="score">★ ${r}</span><span>${y}</span></div>
+    <p class="hero-desc">${m.overview||''}</p>
+    <div class="hero-btns">
+      <button class="btn-watch" onclick="openDetails(${m.id},'${mtype}')"><i class="fas fa-play"></i> Assistir</button>
+      <button class="btn-more" onclick="openDetails(${m.id},'${mtype}')"><i class="fas fa-info-circle"></i> Mais Info</button>
+    </div>`;
+}
+
+// 7. CARROSSÉIS DE FILMES E SÉRIES
+function makeCarousel(sec, items, type, hasMore){
+  const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
+  wrap.innerHTML=`
+    <div class="section-header"><span class="section-title">${sec.title}</span></div>
+    <div class="carousel-wrap">
+      <button class="carousel-btn prev" onclick="scrollCar('${sec.id}',-1)"><i class="fas fa-chevron-left"></i></button>
+      <div class="carousel" id="car-${sec.id}"></div>
+      <button class="carousel-btn next" onclick="scrollCar('${sec.id}',1)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    ${hasMore!==false?`<div class="ver-mais-wrap"><button class="ver-mais-btn" id="vm-${sec.id}" onclick="loadMore('${sec.id}')">Ver mais ↓</button></div>`:''}`;
+  const car=wrap.querySelector('.carousel');
+  items.forEach(m=>{
+    if(m.adult) return; // bloqueia conteúdo adulto
+    const itemType = m.media_type||type||'movie';
+    const name=m.title||m.name||'';
+    const year=(m.release_date||m.first_air_date||'').split('-')[0];
+    const rating=m.vote_average?m.vote_average.toFixed(1):'';
+    const poster=m.poster_path?`${IMG}/w500${m.poster_path}`:'';
+    const favs=getFavs();
+    const isFav=!!favs[m.id];
+    const contData=getContinue()[m.id];
+    const card=document.createElement('div');
+    card.className='card'; card.title=name;
+    card.onclick=()=>openDetails(m.id,itemType);
+    card.innerHTML=`
+      ${poster?`<img src="${poster}" alt="${name}" class="card-thumb" loading="lazy" onerror="this.style.display='none'">`:''}
+      ${itemType==='tv'?'<div class="card-badge">SÉRIE</div>':''}
+      ${contData?`<div class="card-continue" style="width:60%"></div>`:''}
+      <div class="card-overlay">
+        <div class="card-title">${name}</div>
+        <div class="card-meta">${rating?'⭐ '+rating:''} ${year}</div>
+        <div class="card-actions">
+          <div class="card-btn" onclick="event.stopPropagation();openDetails(${m.id},'${itemType}')"><i class="fas fa-play"></i></div>
+          <div class="card-btn fav ${isFav?'fav-on':''}" data-id="${m.id}" title="${isFav?'Remover':'Favoritar'}"
+            onclick="event.stopPropagation();toggleFav(${m.id},'${itemType}','${name.replace(/'/g,"\'")}','${poster}')">
+            <i class="fas fa-heart"></i>
+          </div>
+        </div>
+      </div>`;
+    car.appendChild(card);
+  });
+  return wrap;
+}
+
+function scrollCar(id,dir){
+  const car=document.getElementById('car-'+id);
+  if(car) car.scrollBy({left:dir*600,behavior:'smooth'});
+}
+
+// Rastreia página atual de cada seção para "Ver mais"
+const secPages={};
+
+async function loadSection(sec){
+  const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
+  wrap.innerHTML=`
+    <div class="section-header"><span class="section-title">${sec.title}</span></div>
+    <div class="carousel-wrap"><div class="carousel" id="car-${sec.id}">${Array(8).fill('<div class="skel"></div>').join('')}</div></div>`;
+  document.getElementById('sections-container').appendChild(wrap);
+  try{
+    const d=await api(sec.endpoint,{...sec.params,page:1});
+    const items=(d.results||[]).filter(m=>m.poster_path && !m.adult).slice(0,20);
+    if(!items.length){ wrap.remove(); return; } // remove seção vazia
+    secPages[sec.id]={sec, page:1, totalPages:d.total_pages||1};
+    const hasMore=(d.total_pages||1)>1;
+    wrap.replaceWith(makeCarousel(sec,items,sec.type,hasMore));
+  }catch(e){ wrap.remove(); }
+}
+
+async function loadMore(secId){
+  const state=secPages[secId]; if(!state) return;
+  const btn=document.getElementById('vm-'+secId);
+  if(btn){ btn.disabled=true; btn.textContent='Carregando...'; }
+  try{
+    const nextPage=state.page+1;
+    const d=await api(state.sec.endpoint,{...state.sec.params, page:nextPage});
+    const items=(d.results||[]).filter(m=>m.poster_path && !m.adult).slice(0,20);
+    const car=document.getElementById('car-'+secId);
+    if(car){
+      items.forEach(m=>{
+        const itemType=m.media_type||state.sec.type||'movie';
+        const name=m.title||m.name||'';
+        const year=(m.release_date||m.first_air_date||'').split('-')[0];
+        const rating=m.vote_average?m.vote_average.toFixed(1):'';
+        const poster=m.poster_path?`${IMG}/w500${m.poster_path}`:'';
+        const isFav=!!getFavs()[m.id];
+        const contData=getContinue()[m.id];
+        const card=document.createElement('div');
+        card.className='card'; card.title=name;
+        card.onclick=()=>openDetails(m.id,itemType);
+        card.innerHTML=`
+          ${poster?`<img src="${poster}" alt="${name}" class="card-thumb" loading="lazy" onerror="this.style.display='none'">`:''}
+          ${itemType==='tv'?'<div class="card-badge">SÉRIE</div>':''}
+          ${contData?`<div class="card-continue" style="width:60%"></div>`:''}
+          <div class="card-overlay">
+            <div class="card-title">${name}</div>
+            <div class="card-meta">${rating?'⭐ '+rating:''} ${year}</div>
+            <div class="card-actions">
+              <div class="card-btn" onclick="event.stopPropagation();openDetails(${m.id},'${itemType}')"><i class="fas fa-play"></i></div>
+              <div class="card-btn fav ${isFav?'fav-on':''}" data-id="${m.id}"
+                onclick="event.stopPropagation();toggleFav(${m.id},'${itemType}','${name.replace(/'/g,"\'")}','${poster}')">
+                <i class="fas fa-heart"></i>
+              </div>
+            </div>
+          </div>`;
+        car.appendChild(card);
+      });
+      car.scrollBy({left:car.scrollWidth,behavior:'smooth'});
+    }
+    state.page=nextPage;
+    if(btn){
+      if(nextPage >= (d.total_pages||1)){
+        btn.style.display='none';
+      } else {
+        btn.disabled=false; btn.textContent='Ver mais ↓';
+      }
+    }
   }catch(e){
-    data=calDemoData();
-    toast('⚠️ API offline — exibindo dados de demonstração');
+    if(btn){ btn.disabled=false; btn.textContent='Ver mais ↓'; }
   }
+}
 
-  elLoading.style.display='none';
+// 8. FUNÇÕES DE NAVEGAÇÃO E MENUS
+function clearPage(hideHero, eventElement) {
+  clearTimeout(fallbackTimer);
+  document.getElementById('player-box').innerHTML='';
+  document.getElementById('page-home').style.display='block';
+  document.getElementById('page-details').style.display='none';
+  window.location.hash='';
+  document.getElementById('hero').style.display = hideHero ? 'none' : 'block';
+  const sc = document.getElementById('sections-container');
+  sc.innerHTML='';
+  // Espaçamento: quando hero está oculto, garante distância do header
+  sc.style.paddingTop = hideHero ? 'calc(var(--header-h) + 32px)' : '0';
+  // Fecha a barra de busca sempre que mudar de seção
+  document.getElementById('searchbar').classList.remove('open');
 
-  if(!data||!data.length){
-    document.getElementById('cal-state-msg').textContent='Nenhum conteúdo encontrado.';
-    elState.style.display='flex';
+  if(eventElement) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      eventElement.classList.add('active');
+  }
+}
+
+async function goHome(e){
+  const el = e ? e.currentTarget : document.querySelector('.nav-btn[onclick="goHome(event)"]');
+  clearPage(false, el);
+  for(const sec of SECTIONS_HOME){
+    loadSection(sec);
+    await new Promise(r=>setTimeout(r,120));
+  }
+}
+
+async function showSection(catId, e){
+  clearPage(true, e?.currentTarget||null);
+  const categories = SECTIONS_CATS[catId];
+  if(!categories) return;
+  for(const sec of categories){
+    loadSection(sec);
+    await new Promise(r=>setTimeout(r,150));
+  }
+}
+
+function showFav(e){
+  clearPage(true, e?.currentTarget||null);
+  const sc = document.getElementById('sections-container');
+  const favs = Object.values(getFavs());
+  if(!favs.length){
+    sc.innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Você ainda não tem favoritos. ❤️</div></div>`;
     return;
   }
+  const wrap = document.createElement('div');
+  wrap.className = 'section';
+  wrap.innerHTML = `<div class="section-header"><span class="section-title">❤️ Meus Favoritos</span><span style="color:var(--gray);font-size:13px;">${favs.length} título${favs.length>1?'s':''}</span></div>`;
 
-  data.forEach(item=>{
-    const key=String(item.tmdb_id||item.id||(item.title||item.name||'')+'_'+(item.episode_number||0));
-    item._calKey=key;
-    // Normaliza campos — API pode usar 'name' em vez de 'title', 'poster' em vez de 'poster_path'
-    if(!item.title && item.name)             item.title=item.name;
-    if(!item.poster_path && item.poster)     item.poster_path=item.poster;
-    if(!item.poster_path && item.image)      item.poster_path=item.image;
-    if(!item.air_date && item.date)          item.air_date=item.date;
-    if(!item.air_date && item.release_date)  item.air_date=item.release_date;
-    if(!item.episode_number && item.episode) item.episode_number=item.episode;
-    if(!item.season_number && item.season)   item.season_number=item.season;
-    calItemMap[key]=item;
+  // Grid responsivo — sem carrossel, expandido para baixo
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:flex;flex-wrap:wrap;gap:14px;';
+
+  favs.forEach(f => {
+    const poster = f.poster || '';
+    const card = document.createElement('div');
+    card.style.cssText = 'position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
+    card.onclick = () => openDetails(f.id, f.type);
+    card.innerHTML = `
+      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
+        ${poster ? `<img src="${poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
+                 : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>`}
+        <div style="position:absolute;top:6px;left:6px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px;">${f.type==='movie'?'FILME':'SÉRIE'}</div>
+      </div>
+      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
+    `;
+    grid.appendChild(card);
   });
 
-  console.log('[Cal] total itens:', data.length, '| amostra:', JSON.stringify(data[0]));
-
-  calAllData=data.sort((a,b)=>new Date(a.air_date||'2099-01-01')-new Date(b.air_date||'2099-01-01'));
-  renderCalendar();
+  wrap.appendChild(grid);
+  sc.appendChild(wrap);
 }
 
-function setCalFilter(f,btn){
-  calFilter=f;
-  document.querySelectorAll('#cal-filter-bar .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderCalendar();
+function removeContinue(id){
+  const c=getContinue(); delete c[id]; store.set('pf_cont',c);
 }
 
-function renderCalendar(){
-  const filtered=calAllData.filter(item=>{
-    if(calFilter==='todos') return true;
-    const type=detectCalType(item);
-    const status=calStatusLabel(item.status);
-    if(calFilter==='serie')  return type==='serie';
-    if(calFilter==='anime')  return type==='anime';
-    if(calFilter==='dorama') return type==='dorama';
-    if(calFilter==='hoje')   return calIsToday(item.air_date)||status==='hoje';
-    if(calFilter==='futuro') return calIsFuture(item.air_date)||status==='futuro';
-    return true;
-  });
-
-  const cont=document.getElementById('cal-content');
-  const state=document.getElementById('cal-state');
-  cont.innerHTML='';
-
-  if(!filtered.length){
-    document.getElementById('cal-state-msg').textContent='Nenhum conteúdo encontrado para este filtro.';
-    state.style.display='flex'; cont.style.display='none'; return;
+function showContinue(e){
+  clearPage(true, e?.currentTarget||null);
+  const cont=Object.values(getContinue()).sort((a,b)=>b.ts-a.ts);
+  const sc=document.getElementById('sections-container');
+  if(!cont.length){
+    sc.innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Nenhum conteúdo para continuar. 🎬</div></div>`;
+    return;
   }
-  state.style.display='none'; cont.style.display='block';
-
-  // Agrupar por dia
-  const groups={};
-  filtered.forEach(item=>{
-    const k=dayKey(item.air_date)||'sem-data';
-    if(!groups[k]) groups[k]=[];
-    groups[k].push(item);
+  const sec=document.createElement('div');
+  sec.className='section';
+  sec.innerHTML=`<div class="section-header"><span class="section-title">▶️ Continuar Assistindo</span></div>`;
+  const grid=document.createElement('div');
+  grid.style.cssText='display:flex;flex-wrap:wrap;gap:14px;padding:4px 0;';
+  cont.forEach(f=>{
+    const card=document.createElement('div');
+    card.style.cssText='position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
+    card.onclick=()=>openDetails(f.id,f.type);
+    card.innerHTML=`
+      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
+        ${f.poster?`<img src="${f.poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
+                 :'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>'}
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.1);">
+          <div style="height:100%;width:60%;background:var(--red);"></div>
+        </div>
+        <button onclick="event.stopPropagation();removeContinue(${f.id});showContinue();"
+          style="position:absolute;top:6px;right:6px;width:24px;height:24px;background:rgba(0,0,0,.8);border:1px solid #555;border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:background .2s;"
+          onmouseover="this.style.background='var(--red)'" onmouseout="this.style.background='rgba(0,0,0,.8)'"
+          title="Remover da lista">✕</button>
+      </div>
+      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
+      ${f.type==='tv'?`<div style="font-size:11px;color:var(--gray);margin-top:2px;">T${f.season||1} · Ep ${f.ep||1}</div>`:''}
+    `;
+    grid.appendChild(card);
   });
+  sec.appendChild(grid);
+  sc.appendChild(sec);
+}
 
-  Object.keys(groups).sort().forEach(dk=>{
-    const items=groups[dk];
-    const group=document.createElement('div');
-    group.className='day-group';
+// 9. RECOMENDAÇÕES (Nova Função)
+async function loadRecommendations(id, type) {
+  const container = document.getElementById('recommendations-section');
+  const carousel = document.getElementById('recommendations-carousel');
+  carousel.innerHTML = '<div style="color:#555;padding:10px;">Buscando recomendações...</div>';
+  container.style.display = 'block';
 
-    // Header do dia
-    const today=calIsToday(dk);
-    const future=calIsFuture(dk);
-    const past=calIsPast(dk);
-    const labelCls=today?'hoje-lbl':future?'futuro-lbl':'passado-lbl';
-    const dh=document.createElement('div'); dh.className='day-header';
-    dh.innerHTML=`
-      <span class="day-label ${labelCls}">${today?'📅 Hoje':fmtCalDate(dk)}</span>
-      ${today?'<span class="day-badge-hoje">HOJE</span>':''}
-      <span style="font-size:10px;color:#555;font-weight:600;">${items.length} ep${items.length>1?'s':''}</span>
-      <div class="day-line"></div>`;
-    group.appendChild(dh);
+  try {
+    const d = await api(`/${type}/${id}/recommendations`);
+    const items = (d.results || []).filter(m => m.poster_path).slice(0, 15);
+    
+    if (items.length === 0) {
+      container.style.display = 'none';
+      return;
+    }
 
-    // Carrossel
-    const scroll=document.createElement('div'); scroll.className='h-scroll';
-    items.forEach(item=>scroll.appendChild(makeCalCard(item)));
-    group.appendChild(scroll);
-    cont.appendChild(group);
+    carousel.innerHTML = '';
+    items.forEach(m => {
+      const name = m.title || m.name || '';
+      const poster = `${IMG}/w500${m.poster_path}`;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.title = name;
+      card.onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); openDetails(m.id, type); };
+      card.innerHTML = `<img src="${poster}" alt="${name}" loading="lazy"><div class="card-overlay"><div class="card-title">${name}</div></div>`;
+      carousel.appendChild(card);
+    });
+  } catch (e) {
+    container.style.display = 'none';
+  }
+}
+
+// 10. O PLAYER E SERVIDORES
+let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
+
+function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
+
+function buildServerBtns(){
+  const g=document.getElementById('server-grid'); g.innerHTML='';
+  SERVERS.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='srv-btn'+(i===curSrvIdx?' active':'');
+    b.textContent=s.label;
+    b.onclick=()=>loadServer(i);
+    g.appendChild(b);
   });
 }
 
-function makeCalCard(item){
-  const card=document.createElement('div'); card.className='ep-card';
-  const type=detectCalType(item);
-  const tIcon=calTypeIcon(type);
-  const status=calStatusLabel(item.status);
-  const past=calIsPast(item.air_date)&&!calIsToday(item.air_date);
-  const statusMap={hoje:'HOJE',atualizado:'✓',futuro:'Em breve',atrasado:'⚠'};
-  const wlId=item._calKey;
-  const inList=isInWatchLater(wlId);
+function buildPlayerBox(url, srvLabel, autoplay){
+  const box = document.getElementById('player-box');
+  box.innerHTML = ''; // limpa iframe anterior
 
-  card.innerHTML=`
-    <div class="ep-poster-img${past?' past-poster':''}">
-      ${item.poster_path
-        ?`<img src="${item.poster_path}" alt="${(item.title||'').replace(/"/g,'')}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>${tIcon}</div>'">`
-        :`<div class="no-img">${tIcon}</div>`}
-      <span class="ep-status-badge ${status}">${statusMap[status]||status}</span>
-    </div>
-    <button class="ep-wl-btn${inList?' in-list':''}" title="${inList?'Remover da lista':'Assistir Mais Tarde'}"
-      data-calkey="${wlId}">
-      <i class="fas fa-bookmark"></i>
-    </button>
-    <div class="ep-info-cal">
-      <div class="ep-title-cal">${item.title||'—'}</div>
-      <div class="ep-meta-cal">${item.season_number?'T'+item.season_number+' ':''}${item.episode_number?'Ep '+item.episode_number:''} ${tIcon}</div>
-    </div>`;
-
-  // Listener seguro no botão, sem passar objeto pelo HTML
-  card.querySelector('.ep-wl-btn').addEventListener('click', function(e){
-    e.stopPropagation();
-    toggleCalItem(this, wlId);
-  });
-
-  return card;
+  if(!autoplay){
+    // Mostra botão de play falso — iframe ainda não existe
+    const btn = document.createElement('div');
+    btn.id = 'fake-play-btn';
+    // Pega título do filme/série para exibir
+    const titleEl = document.getElementById('det-title');
+    const titleText = titleEl ? titleEl.textContent : '';
+    btn.innerHTML = `
+      <div class="play-title">${titleText}</div>
+      <div class="play-circle"><i class="fas fa-play"></i></div>
+      <div class="play-label">${srvLabel} — Toque para assistir</div>
+    `;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      btn.remove();
+      injectIframe(box, url);
+    }, {once: true});
+    box.appendChild(btn);
+  } else {
+    injectIframe(box, url);
+  }
 }
 
-function toggleCalItem(btn, wlId){
-  const item=calItemMap[wlId];
-  if(!item) return;
-  const wlItem={
-    id: wlId,
-    type: 'tv',
-    title: item.title||'',
-    poster: item.poster_path||'',
-    release: item.air_date||'',
-    overview: item.episode_title||'',
-    rating: ''
+function injectIframe(box, url){
+  // Loader
+  const loader = document.createElement('div');
+  loader.className = 'player-loader'; loader.id = 'player-loader';
+  loader.innerHTML = '<div class="spinner"></div><p>Carregando stream...</p>';
+  box.appendChild(loader);
+
+  // iframe criado após gesto do usuário (permite autoplay no mobile)
+  const frame = document.createElement('iframe');
+  frame.id = 'player-frame';
+  frame.allowFullscreen = true;
+  frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
+  // SEM sandbox — players como WarezCDN detetam e bloqueiam o vídeo.
+  // O bloqueio de popups é feito pelo window.open=null no nosso AdBlock.
+  frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
+  frame.addEventListener('load', onFrameLoad);
+  box.appendChild(frame);
+  frame.src = url; // src DEPOIS de appendar — gesto já aconteceu
+  clearTimeout(fallbackTimer);
+  fallbackTimer=setTimeout(()=>{
+    document.getElementById('fallback-msg').textContent=`⚠️ "${SERVERS[curSrvIdx].label}" pode estar com problemas. Tentar próximo?`;
+    document.getElementById('fallback-bar').classList.add('show');
+  },12000);
+}
+
+function loadServer(i){
+  curSrvIdx=i; clearTimeout(fallbackTimer);
+  document.getElementById('fallback-bar').classList.remove('show');
+  document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
+  // Expõe estado na window para o auto-resume conseguir salvar
+  window._curId   = curId;
+  window._curType = curType;
+  window._curSrv  = i;
+  // No mobile mostra fake-play; no desktop carrega direto
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  buildPlayerBox(getUrl(i), SERVERS[i].label, !isMobile);
+  if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
+}
+
+function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando para ${SERVERS[next].label}...`); loadServer(next); }
+
+function onFrameLoad(){
+  const frame=document.getElementById('player-frame');
+  if(!frame||!frame.src||frame.src===window.location.href) return;
+  const loader=document.getElementById('player-loader');
+  if(loader) loader.style.display='none';
+  clearTimeout(fallbackTimer);
+  document.getElementById('fallback-bar').classList.remove('show');
+  fallbackTimer=setTimeout(()=>{
+    document.getElementById('fallback-msg').textContent='⚠️ Tela preta? Tente outro servidor.';
+    document.getElementById('fallback-bar').classList.add('show');
+  },8000);
+}
+
+// 11. SÉRIES: TEMPORADAS E EPISÓDIOS
+async function loadSeasons(id, numSeasons){
+  const sec=document.getElementById('seasons-section'); sec.style.display='block';
+  const tabs=document.getElementById('season-tabs'); tabs.innerHTML='';
+  for(let s=1;s<=Math.min(numSeasons,15);s++){
+    const b=document.createElement('button'); b.className='season-tab'+(s===1?' active':''); b.textContent=`Temporada ${s}`;
+    b.onclick=()=>{ document.querySelectorAll('.season-tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); curSeason=s; loadEpisodes(id,s); };
+    tabs.appendChild(b);
+  }
+  loadEpisodes(id,1);
+}
+
+async function loadEpisodes(id,season){
+  const grid=document.getElementById('episodes-grid');
+  grid.innerHTML='<div style="color:#555;padding:10px;font-size:13px">Carregando episódios...</div>';
+  try{
+    const d=await api(`/tv/${id}/season/${season}`);
+    grid.innerHTML='';
+    const _savedEp = (season===curSeason) ? curEp : null;
+    (d.episodes||[]).forEach(ep=>{
+      const card=document.createElement('div');
+      card.className='episode-card'+(ep.episode_number===curEp&&season===curSeason?' active':'');
+      const still=ep.still_path?`${IMG}/w300${ep.still_path}`:'';
+      card.innerHTML=`
+        <div class="ep-thumb">${still?`<img src="${still}" alt="">`:' '}<div class="play-over"><i class="fas fa-play" style="color:#fff;font-size:18px"></i></div></div>
+        <div class="ep-info">
+          <div class="ep-num">Ep. ${ep.episode_number} ${ep.runtime?'· '+ep.runtime+'min':''}</div>
+          <div class="ep-title">${ep.name||'Episódio '+ep.episode_number}</div>
+          <div class="ep-desc">${ep.overview||''}</div>
+        </div>`;
+      card.onclick=()=>{
+        curSeason=season; curEp=ep.episode_number;
+        document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
+        card.classList.add('active'); loadServer(curSrvIdx); buildServerBtns();
+        toast(`▶ T${season} E${ep.episode_number}: ${ep.name}`);
+        // Salva temporada e episódio atual
+        const _sc=getContinue(); if(_sc[curId]){ _sc[curId].season=curSeason; _sc[curId].ep=curEp; store.set('pf_cont',_sc); }
+      };
+      // Destaca episódio salvo ao carregar lista
+      if(_savedEp && ep.episode_number === _savedEp){
+        card.classList.add('active');
+        setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),300);
+      }
+      grid.appendChild(card);
+    });
+  }catch(e){ grid.innerHTML='<div class="empty-row">Erro ao carregar episódios.</div>'; }
+}
+
+// 12. ABERTURA DE DETALHES GERAL
+async function openDetails(id,type){
+  window.location.hash=`#${type}/${id}`;
+  document.getElementById('page-home').style.display='none'; document.getElementById('page-details').style.display='block'; window.scrollTo(0,0);
+  document.getElementById('player-box').innerHTML='';
+  document.getElementById('seasons-section').style.display='none'; document.getElementById('fallback-bar').classList.remove('show');
+  clearTimeout(fallbackTimer);
+  curId=id; curType=type; curSrvIdx=0;
+  // Restaura temporada/episódio salvo
+  const _saved = getContinue()[id];
+  curSeason = (_saved && type==='tv' && _saved.season) ? _saved.season : 1;
+  curEp     = (_saved && type==='tv' && _saved.ep)     ? _saved.ep     : 1;
+
+  try{
+    const m=await api(`/${type}/${id}`,{append_to_response:'external_ids,videos,credits'});
+    const name=m.title||m.name; const year=(m.release_date||m.first_air_date||'').split('-')[0];
+    const rating=m.vote_average?m.vote_average.toFixed(1):'N/A';
+    const runtime=m.runtime||(m.episode_run_time&&m.episode_run_time[0]);
+    const genres=(m.genres||[]).map(g=>g.name);
+    
+    if(m.backdrop_path) document.getElementById('det-backdrop').style.backgroundImage=`url('${IMG}/w1280${m.backdrop_path}')`;
+    document.getElementById('det-poster').src=m.poster_path?`${IMG}/w500${m.poster_path}`:'';
+    document.getElementById('det-title').textContent=name;
+    document.getElementById('det-tags').innerHTML=`
+      <span class="det-tag green">⭐ ${rating}</span><span class="det-tag">${year}</span>
+      ${runtime?`<span class="det-tag">${runtime} min</span>`:''}
+      <span class="det-tag">${type==='tv'?'SÉRIE':'FILME'}</span>
+      ${genres.slice(0,3).map(g=>`<span class="det-tag red">${g}</span>`).join('')}
+    `;
+    document.getElementById('det-synopsis').textContent=m.overview||'Sinopse não disponível.';
+    
+    const trailer=(m.videos?.results||[]).find(v=>v.type==='Trailer'&&v.site==='YouTube');
+    document.getElementById('det-btns').innerHTML=`
+      <button class="btn-watch" onclick="loadServer(0)"><i class="fas fa-play"></i> Assistir</button>
+      ${trailer?`<button class="btn-more" onclick="openTrailer('${trailer.key}')"><i class="fab fa-youtube"></i> Trailer</button>`:''}
+      <button class="btn-more" onclick="toggleFav(${id},'${type}','${name.replace(/'/g,"\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
+        <i class="fas fa-heart"></i> ${getFavs()[id]?'Remover':'Favoritar'}
+      </button>
+      <button class="btn-more" id="wl-btn-${id}" onclick="doToggleWatchLater(${id},'${type}','${name.replace(/'/g,"\\'")}','${m.poster_path||''}','${m.release_date||m.first_air_date||''}','${m.overview||''}',${m.vote_average||0})">
+        <i class="fas fa-bookmark"></i> ${isInWatchLater(id)?'Na Lista':'Minha Lista'}
+      </button>
+    `;
+
+    buildServerBtns(); loadServer(0);
+    if(type==='tv' && m.number_of_seasons){
+      await loadSeasons(id, m.number_of_seasons);
+      // Se foi restaurado da lista "Continuar", destaca o episódio e faz scroll
+      if(_saved && _saved.season && _saved.ep){
+        const activeCard = document.querySelector(`.ep-card.active`);
+        if(activeCard) activeCard.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }
+    saveContinue(id,type,name,m.poster_path?`${IMG}/w500${m.poster_path}`:'',curSeason,curEp);
+    
+    // Chama as recomendações adicionadas agora
+    await loadRecommendations(id, type);
+
+  }catch(err){ document.getElementById('det-title').textContent='Erro ao carregar.'; }
+}
+
+function openTrailer(key){
+  const box = document.getElementById('player-box');
+  injectIframe(box, `https://www.youtube.com/embed/${key}?autoplay=1`);
+}
+
+function closeDetails() {
+    localStorage.removeItem('pf_watching'); // usuário fechou voluntariamente
+    window._curId = ''; window._curType = ''; window._curSrv = 0;
+    document.getElementById('page-details').style.display='none'; document.getElementById('page-home').style.display='block';
+    window.location.hash=''; document.getElementById('player-box').innerHTML='';
+}
+
+// 13. BUSCA
+function toggleSearch(){
+  const b=document.getElementById('searchbar'); b.classList.toggle('open');
+  if(b.classList.contains('open')) document.getElementById('searchInput').focus();
+}
+
+async function doSearch(){
+  const q=document.getElementById('searchInput').value.trim(); if(!q) return;
+  document.getElementById('searchbar').classList.remove('open');
+  clearPage(true, null);
+  try{
+    const [mv,tv]=await Promise.all([ api('/search/movie',{query:q,region:'BR'}), api('/search/tv',{query:q,region:'BR'}) ]);
+    const all=[...(mv.results||[]).map(m=>({...m,media_type:'movie'})), ...(tv.results||[]).map(m=>({...m,media_type:'tv'}))]
+              .filter(m=>m.poster_path).sort((a,b)=>b.popularity-a.popularity);
+    document.getElementById('sections-container').appendChild(makeCarousel({id:'search',title:`🔎 Resultados para "${q}"`,endpoint:'',params:{}},all,'movie'));
+  }catch(e){}
+}
+
+// 14. EVENTOS DE JANELA E SCROLL INTELIGENTE
+window.onhashchange=()=>{
+  const m=window.location.hash.match(/^#(movie|tv)\/(\d+)/);
+  if(m) openDetails(parseInt(m[2]),m[1]);
+  else{ document.getElementById('page-home').style.display='block'; document.getElementById('page-details').style.display='none'; }
+};
+
+let lastScrollTop = 0;
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  header.classList.toggle('solid', scrollTop > 50);
+  
+  // Lógica do cabeçalho que se esconde (A Nova Função)
+  if (scrollTop > lastScrollTop && scrollTop > 100) {
+    header.style.transform = 'translateY(-100%)';
+  } else {
+    header.style.transform = 'translateY(0)';
+  }
+  lastScrollTop = Math.max(scrollTop, 0); 
+});
+
+
+// ══════════════════════════════════════════════════════════════
+// 16. BLOQUEADOR AGRESSIVO DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
+// ══════════════════════════════════════════════════════════════
+(function(){
+
+  // ── A. Bloqueio SIMPLES: só window.open e _blank — não interfere nos players ──
+  window.open = function(){
+    console.log('[PureFlix] popup bloqueado');
+    return null;
   };
-  const added=toggleWatchLater(wlItem);
-  btn.classList.toggle('in-list', added);
-  btn.title=added?'Remover da lista':'Assistir Mais Tarde';
-  if(added){ addNotification(wlItem); toast(`🔖 "${item.title}" adicionado à Minha Lista!`); }
-  else{ removeNotification(wlId); toast('🗑️ Removido da Minha Lista'); }
-  render();
+
+  document.addEventListener('click', function(e){
+    const a = e.target.tagName === 'A' ? e.target : e.target.closest('a');
+    if(a && a.target === '_blank'){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('[PureFlix] link _blank bloqueado');
+    }
+  }, true);
+
+  // ── B. Auto-Resume: salva estado com localStorage para sobreviver a redirects ──
+  function pfSaveWatching(){
+    try{
+      localStorage.setItem('pf_watching', JSON.stringify({
+        hash:    window.location.hash,
+        id:      window._curId   || '',
+        type:    window._curType || '',
+        srv:     window._curSrv  || 0,
+        ts:      Date.now()
+      }));
+    }catch(e){}
+  }
+
+  function pfRestoreWatching(){
+    try{
+      const raw = localStorage.getItem('pf_watching');
+      if(!raw) return;
+      const w = JSON.parse(raw);
+      // Só restaura se foi há menos de 30 segundos (saiu por anúncio)
+      if(!w || (Date.now() - w.ts) > 30000) return;
+      localStorage.removeItem('pf_watching');
+      if(w.hash && w.hash.match(/^#(movie|tv)\/\d+/)){
+        // Redireciona de volta para o filme/série
+        setTimeout(()=>{ window.location.hash = w.hash; }, 300);
+      }
+    }catch(e){}
+  }
+
+  // Salva sempre que o usuário está assistindo
+  window.addEventListener('pagehide',        pfSaveWatching);
+  window.addEventListener('visibilitychange', ()=>{ if(document.hidden) pfSaveWatching(); });
+
+  // Restaura ao carregar/voltar para a página
+  pfRestoreWatching();
+  window.addEventListener('pageshow', (e)=>{ if(e.persisted) pfRestoreWatching(); });
+
+  console.log('[PureFlix] Proteção ativa ✓');
+})();
+
+
+// ══════════════════════════════════════════
+// NAVEGAÇÃO MOBILE (Pills + Bottom Nav)
+// ══════════════════════════════════════════
+function mobNavActive(btn){
+  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+function mobCatActive(btn){
+  document.querySelectorAll('.mob-cat').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+function syncMobileCat(key){
+  // Sincroniza pills com o estado atual
+  document.querySelectorAll('.mob-cat').forEach(b=>{
+    b.classList.toggle('active', b.getAttribute('onclick').includes("'"+key+"'") || (key==='home' && b.getAttribute('onclick').includes("'home'")));
+  });
+}
+function mobNav(btn, section){
+  mobNavActive(btn);
+  if(section==='home')       { goHome(null); syncMobileCat('home'); }
+  else if(section==='fav')   { showFav(null); syncMobileCat('fav'); }
+  else if(section==='continue'){ showContinue(null); syncMobileCat('continue'); }
+}
+function mobCat(btn, section){
+  mobCatActive(btn);
+  if(section==='home')        goHome(null);
+  else if(section==='fav')    showFav(null);
+  else if(section==='continue') showContinue(null);
+  else                        showSection(section, null);
+  // Sincroniza bottom nav
+  const map = {home:'mbn-home',fav:'mbn-fav',continue:'mbn-continue'};
+  if(map[section]){
+    mobNavActive(document.getElementById(map[section]));
+  } else {
+    mobNavActive(document.getElementById('mbn-home'));
+  }
 }
 
-/* ══ INIT ══ */
-requestNotifPermission();
-render();
-// Inicia na aba lista por padrão
-document.getElementById('tab-lista').style.display='block';
-document.getElementById('tab-cal').style.display='none';
+// Oculta bottom nav ao entrar em detalhes, mostra ao sair
+const _origOpenDetails = openDetails;
+// Patch para esconder bottom nav na página de detalhes
+document.addEventListener('DOMContentLoaded', ()=>{
+  const nav = document.getElementById('mobile-nav');
+  const cats = document.getElementById('mobile-cats');
+  const obs = new MutationObserver(()=>{
+    const detOpen = document.getElementById('page-details').style.display === 'block';
+    if(nav)  nav.style.display  = detOpen ? 'none' : '';
+    if(cats) cats.style.display = detOpen ? 'none' : '';
+  });
+  obs.observe(document.getElementById('page-details'), {attributes:true, attributeFilter:['style']});
+});
+
+// 15. START DO SITE
+(async()=>{
+  requestNotifPermission();
+  loadHero(); goHome(null); window.onhashchange();
+})();
+
+// Função para toggling da Minha Lista diretamente do index
+function doToggleWatchLater(id, type, title, poster_path, release, overview, rating){
+  const item = {
+    id, type, title,
+    poster: poster_path ? (poster_path.startsWith('http') ? poster_path : poster_path) : '',
+    release, overview, rating
+  };
+  const added = toggleWatchLater(item);
+  const btn = document.getElementById('wl-btn-'+id);
+  if(btn){
+    btn.innerHTML = added
+      ? '<i class="fas fa-bookmark"></i> Na Lista'
+      : '<i class="fas fa-bookmark"></i> Minha Lista';
+  }
+  toast(added ? '🔖 Adicionado à Minha Lista!' : '🗑️ Removido da Minha Lista');
+  if(added){
+    addNotification(item);
+  } else {
+    removeNotification(id);
+  }
+}
 </script>
+
+<!-- Bottom Navigation Bar mobile -->
+<nav id="mobile-nav">
+  <button class="mob-nav-btn active" id="mbn-home" onclick="mobNav(this,'home')">
+    <i class="fas fa-home"></i>Início
+  </button>
+  <button class="mob-nav-btn" id="mbn-search" onclick="toggleSearch();mobNavActive(this)">
+    <i class="fas fa-search"></i>Buscar
+  </button>
+  <button class="mob-nav-btn" id="mbn-fav" onclick="mobNav(this,'fav')">
+    <i class="fas fa-heart"></i>Favoritos
+  </button>
+  <button class="mob-nav-btn" id="mbn-continue" onclick="mobNav(this,'continue')">
+    <i class="fas fa-play-circle"></i>Continuar
+  </button>
+  <button class="mob-nav-btn" onclick="window.location.href='assistir-mais-tarde.html'">
+    <i class="fas fa-bookmark"></i>Minha Lista
+  </button>
+</nav>
 </body>
 </html>
