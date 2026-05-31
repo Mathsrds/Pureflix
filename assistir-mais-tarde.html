@@ -519,30 +519,45 @@ function calStatusLabel(s){
 }
 function calTypeIcon(type){ return type==='anime'?'⛩️':type==='dorama'?'🎌':'📺'; }
 
+// Mapa de itens indexados por _calKey — evita passar objetos via atributos HTML
+const calItemMap={};
+
 async function loadCalendar(){
   calLoaded=true;
   document.getElementById('cal-loading').style.display='block';
   document.getElementById('cal-content').style.display='none';
   document.getElementById('cal-state').style.display='none';
   let data=null;
+
   for(const url of CAL_APIS){
     try{
-      const r=await fetch(url,{mode:'cors'});
-      if(!r.ok) continue;
+      let r;
+      try{ r=await fetch(url,{mode:'cors',credentials:'omit'}); }
+      catch(e){ r=await fetch(url); }
+      if(!r||!r.ok) continue;
       const d=await r.json();
       if(Array.isArray(d)&&d.length){ data=d; break; }
       if(d&&typeof d==='object'){
         const arr=Object.values(d).find(v=>Array.isArray(v));
         if(arr&&arr.length){ data=arr; break; }
       }
-    }catch(e){ continue; }
+    }catch(e){ console.warn('[Cal] falhou:',url,e.message); continue; }
   }
+
   document.getElementById('cal-loading').style.display='none';
   if(!data||!data.length){
-    document.getElementById('cal-state-msg').textContent='Não foi possível carregar o calendário. Tente novamente mais tarde.';
+    document.getElementById('cal-state-msg').textContent='Não foi possível carregar o calendário. Verifique sua conexão.';
     document.getElementById('cal-state').style.display='flex';
     return;
   }
+
+  // Indexa cada item pelo ID único para uso seguro no onclick
+  data.forEach(item=>{
+    const key=String(item.tmdb_id||item.id||(item.title+'_'+(item.episode_number||0)));
+    item._calKey=key;
+    calItemMap[key]=item;
+  });
+
   calAllData=data.sort((a,b)=>new Date(a.air_date||'2099-01-01')-new Date(b.air_date||'2099-01-01'));
   renderCalendar();
 }
@@ -618,28 +633,37 @@ function makeCalCard(item){
   const status=calStatusLabel(item.status);
   const past=calIsPast(item.air_date)&&!calIsToday(item.air_date);
   const statusMap={hoje:'HOJE',atualizado:'✓',futuro:'Em breve',atrasado:'⚠'};
-  const wlId=item.tmdb_id||item.id||(item.title+'_'+item.episode_number);
+  const wlId=item._calKey;
   const inList=isInWatchLater(wlId);
 
   card.innerHTML=`
     <div class="ep-poster-img${past?' past-poster':''}">
       ${item.poster_path
-        ?`<img src="${item.poster_path}" alt="${item.title||''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>${tIcon}</div>'">`
+        ?`<img src="${item.poster_path}" alt="${(item.title||'').replace(/"/g,'')}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>${tIcon}</div>'">`
         :`<div class="no-img">${tIcon}</div>`}
       <span class="ep-status-badge ${status}">${statusMap[status]||status}</span>
     </div>
     <button class="ep-wl-btn${inList?' in-list':''}" title="${inList?'Remover da lista':'Assistir Mais Tarde'}"
-      onclick="event.stopPropagation();toggleCalItem(this,'${wlId}',${JSON.stringify(item).replace(/'/g,"&#39;")})">
+      data-calkey="${wlId}">
       <i class="fas fa-bookmark"></i>
     </button>
     <div class="ep-info-cal">
       <div class="ep-title-cal">${item.title||'—'}</div>
       <div class="ep-meta-cal">${item.season_number?'T'+item.season_number+' ':''}${item.episode_number?'Ep '+item.episode_number:''} ${tIcon}</div>
     </div>`;
+
+  // Listener seguro no botão, sem passar objeto pelo HTML
+  card.querySelector('.ep-wl-btn').addEventListener('click', function(e){
+    e.stopPropagation();
+    toggleCalItem(this, wlId);
+  });
+
   return card;
 }
 
-function toggleCalItem(btn, wlId, item){
+function toggleCalItem(btn, wlId){
+  const item=calItemMap[wlId];
+  if(!item) return;
   const wlItem={
     id: wlId,
     type: 'tv',
@@ -653,8 +677,8 @@ function toggleCalItem(btn, wlId, item){
   btn.classList.toggle('in-list', added);
   btn.title=added?'Remover da lista':'Assistir Mais Tarde';
   if(added){ addNotification(wlItem); toast(`🔖 "${item.title}" adicionado à Minha Lista!`); }
-  else { removeNotification(wlId); toast('🗑️ Removido da Minha Lista'); }
-  render(); // atualiza contador
+  else{ removeNotification(wlId); toast('🗑️ Removido da Minha Lista'); }
+  render();
 }
 
 /* ══ INIT ══ */
