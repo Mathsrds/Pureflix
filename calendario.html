@@ -513,12 +513,13 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <div id="pills-bar">
   <button class="pill active" onclick="setFilter('todos',this)">Todos</button>
   <button class="pill" onclick="setFilter('hoje',this)">🔴 Hoje</button>
+  <button class="pill" onclick="setFilter('futuro',this)">🟢 Futuros</button>
   <button class="pill" onclick="setFilter('serie',this)">📺 Séries</button>
   <button class="pill" onclick="setFilter('anime',this)">⛩️ Animes</button>
   <button class="pill" onclick="setFilter('dorama',this)">🎌 Doramas</button>
   <button class="pill" onclick="setFilter('filme',this)">🎬 Filmes</button>
-  <button class="pill" onclick="setFilter('futuro',this)">🟢 Futuros</button>
   <button class="pill" onclick="setFilter('atualizado',this)">✅ Disponíveis</button>
+  <button class="pill pill-later" onclick="setFilter('lista',this)">🔖 Minha Lista</button>
 </div>
 
 <!-- CORPO PRINCIPAL -->
@@ -607,37 +608,9 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <!-- TOAST -->
 <div id="toast"></div>
 
-<script src="watchlater.js" onerror="window._wlFallback=true"></script>
-<script src="notifications.js" onerror="window._notifFallback=true"></script>
+<script src="watchlater.js"></script>
+<script src="notifications.js"></script>
 <script>
-/* ══════════════════════════════════════════
-   WATCHLATER INLINE FALLBACK
-   (caso watchlater.js não carregue)
-══════════════════════════════════════════ */
-if(!window.getWatchLater){
-  const WL_KEY='pf_watchlater';
-  window.getWatchLater=()=>{try{return JSON.parse(localStorage.getItem(WL_KEY)||'[]');}catch(e){return[];}};
-  window.saveWatchLater=l=>localStorage.setItem(WL_KEY,JSON.stringify(l));
-  window.isInWatchLater=id=>getWatchLater().some(x=>String(x.id)===String(id));
-  window.addWatchLater=item=>{const l=getWatchLater();if(l.some(x=>String(x.id)===String(item.id)))return false;l.unshift({...item,savedAt:Date.now()});saveWatchLater(l);return true;};
-  window.removeWatchLater=id=>{saveWatchLater(getWatchLater().filter(x=>String(x.id)!==String(id)));};
-  window.toggleWatchLater=item=>{if(isInWatchLater(item.id)){removeWatchLater(item.id);return false;}addWatchLater(item);return true;};
-}
-
-/* ══════════════════════════════════════════
-   NOTIFICATIONS INLINE FALLBACK
-   (caso notifications.js não carregue)
-══════════════════════════════════════════ */
-if(!window.requestNotifPermission){
-  const NK='pf_notifications';
-  window.requestNotifPermission=async()=>{if(!('Notification'in window))return false;if(Notification.permission==='granted')return true;if(Notification.permission==='denied')return false;return(await Notification.requestPermission())==='granted';};
-  window.getNotifications=()=>{try{return JSON.parse(localStorage.getItem(NK)||'[]');}catch(e){return[];}};
-  window.isNotifying=id=>getNotifications().some(x=>String(x.id)===String(id));
-  window.addNotification=item=>{const l=getNotifications();if(l.some(x=>String(x.id)===String(item.id)))return false;l.push(item);localStorage.setItem(NK,JSON.stringify(l));return true;};
-  window.removeNotification=id=>{localStorage.setItem(NK,JSON.stringify(getNotifications().filter(x=>String(x.id)!==String(id))));};
-  window.toggleNotification=item=>{if(isNotifying(item.id)){removeNotification(item.id);return false;}addNotification(item);return true;};
-  window.checkNotifications=async()=>{};
-}
 /* ═══════════════════════════════════════
    ESTADO GLOBAL
 ═══════════════════════════════════════ */
@@ -686,53 +659,24 @@ function isPast(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); re
 function isFuture(str){ const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0); return d>TODAY; }
 
 function detectType(item){
-  // Campos que a API pode usar para indicar o tipo
-  const raw = (
-    item.type         ||
-    item.category     ||
-    item.media_type   ||
-    item.genre        ||
-    item.show_type    ||
-    ''
-  ).toLowerCase().trim();
+  const raw = (item.type||item.category||item.media_type||item.genre||item.show_type||'').toLowerCase().trim();
+  const orig = (item.original_language||item.language||'').toLowerCase();
+  const country = (item.origin_country||item.country||'').toLowerCase();
 
-  const title = (item.title || item.name || item.show || '').toLowerCase();
-  const orig  = (item.original_language || item.language || '').toLowerCase();
-  const net   = (item.network || item.networks || '').toLowerCase();
-  const origin= (item.origin_country || item.country || '').toLowerCase();
-
-  // Anime: idioma japonês E animação, ou flag explícita
-  if(item.is_anime) return 'anime';
-  if(raw.includes('anime')) return 'anime';
-  if((orig==='ja'||orig==='jp') && (raw.includes('anim')||raw.includes('animação')||raw.includes('animation'))) return 'anime';
-  if(orig==='ja' && (raw==='tv'||raw==='serie'||raw==='series'||raw==='show')) return 'anime';
-
-  // Dorama: origem coreana/japonesa/chinesa/tailandesa
-  if(raw.includes('dorama')||raw.includes('k-drama')||raw.includes('kdrama')) return 'dorama';
-  if((origin.includes('kr')||origin.includes('korea'))&&(raw==='tv'||raw==='serie'||raw==='series'||raw==='show'||raw==='')) return 'dorama';
-  if((origin.includes('cn')||origin.includes('tw')||origin.includes('hk'))&&(raw==='tv'||raw==='serie'||raw==='')) return 'dorama';
-  if((origin.includes('th')||origin.includes('thailand'))&&raw==='tv') return 'dorama';
-
-  // Filme explícito
+  // Filme
   if(raw==='movie'||raw==='filme'||raw==='film') return 'filme';
   if(item.runtime && !item.episode_number && !item.season_number) return 'filme';
 
-  // Série (default para TV)
+  // Anime
+  if(item.is_anime||raw.includes('anime')) return 'anime';
+  if((orig==='ja'||orig==='jp') && (raw==='tv'||raw==='serie'||raw==='series'||raw===''||raw.includes('anim'))) return 'anime';
+
+  // Dorama
+  if(raw.includes('dorama')||raw.includes('k-drama')||raw.includes('kdrama')) return 'dorama';
+  if((country.includes('kr')||country.includes('cn')||country.includes('tw')||country.includes('th')) && (raw==='tv'||raw==='serie'||raw==='')) return 'dorama';
+
+  // Série (default TV)
   return 'serie';
-}
-
-// Mantém item visível até 5 dias após o lançamento
-function isWithin5Days(str){
-  if(!str) return true;
-  const d=new Date(str+'T00:00:00'); d.setHours(0,0,0,0);
-  const diff=Math.floor((TODAY-d)/86400000);
-  return diff<=5; // mostra até 5 dias depois
-}
-
-function shouldShow(item){
-  // Sempre mostra futuros e de hoje
-  // Mostra passados apenas se dentro de 5 dias
-  return isWithin5Days(item.air_date||item.release_date||'');
 }
 
 function statusLabel(s){
@@ -829,17 +773,59 @@ async function init(){
     allData = demoData();
     toast('⚠️ Modo demonstração (API offline)');
   }
-  // Filtrar: só mostra itens do dia ou até 5 dias passados
-  allData = allData.filter(shouldShow);
+
+  // Normalizar: garantir air_date em todos os itens
+  allData = allData.map(item=>({
+    ...item,
+    air_date: item.air_date || item.release_date || item.date || item.premiere || '',
+  }));
+
+  // Filtrar: só mostra itens com data válida
+  allData = allData.filter(item=> item.air_date && item.air_date.length >= 8);
+
+  // Cruzar com Minha Lista — marcar itens salvos
+  const wl = getWatchLaterSafe();
+  allData = allData.map(item=>{
+    const id = String(item.tmdb_id||item.id||'');
+    return { ...item, _inWatchLater: id && wl.some(x=>String(x.id)===id) };
+  });
+
+  // Adicionar itens da Minha Lista que não estão na API (ex: filmes salvos)
+  const apiIds = new Set(allData.map(i=>String(i.tmdb_id||i.id||'')));
+  wl.forEach(wlItem=>{
+    if(!String(wlItem.id)||apiIds.has(String(wlItem.id))) return;
+    if(!wlItem.release) return;
+    allData.push({
+      title:          wlItem.title||'',
+      air_date:       wlItem.release,
+      poster_path:    wlItem.poster||'',
+      type:           wlItem.type==='movie'?'filme':(wlItem.type||'serie'),
+      status:         new Date(wlItem.release+'T00:00:00')>TODAY ? 'Futuro' : 'Atualizado',
+      tmdb_id:        wlItem.id,
+      _inWatchLater:  true,
+      _fromWatchLater:true,
+    });
+  });
+
+  // Ordenar por data
   allData.sort((a,b)=>{
-    const da=new Date(a.air_date||a.release_date||'2099-01-01');
-    const db=new Date(b.air_date||b.release_date||'2099-01-01');
+    const da=new Date(a.air_date||'2099-01-01');
+    const db=new Date(b.air_date||'2099-01-01');
     return da-db;
   });
+
   filteredData = [...allData];
   document.getElementById('loading-state').style.display='none';
   document.getElementById('content').style.display='block';
   renderAll();
+}
+
+// Helper seguro para ler Minha Lista mesmo sem watchlater.js
+function getWatchLaterSafe(){
+  try{
+    if(typeof getWatchLater==='function') return getWatchLater();
+    return JSON.parse(localStorage.getItem('pf_watchlater')||'[]');
+  }catch(e){ return []; }
 }
 
 /* ═══════════════════════════════════════
@@ -859,17 +845,20 @@ function applyFilters(){
   filteredData = allData.filter(item=>{
     const type   = detectType(item);
     const status = statusLabel(item.status);
-    const date   = item.air_date||item.release_date||'';
+    const date   = item.air_date||'';
     const q = searchTerm;
-    if(q && !item.title?.toLowerCase().includes(q) && !item.episode_title?.toLowerCase().includes(q) && !(item.name||'').toLowerCase().includes(q)) return false;
+    const titleMatch = (item.title||item.name||'').toLowerCase().includes(q);
+    const epMatch    = (item.episode_title||'').toLowerCase().includes(q);
+    if(q && !titleMatch && !epMatch) return false;
     if(currentFilter==='todos')      return true;
-    if(currentFilter==='hoje')       return isToday(date);
-    if(currentFilter==='futuro')     return isFuture(date);
-    if(currentFilter==='atualizado') return status==='atualizado'||isPast(date);
+    if(currentFilter==='hoje')       return date && isToday(date);
+    if(currentFilter==='futuro')     return date && isFuture(date);
+    if(currentFilter==='atualizado') return date && (isToday(date)||isPast(date));
     if(currentFilter==='serie')      return type==='serie';
     if(currentFilter==='anime')      return type==='anime';
     if(currentFilter==='dorama')     return type==='dorama';
     if(currentFilter==='filme')      return type==='filme';
+    if(currentFilter==='lista')      return item._inWatchLater;
     return true;
   });
   renderAll();
@@ -920,27 +909,29 @@ function renderScroll(){
   });
 
   Object.keys(groups).sort().forEach(dateKey=>{
+    if(dateKey==='sem-data') return; // pula itens sem data
     const items = groups[dateKey];
     const group = document.createElement('div');
     group.className='day-group';
 
-    // Header do dia
     const dh=document.createElement('div');
     dh.className='day-header';
-    const today=isToday(dateKey);
-    const past=isPast(dateKey);
-    const future=isFuture(dateKey);
+    const today  =isToday(dateKey);
+    const past   =isPast(dateKey);
+    const future =isFuture(dateKey);
     const labelCls=today?'today':future?'future':'past';
-    const badge=today?'<span class="day-badge hoje">HOJE</span>'
-                :past?'<span class="day-badge atrasado">PASSADO</span>':'';
+    const badge=today
+      ?'<span class="day-badge hoje">HOJE</span>'
+      :past
+        ?'<span class="day-badge atrasado" style="background:rgba(70,211,105,.15);border:1px solid rgba(70,211,105,.3);color:#46d369;">DISPONÍVEL</span>'
+        :'';
     dh.innerHTML=`
       <span class="day-label ${labelCls}">${today?'📅 Hoje':fmtDate(dateKey)}</span>
       ${badge}
-      <span class="day-badge" style="background:rgba(255,255,255,.06);color:#777;font-size:9px;font-weight:600;padding:3px 8px;border-radius:10px;">${items.length} ep${items.length>1?'s':''}</span>
+      <span class="day-badge" style="background:rgba(255,255,255,.06);color:#777;font-size:9px;font-weight:600;padding:3px 8px;border-radius:10px;">${items.length} título${items.length>1?'s':''}</span>
       <div class="day-line"></div>`;
     group.appendChild(dh);
 
-    // Carrossel
     const scroll=document.createElement('div');
     scroll.className='h-scroll';
     items.forEach(item=>scroll.appendChild(makeCard(item)));
@@ -953,22 +944,30 @@ function renderScroll(){
 function makeCard(item){
   const card=document.createElement('div');
   card.className='ep-card';
-  const status=statusLabel(item.status);
   const type=detectType(item);
   const typeIcon=type==='anime'?'⛩️':type==='dorama'?'🎌':type==='filme'?'🎬':'📺';
-  const posterSrc=item.poster_path||item.poster||item.image||'';
-  const date=item.air_date||item.release_date||'';
+  const posterSrc=item.poster_path||item.poster||'';
+  const date=item.air_date||'';
   const pastClass=date&&isPast(date)&&!isToday(date)?'past':'';
-  const statusMap={hoje:'HOJE',atualizado:'✓ Novo',futuro:'Em breve',atrasado:'⚠ Atrasado'};
-  // Para passados dentro de 5 dias, status visual = "Disponível"
-  const displayStatus=(date&&isPast(date)&&!isToday(date))?'Disponível':(statusMap[status]||status);
+
+  // Status visual
+  let statusCls, statusTxt;
+  if(date && isToday(date))  { statusCls='hoje';      statusTxt='HOJE'; }
+  else if(date&&isFuture(date)){ statusCls='futuro';  statusTxt='Em breve'; }
+  else                         { statusCls='atualizado'; statusTxt='✓ Disponível'; }
+
+  // Badge "da minha lista"
+  const listBadge = item._inWatchLater
+    ? `<span style="position:absolute;bottom:6px;right:6px;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:.5px;">🔖 LISTA</span>`
+    : '';
 
   card.innerHTML=`
-    <div class="ep-poster ${pastClass}">
+    <div class="ep-poster ${pastClass}" style="position:relative;">
       ${posterSrc
-        ?`<img src="${posterSrc}" alt="${item.title||item.name||''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>${typeIcon}</div>'">`
+        ?`<img src="${posterSrc}" alt="${item.title||''}" loading="lazy" onerror="this.parentElement.querySelector('img').style.display='none'">`
         :`<div class="no-img">${typeIcon}</div>`}
-      <span class="ep-status ${status}">${displayStatus}</span>
+      <span class="ep-status ${statusCls}">${statusTxt}</span>
+      ${listBadge}
     </div>
     <div class="ep-info">
       <div class="ep-title">${item.title||item.name||'—'}</div>
@@ -1068,67 +1067,64 @@ function showDayDetail(dateKey, items){
   toast(`📅 ${fmtDate(dateKey)} — ${items.length} lançamento(s)`);
 }
 
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
 function openModal(item){
   const overlay=document.getElementById('modal-overlay');
   const status=statusLabel(item.status);
   const type=detectType(item);
-  const typeIcon=type==='anime'?'⛩️ Anime':type==='dorama'?'🎌 Dorama':type==='filme'?'🎬 Filme':'📺 Série';
-  const statusText={hoje:'🔴 Hoje',atualizado:'✅ Disponível',futuro:'🟢 Em breve',atrasado:'⚠️ Atrasado'};
-  const date=item.air_date||item.release_date||'';
-  const poster=item.poster_path||item.poster||item.image||'';
-  const backdrop=item.backdrop_path||item.backdrop||poster||'';
-  const title=item.title||item.name||item.show||'—';
-  const epTitle=item.episode_title||item.name||'';
+  const typeIcon=type==='anime'?'⛩️ Anime':type==='dorama'?'🎌 Dorama':'📺 Série';
+  const statusText={hoje:'🔴 Hoje',atualizado:'✅ Atualizado',futuro:'🟢 Em breve',atrasado:'⚠️ Atrasado'};
 
   // Backdrop
-  document.getElementById('modal-backdrop').style.backgroundImage=backdrop?`url(${backdrop})`:'';
+  const bd=document.getElementById('modal-backdrop');
+  bd.style.backgroundImage=item.backdrop_path?`url(${item.backdrop_path})`:
+    item.poster_path?`url(${item.poster_path})`:'';
 
   // Poster
   const pi=document.getElementById('modal-poster-img');
-  pi.src=poster; pi.onerror=()=>pi.style.display='none';
-  pi.style.display='block';
+  pi.src=item.poster_path||''; pi.onerror=()=>pi.style.display='none';
 
   // Textos
-  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-title').textContent=item.title||'—';
   document.getElementById('modal-sub').textContent=
     `${item.season_number?'Temporada '+item.season_number+' · ':''}${item.episode_number?'Episódio '+item.episode_number:''}`;
-  document.getElementById('modal-ep-title').textContent=epTitle!==title?epTitle:'';
-  document.getElementById('modal-date').textContent=date?`📅 ${fmtFull(date)}`:'';
-
-  // Status display para passados dentro de 5 dias
-  const isAvail=date&&isPast(date)&&!isToday(date);
-  const statusDisplay=isAvail?'✅ Disponível':(statusText[status]||item.status||'');
+  document.getElementById('modal-ep-title').textContent=item.episode_title||'';
+  document.getElementById('modal-date').textContent=item.air_date?`📅 ${fmtFull(item.air_date)}`:'';
 
   // Badges
-  document.getElementById('modal-badges').innerHTML=`
-    <span class="mbadge ${isAvail?'atualizado':status}">${statusDisplay}</span>
+  const badges=document.getElementById('modal-badges');
+  badges.innerHTML=`
+    <span class="mbadge ${status}">${statusText[status]||item.status}</span>
     <span class="mbadge type">${typeIcon}</span>`;
 
   // Botão Assistir Mais Tarde
-  const wlId=String(item.tmdb_id||item.id||item.tmdb||'');
-  const wlItem={
-    id:wlId, type:type==='filme'?'movie':'tv',
-    title, poster, release:date,
-    overview:epTitle||item.overview||'',
-    season_number:item.season_number,
-    episode_number:item.episode_number,
+  const wlId = item.tmdb_id || item.id || (item.title+'_'+item.episode_number);
+  const wlItem = {
+    id:      wlId,
+    type:    type === 'anime' ? 'tv' : type === 'dorama' ? 'tv' : 'tv',
+    title:   item.title || '',
+    poster:  item.poster_path || '',
+    release: item.air_date || '',
+    overview: item.episode_title || '',
+    rating:  ''
   };
-  const wlBtn=document.getElementById('modal-wl-btn');
-  const wlLabel=document.getElementById('modal-wl-label');
-  const inList=wlId?isInWatchLater(wlId):false;
-  wlLabel.textContent=inList?'Na Minha Lista ✓':'Assistir Mais Tarde';
-  wlBtn.style.background =inList?'rgba(229,9,20,.15)':'#1a1a1a';
-  wlBtn.style.borderColor=inList?'var(--red)':'#333';
-  wlBtn.style.color      =inList?'#ff7070':'#ccc';
-  wlBtn.onclick=()=>{
-    if(!wlId){toast('⚠️ Sem ID para salvar');return;}
-    const added=toggleWatchLater(wlItem);
-    wlLabel.textContent      =added?'Na Minha Lista ✓':'Assistir Mais Tarde';
-    wlBtn.style.background   =added?'rgba(229,9,20,.15)':'#1a1a1a';
-    wlBtn.style.borderColor  =added?'var(--red)':'#333';
-    wlBtn.style.color        =added?'#ff7070':'#ccc';
-    if(added){addNotification({...wlItem,air_date:date});toast('🔖 Adicionado à Minha Lista!');}
-    else{removeNotification(wlId);toast('🗑️ Removido da Minha Lista');}
+  const wlBtn   = document.getElementById('modal-wl-btn');
+  const wlLabel = document.getElementById('modal-wl-label');
+  const inList  = isInWatchLater(wlId);
+  wlLabel.textContent = inList ? 'Na Minha Lista ✓' : 'Assistir Mais Tarde';
+  wlBtn.style.background   = inList ? 'rgba(229,9,20,.15)' : '#1a1a1a';
+  wlBtn.style.borderColor  = inList ? 'var(--red)'         : '#333';
+  wlBtn.style.color        = inList ? '#ff7070'            : '#ccc';
+  wlBtn.onclick = () => {
+    const added = toggleWatchLater(wlItem);
+    wlLabel.textContent      = added ? 'Na Minha Lista ✓' : 'Assistir Mais Tarde';
+    wlBtn.style.background   = added ? 'rgba(229,9,20,.15)' : '#1a1a1a';
+    wlBtn.style.borderColor  = added ? 'var(--red)'         : '#333';
+    wlBtn.style.color        = added ? '#ff7070'            : '#ccc';
+    if(added){ addNotification(wlItem); toast('🔖 Adicionado à Minha Lista!'); }
+    else      { removeNotification(wlId); toast('🗑️ Removido da Minha Lista'); }
   };
 
   overlay.classList.add('open');
