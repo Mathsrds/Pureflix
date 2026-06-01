@@ -614,17 +614,12 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 /* ═══════════════════════════════════════
    ESTADO GLOBAL
 ═══════════════════════════════════════ */
-// URL do seu Cloudflare Worker — troque pela URL real após o deploy
-const CAL_WORKER = 'https://cloudflare-workerjs-e425.mathsrds.workers.dev';
-
-const API_URL = CAL_WORKER;
+// Ordem de tentativa: PHP proxy (sem CORS) → Worker → proxies públicos
 const API_FALLBACKS = [
-  CAL_WORKER,
-  'https://warezcdn.lat/calendario.php',
-  'https://superflixapi.best/calendario.php',
-  'https://superflixapi.help/calendario.php',
-  'https://superflixapi.asia/calendario.php',
-  'https://superflixapi.my/calendario.php',
+  'calendario-proxy.php',
+  'https://cloudflare-workerjs-e425.mathsrds.workers.dev',
+  'https://api.allorigins.win/get?url='+encodeURIComponent('https://warezcdn.lat/calendario.php'),
+  'https://corsproxy.io/?'+encodeURIComponent('https://warezcdn.lat/calendario.php'),
 ];
 
 let allData = [];
@@ -694,34 +689,25 @@ function toast(msg){
    FETCH COM FALLBACK
 ═══════════════════════════════════════ */
 async function tryFetchCal(url){
-  // 1. Direto
   try{
-    const r=await fetch(url,{mode:'cors'});
-    if(r.ok){
-      const d=await r.json();
-      if(Array.isArray(d)&&d.length) return d;
-      if(d&&typeof d==='object'){ const a=Object.values(d).find(v=>Array.isArray(v)); if(a&&a.length) return a; }
+    const r = await fetch(url, {mode:'cors', cache:'no-store'});
+    if(!r.ok) return null;
+    let d;
+    // allorigins encapsula o JSON dentro de {contents: "..."}
+    if(url.includes('allorigins.win')){
+      const j = await r.json();
+      d = JSON.parse(j.contents);
+    } else {
+      d = await r.json();
     }
-  }catch(e){}
-  // 2. allorigins
-  try{
-    const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-    if(r.ok){
-      const d=JSON.parse((await r.json()).contents);
-      if(Array.isArray(d)&&d.length) return d;
-      if(d&&typeof d==='object'){ const a=Object.values(d).find(v=>Array.isArray(v)); if(a&&a.length) return a; }
+    if(Array.isArray(d) && d.length) return d;
+    if(d && typeof d==='object'){
+      // Pode vir como { data: [...] } ou { results: [...] } etc.
+      const found = Object.values(d).find(v=>Array.isArray(v)&&v.length);
+      if(found) return found;
     }
-  }catch(e){}
-  // 3. corsproxy.io
-  try{
-    const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
-    if(r.ok){
-      const d=await r.json();
-      if(Array.isArray(d)&&d.length) return d;
-      if(d&&typeof d==='object'){ const a=Object.values(d).find(v=>Array.isArray(v)); if(a&&a.length) return a; }
-    }
-  }catch(e){}
-  return null;
+    return null;
+  }catch(e){ return null; }
 }
 
 async function fetchCalendar(){
@@ -764,20 +750,33 @@ function demoData(){
    INICIALIZAÇÃO
 ═══════════════════════════════════════ */
 async function init(){
-  requestNotifPermission();
+  if(typeof requestNotifPermission==='function') requestNotifPermission();
   try{
     let data = await fetchCalendar();
     allData = data;
-    toast('✅ Dados carregados');
+    console.log(`✅ API retornou ${data.length} itens. Primeiro:`, data[0]);
+    toast(`✅ ${data.length} lançamentos carregados`);
   }catch(e){
+    console.warn('⚠️ API falhou, usando dados de demonstração:', e);
     allData = demoData();
-    toast('⚠️ Modo demonstração (API offline)');
+    toast('⚠️ Modo demonstração — API offline');
   }
 
-  // Normalizar: garantir air_date em todos os itens
+  // NORMALIZAR campos — a API warezcdn usa nomes diferentes dos esperados
+  // date → air_date | image → poster_path | season → season_number | episode → episode_number
   allData = allData.map(item=>({
     ...item,
-    air_date: item.air_date || item.release_date || item.date || item.premiere || '',
+    // Data
+    air_date:       item.air_date || item.date || item.release_date || item.premiere || item.data || '',
+    // Poster
+    poster_path:    item.poster_path || item.image || item.poster || item.thumbnail || item.img || '',
+    // Temporada e episódio
+    season_number:  item.season_number ?? item.season ?? item.temporada ?? null,
+    episode_number: item.episode_number ?? item.episode ?? item.episodio ?? item.ep ?? null,
+    // Título
+    title:          item.title || item.name || item.titulo || item.nome || '',
+    // Tipo
+    type:           item.type || item.category || item.tipo || item.categoria || '',
   }));
 
   // Filtrar: só mostra itens com data válida
