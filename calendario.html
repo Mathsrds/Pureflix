@@ -195,6 +195,12 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   display:flex;align-items:center;justify-content:center;
   font-size:32px;color:#333;
 }
+.ep-list-badge{
+  position:absolute;bottom:6px;right:6px;
+  background:var(--red);color:#fff;font-size:9px;font-weight:800;
+  padding:2px 6px;border-radius:3px;letter-spacing:.5px;
+  pointer-events:none;
+}
 
 /* Status badge no canto */
 .ep-status{
@@ -763,21 +769,28 @@ async function init(){
   }
 
   // NORMALIZAR campos — a API warezcdn usa nomes diferentes dos esperados
-  // date → air_date | image → poster_path | season → season_number | episode → episode_number
-  allData = allData.map(item=>({
-    ...item,
-    // Data
-    air_date:       item.air_date || item.date || item.release_date || item.premiere || item.data || '',
-    // Poster
-    poster_path:    item.poster_path || item.image || item.poster || item.thumbnail || item.img || '',
-    // Temporada e episódio
-    season_number:  item.season_number ?? item.season ?? item.temporada ?? null,
-    episode_number: item.episode_number ?? item.episode ?? item.episodio ?? item.ep ?? null,
-    // Título
-    title:          item.title || item.name || item.titulo || item.nome || '',
-    // Tipo
-    type:           item.type || item.category || item.tipo || item.categoria || '',
-  }));
+  const TMDB_IMG = 'https://image.tmdb.org/t/p';
+  allData = allData.map(item=>{
+    // Poster: normalizar campo e garantir URL absoluta
+    let poster = item.poster_path || item.image || item.poster
+               || item.thumbnail || item.img || item.cover || item.banner || '';
+    // Se for caminho relativo TMDB (começa com /), adicionar domínio
+    if(poster && poster.startsWith('/') && !poster.startsWith('//'))
+      poster = `${TMDB_IMG}/w500${poster}`;
+    // Se for http mas sem poster, buscar do TMDB pelo tmdb_id
+    const tmdbId = item.tmdb_id || item.id || item.tmdb || '';
+
+    return {
+      ...item,
+      air_date:       item.air_date || item.date || item.release_date || item.premiere || item.data || '',
+      poster_path:    poster,
+      poster_tmdb_id: tmdbId,   // guardamos para buscar no TMDB se precisar
+      season_number:  item.season_number  ?? item.season   ?? item.temporada ?? null,
+      episode_number: item.episode_number ?? item.episode  ?? item.episodio  ?? item.ep ?? null,
+      title:          item.title || item.name || item.titulo || item.nome || '',
+      type:           item.type  || item.category || item.tipo || item.categoria || '',
+    };
+  });
 
   // Filtrar: só mostra itens com data válida
   allData = allData.filter(item=> item.air_date && item.air_date.length >= 8);
@@ -939,43 +952,112 @@ function renderScroll(){
   });
 }
 
+/* ── POSTER FALLBACK — busca no TMDB se a imagem da API falhar ── */
+const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
+const TMDB_IMG  = 'https://image.tmdb.org/t/p';
+const posterCache = {}; // evita buscar o mesmo ID várias vezes
+
+async function fetchPosterFromTMDB(tmdbId, type){
+  const key = `${type}_${tmdbId}`;
+  if(posterCache[key]) return posterCache[key];
+  try{
+    const mediaType = (type==='filme'||type==='movie') ? 'movie' : 'tv';
+    const r = await fetch(
+      `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?language=pt-BR`,
+      { headers:{ Authorization:`Bearer ${TMDB_TOKEN}` } }
+    );
+    if(!r.ok) return null;
+    const d = await r.json();
+    const url = d.poster_path ? `${TMDB_IMG}/w500${d.poster_path}` : null;
+    posterCache[key] = url;
+    return url;
+  }catch(e){ return null; }
+}
+
+// Tenta carregar a imagem e faz fallback para TMDB se falhar
+function setCardPoster(imgEl, placeholderEl, item){
+  const type = detectType(item);
+
+  function showPlaceholder(){
+    imgEl.style.display='none';
+    placeholderEl.style.display='flex';
+    // Tenta buscar do TMDB se tiver tmdb_id
+    const tid = item.poster_tmdb_id || item.tmdb_id || item.id || '';
+    if(tid){
+      fetchPosterFromTMDB(tid, type).then(url=>{
+        if(url){
+          imgEl.src = url;
+          imgEl.style.display = 'block';
+          placeholderEl.style.display = 'none';
+        }
+      });
+    }
+  }
+
+  if(!item.poster_path){
+    showPlaceholder();
+    return;
+  }
+
+  imgEl.src = item.poster_path;
+  imgEl.onload  = () => { imgEl.style.display='block'; placeholderEl.style.display='none'; };
+  imgEl.onerror = () => showPlaceholder();
+}
+
 /* ── CARD ── */
 function makeCard(item){
   const card=document.createElement('div');
   card.className='ep-card';
   const type=detectType(item);
   const typeIcon=type==='anime'?'⛩️':type==='dorama'?'🎌':type==='filme'?'🎬':'📺';
-  const posterSrc=item.poster_path||item.poster||'';
   const date=item.air_date||'';
   const pastClass=date&&isPast(date)&&!isToday(date)?'past':'';
 
   // Status visual
   let statusCls, statusTxt;
-  if(date && isToday(date))  { statusCls='hoje';      statusTxt='HOJE'; }
+  if(date&&isToday(date))   { statusCls='hoje';       statusTxt='HOJE'; }
   else if(date&&isFuture(date)){ statusCls='futuro';  statusTxt='Em breve'; }
   else                         { statusCls='atualizado'; statusTxt='✓ Disponível'; }
 
-  // Badge "da minha lista"
   const listBadge = item._inWatchLater
-    ? `<span style="position:absolute;bottom:6px;right:6px;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:.5px;">🔖 LISTA</span>`
-    : '';
+    ? `<span class="ep-list-badge">🔖 LISTA</span>` : '';
 
-  card.innerHTML=`
-    <div class="ep-poster ${pastClass}" style="position:relative;">
-      ${posterSrc
-        ?`<img src="${posterSrc}" alt="${item.title||''}" loading="lazy" onerror="this.parentElement.querySelector('img').style.display='none'">`
-        :`<div class="no-img">${typeIcon}</div>`}
-      <span class="ep-status ${statusCls}">${statusTxt}</span>
-      ${listBadge}
-    </div>
-    <div class="ep-info">
-      <div class="ep-title">${item.title||item.name||'—'}</div>
-      <div class="ep-meta">
-        <span class="ep-ep">${item.season_number?'T'+item.season_number+' ':''}${item.episode_number?'Ep '+item.episode_number:''}</span>
-        <span>${typeIcon} ${type==='filme'?'Filme':type==='anime'?'Anime':type==='dorama'?'Dorama':'Série'}</span>
-      </div>
+  // Montar estrutura do card com img e placeholder separados
+  const poster = document.createElement('div');
+  poster.className = `ep-poster ${pastClass}`;
+  poster.style.position = 'relative';
+
+  const img = document.createElement('img');
+  img.alt = item.title||'';
+  img.loading = 'lazy';
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:none;';
+
+  const placeholder = document.createElement('div');
+  placeholder.className = 'no-img';
+  placeholder.textContent = typeIcon;
+  placeholder.style.display = 'flex';
+
+  poster.appendChild(img);
+  poster.appendChild(placeholder);
+  poster.insertAdjacentHTML('beforeend',
+    `<span class="ep-status ${statusCls}">${statusTxt}</span>${listBadge}`);
+
+  const info = document.createElement('div');
+  info.className = 'ep-info';
+  info.innerHTML = `
+    <div class="ep-title">${item.title||item.name||'—'}</div>
+    <div class="ep-meta">
+      <span class="ep-ep">${item.season_number?'T'+item.season_number+' ':''}${item.episode_number?'Ep '+item.episode_number:''}</span>
+      <span>${typeIcon} ${type==='filme'?'Filme':type==='anime'?'Anime':type==='dorama'?'Dorama':'Série'}</span>
     </div>`;
-  card.onclick=()=>openModal(item);
+
+  card.appendChild(poster);
+  card.appendChild(info);
+  card.onclick = ()=>openModal(item);
+
+  // Dispara o carregamento do poster com fallback
+  setCardPoster(img, placeholder, item);
+
   return card;
 }
 
