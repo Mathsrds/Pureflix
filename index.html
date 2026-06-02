@@ -439,16 +439,27 @@ async function loadDirectDB(){
   }catch(e){ _directDB = {}; return {}; }
 }
 
+// Preferência de áudio: 'dubbed' ou 'subbed'
+let directAudioPref = localStorage.getItem('pf_audio') || 'dubbed';
+
 function getDirectLink(id, type, season, episode){
-  // Retorna null se não houver link — loadServer trata este caso
   if(!_directDB) return null;
   const entry = _directDB[String(id)];
   if(!entry) return null;
-  if(type === 'movie') return entry.url || null;
+  // Filme
+  if(type === 'movie'){
+    return entry.dubbed_url || entry.subbed_url || entry.url || null;
+  }
   // TV: encontrar episódio correto
   const s = season || 1, ep = episode || 1;
   const found = (entry.episodes||[]).find(e => e.season===s && e.episode===ep);
-  return (found && found.url) ? found.url : null;
+  if(!found) return null;
+  // Prefer áudio configurado, fallback para o outro
+  if(directAudioPref === 'dubbed'){
+    return found.dubbed_url || found.subbed_url || null;
+  } else {
+    return found.subbed_url || found.dubbed_url || null;
+  }
 }
 
 function hasDirectLink(id, type, season, episode){
@@ -992,17 +1003,46 @@ function injectIframe(box, url){
   loader.innerHTML = '<div class="spinner"></div><p>Carregando stream...</p>';
   box.appendChild(loader);
 
-  // iframe criado após gesto do usuário (permite autoplay no mobile)
   const frame = document.createElement('iframe');
   frame.id = 'player-frame';
   frame.allowFullscreen = true;
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
-  // SEM sandbox — players como WarezCDN detetam e bloqueiam o vídeo.
-  // O bloqueio de popups é feito pelo window.open=null no nosso AdBlock.
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
-  frame.src = url; // src DEPOIS de appendar — gesto já aconteceu
+
+  // Links do Blogger: envolver num srcdoc que força o vídeo a preencher o iframe inteiro
+  if(url && url.includes('blogger.com/video')){
+    frame.srcdoc = `<!DOCTYPE html><html><head><style>
+      *{margin:0;padding:0;box-sizing:border-box;}
+      html,body{width:100%;height:100%;background:#000;overflow:hidden;}
+      iframe,video,object,embed{width:100%!important;height:100%!important;border:none;display:block;}
+    </style></head><body>
+      <iframe src="${url}" width="100%" height="100%" frameborder="0"
+        allowfullscreen allow="autoplay; fullscreen *; encrypted-media"></iframe>
+    </body></html>`;
+  } else if(url && (url.includes('.m3u8') || url.includes('videohls'))){
+    // HLS stream — usar hls.js via srcdoc
+    frame.srcdoc = `<!DOCTYPE html><html><head><style>
+      *{margin:0;padding:0;box-sizing:border-box;}
+      html,body{width:100%;height:100%;background:#000;overflow:hidden;}
+      video{width:100%;height:100%;display:block;}
+    </style></head><body>
+      <video id="v" controls autoplay playsinline></video>
+      <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"><\/script>
+      <script>
+        const v=document.getElementById('v');
+        const src="${url.replace(/"/g,'&quot;')}";
+        if(Hls.isSupported()){
+          const h=new Hls(); h.loadSource(src); h.attachMedia(v); v.play();
+        } else if(v.canPlayType('application/vnd.apple.mpegurl')){
+          v.src=src; v.play();
+        }
+      <\/script>
+    </body></html>`;
+  } else {
+    frame.src = url;
+  }
   clearTimeout(fallbackTimer);
   fallbackTimer=setTimeout(()=>{
     document.getElementById('fallback-msg').textContent=`⚠️ "${SERVERS[curSrvIdx].label}" pode estar com problemas. Tentar próximo?`;
