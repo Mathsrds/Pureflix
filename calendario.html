@@ -1767,11 +1767,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
    ESTADO GLOBAL
 ═══════════════════════════════════════ */
 // Ordem de tentativa: PHP proxy (sem CORS) → Worker → proxies públicos
-const API_FALLBACKS = [
-  'https://warezcdn.lat/calendario.php',
-  'https://api.allorigins.win/get?url='+encodeURIComponent('https://warezcdn.lat/calendario.php'),
-  'https://corsproxy.io/?'+encodeURIComponent('https://warezcdn.lat/calendario.php'),
-];
+// Usa TMDB diretamente — sem dependência de APIs externas
+const CAL_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
+const CAL_BASE  = 'https://api.themoviedb.org/3';
+const CAL_IMG   = 'https://image.tmdb.org/t/p/w500';
+const CAL_OPTS  = { headers:{ Authorization:`Bearer ${CAL_TOKEN}` } };
 
 let allData = [];
 let filteredData = [];
@@ -1839,34 +1839,81 @@ function calToast(msg){
 /* ═══════════════════════════════════════
    FETCH COM FALLBACK
 ═══════════════════════════════════════ */
-async function tryFetchCal(url){
-  try{
-    const r = await fetch(url, {mode:'cors', cache:'no-store'});
-    if(!r.ok) return null;
-    let d;
-    // allorigins encapsula o JSON dentro de {contents: "..."}
-    if(url.includes('allorigins.win')){
-      const j = await r.json();
-      d = JSON.parse(j.contents);
-    } else {
-      d = await r.json();
-    }
-    if(Array.isArray(d) && d.length) return d;
-    if(d && typeof d==='object'){
-      // Pode vir como { data: [...] } ou { results: [...] } etc.
-      const found = Object.values(d).find(v=>Array.isArray(v)&&v.length);
-      if(found) return found;
-    }
-    return null;
-  }catch(e){ return null; }
-}
-
+// Busca episódios a ar no TMDB para as próximas semanas e passados recentes
 async function fetchCalendar(){
-  for(const url of API_FALLBACKS){
-    const data=await tryFetchCal(url);
-    if(data) return data;
-  }
-  throw new Error('API indisponível');
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const pastDate = new Date(today); pastDate.setDate(today.getDate()-7);
+  const futDate  = new Date(today); futDate.setDate(today.getDate()+30);
+  const fmt = d => d.toISOString().split('T')[0];
+
+  // Séries em exibição agora no TMDB (on_the_air cobre ~2 semanas)
+  const fetchTMDB = async (path, params={}) => {
+    const u = new URL(CAL_BASE + path);
+    u.searchParams.set('language','pt-BR');
+    Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));
+    const r = await fetch(u, CAL_OPTS);
+    return r.json();
+  };
+
+  // Buscar séries populares em exibição (on_the_air)
+  const pages = [1,2,3];
+  const requests = [
+    ...pages.map(p => fetchTMDB('/tv/on_the_air', {page:p, region:'BR'})),
+    ...pages.map(p => fetchTMDB('/tv/airing_today', {page:p, region:'BR'})),
+  ];
+  const results = await Promise.allSettled(requests);
+  const shows = new Map();
+  results.forEach(r => {
+    if(r.status==='fulfilled' && r.value.results){
+      r.value.results.forEach(s => { if(!shows.has(s.id)) shows.set(s.id, s); });
+    }
+  });
+
+  // Para cada série, buscar detalhes da última temporada/episódio
+  const items = [];
+  const showList = [...shows.values()].slice(0, 60);
+
+  await Promise.allSettled(showList.map(async show => {
+    try {
+      const det = await fetchTMDB(`/tv/${show.id}`, {append_to_response:'external_ids'});
+      if(!det.last_episode_to_air && !det.next_episode_to_air) return;
+
+      const poster = show.poster_path ? CAL_IMG + show.poster_path : '';
+      const type = detectType({type: show.genre_ids?.includes(16) ? 'anime' : 'serie',
+                                original_language: show.original_language});
+
+      // Episódio anterior
+      if(det.last_episode_to_air){
+        const ep = det.last_episode_to_air;
+        const d  = ep.air_date;
+        if(d && d >= fmt(pastDate) && d <= fmt(futDate)){
+          items.push({
+            title: show.name, episode_title: ep.name || '',
+            episode_number: ep.episode_number, season_number: ep.season_number,
+            air_date: d, poster_path: poster, status: d===fmt(today)?'Hoje':'Atualizado',
+            type: type, tmdb_id: show.id
+          });
+        }
+      }
+
+      // Próximo episódio
+      if(det.next_episode_to_air){
+        const ep = det.next_episode_to_air;
+        const d  = ep.air_date;
+        if(d && d >= fmt(today) && d <= fmt(futDate)){
+          items.push({
+            title: show.name, episode_title: ep.name || '',
+            episode_number: ep.episode_number, season_number: ep.season_number,
+            air_date: d, poster_path: poster, status: 'Futuro',
+            type: type, tmdb_id: show.id
+          });
+        }
+      }
+    } catch(e){}
+  }));
+
+  if(!items.length) throw new Error('Sem dados');
+  return items;
 }
 
 /* ═══════════════════════════════════════
@@ -1910,7 +1957,7 @@ async function init(){
   }catch(e){
     console.warn('⚠️ API falhou, usando dados de demonstração:', e);
     allData = demoData();
-    calToast('⚠️ Modo demonstração — API offline');
+    calToast('📅 Mostrando lançamentos de exemplo');
   }
 
   // NORMALIZAR campos — a API warezcdn usa nomes diferentes dos esperados
