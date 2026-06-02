@@ -8,7 +8,7 @@
   function decodeVideoUrl(url) {
     if (!url || url.indexOf(_h) === -1) return url;
     try {
-      return url.replace(_re, function(_, b64)
+      return url.replace(_re, function(_, b64){
         return _h + '?' + _p + atob(b64);
       });
     } catch(e) { return url; }
