@@ -130,6 +130,9 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .srv-btn:hover:not(.active){border-color:#fff;color:#fff;}
 .srv-btn.active{background:var(--red);border-color:var(--red);color:#fff;}
 .srv-btn.trying{border-color:orange;color:orange;animation:pulse .8s infinite;}
+.srv-btn.srv-unavail{opacity:.4;cursor:not-allowed;}
+.srv-btn[title*="sem anúncios"]{border-color:rgba(70,211,105,.5);}
+.srv-btn[title*="sem anúncios"].active{background:linear-gradient(135deg,#1a6b30,#e50914);border-color:#46d369;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 .player-box{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;position:relative;}
 .player-box iframe{width:100%;height:100%;border:none;display:block;position:absolute;inset:0;}
@@ -414,14 +417,44 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 // 2. SERVIDORES DE VÍDEO (Foco em Dublados)
 const SERVERS = [
-  { label:'VidSrc',         fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'VidSrc.me',      fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
-  { label:'VidSrc Pro',     fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'WarezCDN 🇧🇷',   fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}/`:`https://warezcdn.lat/serie/${id}/${s||1}/${e||1}/` },
-  { label:'2Embed 🇧🇷',      fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
-  { label:'MultiEmbed',     fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
-  { label:'AutoEmbed',      fn:(id,t,s,e)=>t==='movie'?`https://autoembed.co/movie/tmdb/${id}`:`https://autoembed.co/tv/tmdb/${id}-${s||1}-${e||1}` },
+  { label:'⭐ PureFlix Direct', fn:(id,t,s,e)=>getDirectLink(id,t,s,e), direct:true },
+  { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'VidSrc.me',          fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
+  { label:'VidSrc Pro',         fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'WarezCDN 🇧🇷',       fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}/`:`https://warezcdn.lat/serie/${id}/${s||1}/${e||1}/` },
+  { label:'2Embed 🇧🇷',          fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
+  { label:'MultiEmbed',         fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
+  { label:'AutoEmbed',          fn:(id,t,s,e)=>t==='movie'?`https://autoembed.co/movie/tmdb/${id}`:`https://autoembed.co/tv/tmdb/${id}-${s||1}-${e||1}` },
 ];
+
+// ── SISTEMA DE LINKS DIRETOS ──
+let _directDB = null; // cache do JSON após primeiro carregamento
+
+async function loadDirectDB(){
+  if(_directDB) return _directDB;
+  try{
+    const r = await fetch('direct_links.json');
+    _directDB = await r.json();
+    return _directDB;
+  }catch(e){ _directDB = {}; return {}; }
+}
+
+function getDirectLink(id, type, season, episode){
+  // Retorna null se não houver link — loadServer trata este caso
+  if(!_directDB) return null;
+  const entry = _directDB[String(id)];
+  if(!entry) return null;
+  if(type === 'movie') return entry.url || null;
+  // TV: encontrar episódio correto
+  const s = season || 1, ep = episode || 1;
+  const found = (entry.episodes||[]).find(e => e.season===s && e.episode===ep);
+  return (found && found.url) ? found.url : null;
+}
+
+function hasDirectLink(id, type, season, episode){
+  if(!_directDB) return false;
+  return !!getDirectLink(id, type, season, episode);
+}
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
 const SECTIONS_HOME = [
@@ -915,8 +948,10 @@ function buildServerBtns(){
   const g=document.getElementById('server-grid'); g.innerHTML='';
   SERVERS.forEach((s,i)=>{
     const b=document.createElement('button');
-    b.className='srv-btn'+(i===curSrvIdx?' active':'');
-    b.textContent=s.label;
+    const hasDir = s.direct && hasDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    b.className='srv-btn'+(i===curSrvIdx?' active':'')+(s.direct&&!hasDir?' srv-unavail':'');
+    b.textContent = s.label + (hasDir?' ✓':'');
+    b.title = s.direct ? (hasDir?'Link direto disponível — sem anúncios!':'Sem link direto para este título') : '';
     b.onclick=()=>loadServer(i);
     g.appendChild(b);
   });
@@ -979,11 +1014,24 @@ function loadServer(i){
   curSrvIdx=i; clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
   document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
-  // Expõe estado na window para o auto-resume conseguir salvar
   window._curId   = curId;
   window._curType = curType;
   window._curSrv  = i;
-  // No mobile mostra fake-play; no desktop carrega direto
+
+  // Servidor Direct: verificar se existe link antes de carregar
+  if(SERVERS[i].direct){
+    const url = getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    if(!url){
+      // Sem link direto disponível — avisar e passar para próximo
+      toast('⭐ Sem link direto para este episódio. A tentar próximo servidor...');
+      setTimeout(()=>loadServer((i+1)%SERVERS.length), 1200);
+      return;
+    }
+    buildPlayerBox(url, SERVERS[i].label, true); // direct = sem fake-play, sem anúncios
+    if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
+    return;
+  }
+
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   buildPlayerBox(getUrl(i), SERVERS[i].label, !isMobile);
   if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
@@ -1280,6 +1328,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 // 15. START DO SITE
 (async()=>{
   requestNotifPermission();
+  loadDirectDB(); // pré-carregar links diretos em background
   loadHero(); goHome(null); window.onhashchange();
 })();
 
