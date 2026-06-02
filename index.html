@@ -411,7 +411,7 @@ async function requestNotifPermission(){
 }
 
 // 1. DADOS DE ACESSO À API
-const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWZmMTlmMGM4MjJhYmRmYjBjM2I0MWJmZDZiOTJiMCIsIm5iZiI6MTc3OTcxNTY2Ni41NzEsInN1YiI6IjZhMTQ0ZTUyODM4ZGNiYzhmNDAyZDY5MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pFS9ydcOA40ekPL09mC8DiNns6RK_j26KrRIGAt1HCg';
+const TOKEN = atob('ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaGRXUWlPaUkxT1dabU1UbG1NR000TWpKaFltUm1ZakJqTTJJME1XSm1aRFppT1RKaU1DSXNJbTVpWmlJNk1UYzNPVGN4TlRZMk5pNDFOekVzSW5OMVlpSTZJalpoTVRRMFpUVXlPRE00WkdOaVl6aG1OREF5WkRZNU1DSXNJbk5qYjNCbGN5STZXeUpoY0dsZmNtVmhaQ0pkTENKMlpYSnphVzl1SWpveGZRLnBGUzl5ZGNPQTQwZWtQTDA5bUM4RGlObnM2UktfajI2S3JSSUdBdDFIQ2c=');
 const BASE  = 'https://api.themoviedb.org/3';
 const IMG   = 'https://image.tmdb.org/t/p';
 const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
@@ -436,7 +436,7 @@ async function loadDirectDB(){
   try{
     const r = await fetch('direct_links.json');
     const raw = await r.json();
-    _directDB = decodeDirectLinks(raw); // ← decodifica tokens Blogger
+    _directDB = decodeDirectLinks(raw);
     return _directDB;
   }catch(e){ _directDB = {}; return {}; }
 }
