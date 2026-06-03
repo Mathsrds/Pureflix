@@ -434,10 +434,15 @@ let _directDB = null; // cache do JSON após primeiro carregamento
 async function loadDirectDB(){
   if(_directDB) return _directDB;
   try{
-    const r = await fetch('direct_links.json?v=4.0');
+    const r = await fetch('direct_links.json?v=5.0');
     _directDB = await r.json();
+    console.log('[PureFlix Direct] JSON carregado:', Object.keys(_directDB).length, 'títulos');
     return _directDB;
-  }catch(e){ _directDB = {}; return {}; }
+  }catch(e){ 
+    console.error('[PureFlix Direct] ERRO ao carregar JSON:', e);
+    _directDB = {}; 
+    return {}; 
+  }
 }
 
 // Preferência de áudio: 'dubbed' ou 'subbed'
