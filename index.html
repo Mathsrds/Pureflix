@@ -6,7 +6,7 @@
 <title>Pureflix</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="decode_urls.js"></script>
+<script src="decode_urls.js?v=2.0"></script>
 <style>
 /* ═══════════════════════════════════════════════════════
    1. VARIÁVEIS E GERAIS
@@ -418,9 +418,8 @@ const IMG   = 'https://image.tmdb.org/t/p';
 const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 // 2. SERVIDORES DE VÍDEO (Foco em Dublados)
-// ATENÇÃO: PureFlix Direct NÃO tem fn síncrona — é sempre tratado via loadServer() com await
 const SERVERS = [
-  { label:'⭐ PureFlix Direct', direct:true, fn: null }, // fn=null: só via loadServer() async
+  { label:'⭐ PureFlix Direct', fn:(id,t,s,e)=>getDirectLink(id,t,s,e), direct:true },
   { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',          fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc Pro',         fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
@@ -431,62 +430,24 @@ const SERVERS = [
 ];
 
 // ── SISTEMA DE LINKS DIRETOS ──
-let _directDB = null;       // cache do JSON após carregamento
-let _directDBPromise = null; // promise do carregamento em andamento
+let _directDB = null; // cache do JSON após primeiro carregamento
 
-async function loadDirectDB(retryCount = 0){
-  // Se já carregou, retorna cache
+async function loadDirectDB(){
   if(_directDB) return _directDB;
-  // Se já tem um fetch em andamento, aguarda ele
-  if(_directDBPromise) return _directDBPromise;
-
-  _directDBPromise = (async () => {
-    const maxRetries = 3;
-    let lastError;
-
-    for(let attempt = 0; attempt <= maxRetries; attempt++){
-      try{
-        // Tenta múltiplos caminhos possíveis para o JSON
-        const paths = ['./direct_links.json', 'direct_links.json', '/direct_links.json'];
-        let lastFetchError;
-
-        for(const path of paths){
-          try{
-            const r = await fetch(path, { cache: 'no-cache' });
-            if(!r.ok) { lastFetchError = r.status; continue; }
-            const raw = await r.json();
-            _directDB = decodeDirectLinks(raw);
-            console.log('[PureFlix Direct] DB carregado:', Object.keys(_directDB).length, 'títulos');
-            return _directDB;
-          }catch(pe){ lastFetchError = pe.message; }
-        }
-        throw new Error('Todos os caminhos falharam: ' + lastFetchError);
-      }catch(e){
-        lastError = e;
-        if(attempt < maxRetries){
-          console.log(`[PureFlix Direct] Tentativa ${attempt + 1} falhou, retry em ${500 * (attempt + 1)}ms...`);
-          await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
-        }
-      }
-    }
-
-    console.error('[PureFlix Direct] Falha ao carregar após', maxRetries, 'tentativas:', lastError);
-    _directDB = {}; // fallback para objeto vazio para não quebrar
+  try{
+    const r = await fetch('direct_links.json?v=2.0');
+    const raw = await r.json();
+    _directDB = decodeDirectLinks(raw);
     return _directDB;
-  })();
-
-  return _directDBPromise;
+  }catch(e){ _directDB = {}; return {}; }
 }
 
 // Preferência de áudio: 'dubbed' ou 'subbed'
 let directAudioPref = localStorage.getItem('pf_audio') || 'dubbed';
 
-async function getDirectLink(id, type, season, episode){
-  // Garante que o DB está carregado antes de retornar
-  const db = await loadDirectDB();
-  if(!db || Object.keys(db).length === 0) return null;
-
-  const entry = db[String(id)];
+function getDirectLink(id, type, season, episode){
+  if(!_directDB) return null;
+  const entry = _directDB[String(id)];
   if(!entry) return null;
   // Filme
   if(type === 'movie'){
@@ -504,9 +465,9 @@ async function getDirectLink(id, type, season, episode){
   }
 }
 
-async function hasDirectLink(id, type, season, episode){
-  const link = await getDirectLink(id, type, season, episode);
-  return !!link;
+function hasDirectLink(id, type, season, episode){
+  if(!_directDB) return false;
+  return !!getDirectLink(id, type, season, episode);
 }
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
@@ -995,44 +956,19 @@ async function loadRecommendations(id, type) {
 // 10. O PLAYER E SERVIDORES
 let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
 
-function getUrl(i){
-  const srv = SERVERS[i];
-  if(!srv || !srv.fn) return null; // Direct não tem fn síncrona
-  return srv.fn(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
-}
+function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
 
-async function buildServerBtns(){
-  const g = document.getElementById('server-grid');
-  g.innerHTML = '';
-
-  // Renderiza todos os botões IMEDIATAMENTE (sem esperar o JSON)
-  SERVERS.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.id = `srv-btn-${i}`;
-    b.className = 'srv-btn' + (i === curSrvIdx ? ' active' : '');
-    b.textContent = s.label;
-    b.onclick = () => loadServer(i);
+function buildServerBtns(){
+  const g=document.getElementById('server-grid'); g.innerHTML='';
+  SERVERS.forEach((s,i)=>{
+    const b=document.createElement('button');
+    const hasDir = s.direct && hasDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    b.className='srv-btn'+(i===curSrvIdx?' active':'')+(s.direct&&!hasDir?' srv-unavail':'');
+    b.textContent = s.label + (hasDir?' ✓':'');
+    b.title = s.direct ? (hasDir?'Link direto disponível — sem anúncios!':'Sem link direto para este título') : '';
+    b.onclick=()=>loadServer(i);
     g.appendChild(b);
   });
-
-  // Depois, em background, verifica se o Direct tem link e atualiza o badge
-  const directIdx = SERVERS.findIndex(s => s.direct);
-  if(directIdx < 0) return;
-
-  getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null)
-    .then(url => {
-      const btn = document.getElementById(`srv-btn-${directIdx}`);
-      if(!btn) return;
-      if(url){
-        btn.textContent = SERVERS[directIdx].label + ' ✓';
-        btn.title = 'Link direto disponível — sem anúncios!';
-      } else {
-        btn.textContent = SERVERS[directIdx].label;
-        btn.classList.add('srv-unavail');
-        btn.title = 'Sem link direto para este título';
-      }
-    })
-    .catch(() => {});
 }
 
 function buildPlayerBox(url, srvLabel, autoplay){
@@ -1130,7 +1066,7 @@ function injectIframe(box, url){
   },12000);
 }
 
-async function loadServer(i){
+function loadServer(i){
   curSrvIdx=i; clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
   document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
@@ -1140,27 +1076,20 @@ async function loadServer(i){
 
   // Servidor Direct: verificar se existe link antes de carregar
   if(SERVERS[i].direct){
-    const url = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    const url = getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
     if(!url){
-      toast('⭐ Sem link direto para este episódio. Tentando próximo servidor...');
+      // Sem link direto disponível — avisar e passar para próximo
+      toast('⭐ Sem link direto para este episódio. A tentar próximo servidor...');
       setTimeout(()=>loadServer((i+1)%SERVERS.length), 1200);
       return;
     }
-    // Garante que url é string (não Promise) antes de passar para buildPlayerBox
-    if(typeof url !== 'string'){
-      console.error('[PureFlix Direct] URL inválida (não é string):', url);
-      setTimeout(()=>loadServer((i+1)%SERVERS.length), 1200);
-      return;
-    }
-    buildPlayerBox(url, SERVERS[i].label, true);
+    buildPlayerBox(url, SERVERS[i].label, true); // direct = sem fake-play, sem anúncios
     if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
     return;
   }
 
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  const url = getUrl(i);
-  if(!url){ toast('Servidor indisponível. Tentando próximo...'); setTimeout(()=>loadServer((i+1)%SERVERS.length),800); return; }
-  buildPlayerBox(url, SERVERS[i].label, !isMobile);
+  buildPlayerBox(getUrl(i), SERVERS[i].label, !isMobile);
   if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
 }
 
@@ -1168,11 +1097,7 @@ function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando 
 
 function onFrameLoad(){
   const frame=document.getElementById('player-frame');
-  if(!frame) return;
-  // Ignora disparos com src vazio ou igual à própria página
-  const hasSrc    = frame.src && frame.src !== window.location.href;
-  const hasSrcdoc = !!frame.srcdoc;
-  if(!hasSrc && !hasSrcdoc) return;
+  if(!frame||!frame.src||frame.src===window.location.href) return;
   const loader=document.getElementById('player-loader');
   if(loader) loader.style.display='none';
   clearTimeout(fallbackTimer);
@@ -1213,10 +1138,10 @@ async function loadEpisodes(id,season){
           <div class="ep-title">${ep.name||'Episódio '+ep.episode_number}</div>
           <div class="ep-desc">${ep.overview||''}</div>
         </div>`;
-      card.onclick=async ()=>{
+      card.onclick=()=>{
         curSeason=season; curEp=ep.episode_number;
         document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
-        card.classList.add('active'); await loadServer(curSrvIdx); await buildServerBtns();
+        card.classList.add('active'); loadServer(curSrvIdx); buildServerBtns();
         toast(`▶ T${season} E${ep.episode_number}: ${ep.name}`);
         // Salva temporada e episódio atual
         const _sc=getContinue(); if(_sc[curId]){ _sc[curId].season=curSeason; _sc[curId].ep=curEp; store.set('pf_cont',_sc); }
@@ -1274,7 +1199,7 @@ async function openDetails(id,type){
       </button>
     `;
 
-    await buildServerBtns(); await loadServer(0);
+    buildServerBtns(); loadServer(0);
     if(type==='tv' && m.number_of_seasons){
       await loadSeasons(id, m.number_of_seasons);
       // Se foi restaurado da lista "Continuar", destaca o episódio e faz scroll
@@ -1459,8 +1384,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 // 15. START DO SITE
 (async()=>{
   requestNotifPermission();
-  // Pré-carrega links diretos em background — getDirectLink() aguarda automaticamente
-  loadDirectDB().catch(e => console.error('[PureFlix Direct] Erro no pré-carregamento:', e));
+  loadDirectDB(); // pré-carregar links diretos em background
   loadHero(); goHome(null); window.onhashchange();
 })();
 
@@ -1505,6 +1429,5 @@ function doToggleWatchLater(id, type, title, poster_path, release, overview, rat
     <i class="fas fa-bookmark"></i>Minha Lista
   </button>
 </nav>
-</bo
-dy>
+</body>
 </html>
