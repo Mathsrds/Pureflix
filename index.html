@@ -6,7 +6,6 @@
 <title>Pureflix</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="decode_urls.js?v=3.1"></script>
 <style>
 /* ═══════════════════════════════════════════════════════
    1. VARIÁVEIS E GERAIS
@@ -285,6 +284,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 }
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -435,39 +435,66 @@ let _directDB = null; // cache do JSON após primeiro carregamento
 async function loadDirectDB(){
   if(_directDB) return _directDB;
   try{
-    const r = await fetch('direct_links.json?v=3.1');
-    const raw = await r.json();
-    _directDB = decodeDirectLinks(raw);
+    const r = await fetch('direct_links.json?v=4.0');
+    _directDB = await r.json();
+    console.log('[PureFlix Direct] JSON carregado:', Object.keys(_directDB).length, 'títulos');
     return _directDB;
-  }catch(e){ _directDB = {}; return {}; }
+  }catch(e){ 
+    console.error('[PureFlix Direct] ERRO ao carregar JSON:', e);
+    _directDB = {}; 
+    return {}; 
+  }
 }
 
 // Preferência de áudio: 'dubbed' ou 'subbed'
 let directAudioPref = localStorage.getItem('pf_audio') || 'dubbed';
 
 function getDirectLink(id, type, season, episode){
-  if(!_directDB) return null;
+  if(!_directDB) {
+    console.log('[PureFlix Direct] _directDB está vazio!');
+    return null;
+  }
   const entry = _directDB[String(id)];
-  if(!entry) return null;
+  if(!entry) {
+    console.log('[PureFlix Direct] ID não encontrado:', id);
+    return null;
+  }
+  console.log('[PureFlix Direct] Entry encontrado:', entry.title, entry.type);
+
   // Filme
   if(type === 'movie'){
-    return entry.dubbed_url || entry.subbed_url || entry.url || null;
+    const url = entry.dubbed_url || entry.subbed_url || entry.url || null;
+    console.log('[PureFlix Direct] URL filme:', url ? url.substring(0,60)+'...' : 'null');
+    return url;
   }
+
   // TV: encontrar episódio correto
   const s = season || 1, ep = episode || 1;
   const found = (entry.episodes||[]).find(e => e.season===s && e.episode===ep);
-  if(!found) return null;
-  // Prefer áudio configurado, fallback para o outro
-  if(directAudioPref === 'dubbed'){
-    return found.dubbed_url || found.subbed_url || null;
-  } else {
-    return found.subbed_url || found.dubbed_url || null;
+  if(!found) {
+    console.log('[PureFlix Direct] Episódio não encontrado:', 'T'+s+'E'+ep);
+    return null;
   }
+
+  // Prefer áudio configurado, fallback para o outro
+  let url;
+  if(directAudioPref === 'dubbed'){
+    url = found.dubbed_url || found.subbed_url || null;
+  } else {
+    url = found.subbed_url || found.dubbed_url || null;
+  }
+  console.log('[PureFlix Direct] URL episódio:', url ? url.substring(0,60)+'...' : 'null');
+  return url;
 }
 
 function hasDirectLink(id, type, season, episode){
-  if(!_directDB) return false;
-  return !!getDirectLink(id, type, season, episode);
+  if(!_directDB) {
+    console.log('[PureFlix Direct] hasDirectLink: _directDB vazio');
+    return false;
+  }
+  const result = !!getDirectLink(id, type, season, episode);
+  console.log('[PureFlix Direct] hasDirectLink:', id, result);
+  return result;
 }
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
@@ -960,9 +987,11 @@ function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:
 
 function buildServerBtns(){
   const g=document.getElementById('server-grid'); g.innerHTML='';
+  console.log('[PureFlix Direct] buildServerBtns - curId:', curId, 'curType:', curType);
   SERVERS.forEach((s,i)=>{
     const b=document.createElement('button');
     const hasDir = s.direct && hasDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    console.log('[PureFlix Direct] Servidor', s.label, 'hasDir:', hasDir);
     b.className='srv-btn'+(i===curSrvIdx?' active':'')+(s.direct&&!hasDir?' srv-unavail':'');
     b.textContent = s.label + (hasDir?' ✓':'');
     b.title = s.direct ? (hasDir?'Link direto disponível — sem anúncios!':'Sem link direto para este título') : '';
@@ -1067,6 +1096,7 @@ function injectIframe(box, url){
 }
 
 function loadServer(i){
+  console.log('[PureFlix Direct] loadServer:', i, SERVERS[i].label);
   curSrvIdx=i; clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
   document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
@@ -1076,13 +1106,16 @@ function loadServer(i){
 
   // Servidor Direct: verificar se existe link antes de carregar
   if(SERVERS[i].direct){
+    console.log('[PureFlix Direct] Tentando carregar link direto...');
     const url = getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    console.log('[PureFlix Direct] URL retornado:', url ? url.substring(0,80)+'...' : 'NULL');
     if(!url){
-      // Sem link direto disponível — avisar e passar para próximo
+      console.log('[PureFlix Direct] URL vazio - indo para próximo servidor');
       toast('⭐ Sem link direto para este episódio. A tentar próximo servidor...');
       setTimeout(()=>loadServer((i+1)%SERVERS.length), 1200);
       return;
     }
+    console.log('[PureFlix Direct] Carregando URL no player...');
     buildPlayerBox(url, SERVERS[i].label, true); // direct = sem fake-play, sem anúncios
     if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
     return;
