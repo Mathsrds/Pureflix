@@ -2,8 +2,26 @@
   "297762": {
     "title": "Boruto: Naruto the Movie",
     "type": "movie",
-     <iframe class="metaframe rptss no-lazy" src="https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/02.mp4/index.m3u8&nocache1771203529" frameborder="0" scrolling="no" allowfullscreen width="100%" height="100%"></iframe>,
-    "subbed_url": null
+    <div id="player" itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
+                        <meta itemprop="duration" content="T24M00S"/>
+                        <meta itemprop="name" content="Assistir Naruto Shippuuden: Movie 2 &#8211; Kizuna Dublado Episódio 01">
+                        <meta itemprop="thumbnailUrl" content="https://animesdigital.org/wp-content/uploads/2023/08/Naruto-Shippuden-filme-2.jpg"/>
+                        <meta itemprop="contentURL" content="https://animesdigital.org/video/a/101321/"/>
+                        <meta itemprop="uploadDate" content="2023-08-17T15:22:09-03:00"/>
+                        <meta itemprop="description" content="Assista Naruto Shippuuden: Movie 2 &#8211; Kizuna Dublado Episódio 01 online em HD. Dublado e legendado grátis no animesdigital.org, sem anúncios e com atualização diária."/>
+                        <img id="thumbHis" class="none skip-lazy" src="https://animesdigital.org/wp-content/uploads/2023/08/Naruto-Shippuden-filme-2.jpg" width="200" height="200">
+                        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+                        <script src="//cdn.jsdelivr.net/npm/cdnbye@latest"></script>
+                        <script type="text/javascript" src="https://ssl.p.jwpcdn.com/player/v/8.6.2/jwplayer.js"></script>
+                        <script>
+                            jwplayer.key = "64HPbvSQorQcd52B8XFuhMtEoitbvY/EXJmMBfKcXZQU2Rnn";
+                        </script>
+                        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+                        <script src="https://www.jwplayer.com/developers/web-player-demos/resume-playback-with-cookies/logger.js"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.2/mobile-detect.min.js"></script>
+                        <div id="player1" class="tab-video" data-id="101321" data-video="1">
+                            <iframe class="metaframe rptss no-lazy" src="https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/02.mp4/index.m3u8&nocache1771203529" frameborder="0" scrolling="no" allowfullscreen width="100%" height="100%"></iframe>
+                        </div>
   },
   "85937": {
     "title": "Demon Slayer: Kimetsu no Yaiba",
