@@ -350,9 +350,18 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
           <span id="fallback-msg">⚠️ Tela preta detectada. Trocando servidor...</span>
           <button onclick="nextServer()">Trocar agora</button>
         </div>
+        <div id="ep-nav-btns" style="display:none;margin-top:12px;gap:10px;align-items:center;">
+          <button class="btn-more" onclick="prevEpisode()" style="padding:8px 16px;font-size:13px;"><i class="fas fa-step-backward"></i> Ep. Anterior</button>
+          <span id="ep-current-label" style="font-size:13px;color:var(--gray);"></span>
+          <button class="btn-more" onclick="nextEpisode()" style="padding:8px 16px;font-size:13px;">Próx. Ep. <i class="fas fa-step-forward"></i></button>
+        </div>
         <div style="margin-top:16px;">
           <p class="player-label"><i class="fas fa-film"></i> Fontes de Vídeo</p>
-          <div class="server-grid" id="server-grid"></div>
+          <div class="carousel-wrap" style="position:relative;">
+            <button class="carousel-btn prev srv-scroll" onclick="scrollSrv(-1)" style="left:-12px;opacity:0.6;width:32px;height:32px;font-size:12px;" title="Servidores anteriores"><i class="fas fa-chevron-left"></i></button>
+            <div class="server-grid" id="server-grid"></div>
+            <button class="carousel-btn next srv-scroll" onclick="scrollSrv(1)" style="right:-12px;opacity:0.6;width:32px;height:32px;font-size:12px;" title="Próximos servidores"><i class="fas fa-chevron-right"></i></button>
+          </div>
           <p style="color:var(--gray);font-size:12px;margin-top:8px;line-height:1.5;">
             Se o vídeo não carregar ou estiver sem dublagem, tente outra fonte acima. As fontes com 🇧🇷 têm opção de dublagem em português.
           </p>
@@ -422,11 +431,11 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 const SERVERS = [
   { label:'⭐ PureFlix Direct', direct:true, fn:null }, // tratado separadamente em loadServer()
   { label:'EmbedMovies 🇧🇷',     fn:(id,t,s,e)=>t==='movie'?`https://cdn-embed.com/filme/${id}`:`https://cdn-embed.com/serie/${id}/${s||1}/${e||1}` },
+  { label:'WarezCDN 🇧🇷',       fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}/`:`https://warezcdn.lat/serie/${id}/${s||1}/${e||1}/` },
+  { label:'2Embed 🇧🇷',          fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
   { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',          fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc Pro',         fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'WarezCDN 🇧🇷',       fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}/`:`https://warezcdn.lat/serie/${id}/${s||1}/${e||1}/` },
-  { label:'2Embed 🇧🇷',          fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
   { label:'MultiEmbed',         fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
   { label:'AutoEmbed',          fn:(id,t,s,e)=>t==='movie'?`https://autoembed.co/movie/tmdb/${id}`:`https://autoembed.co/tv/tmdb/${id}-${s||1}-${e||1}` },
 ];
@@ -747,6 +756,10 @@ function makeCarousel(sec, items, type, hasMore){
 function scrollCar(id,dir){
   const car=document.getElementById('car-'+id);
   if(car) car.scrollBy({left:dir*600,behavior:'smooth'});
+}
+function scrollSrv(dir){
+  const grid=document.getElementById('server-grid');
+  if(grid) grid.scrollBy({left:dir*200,behavior:'smooth'});
 }
 
 // Rastreia página atual de cada seção para "Ver mais"
@@ -1156,6 +1169,47 @@ async function loadServer(i){
 
 function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando para ${SERVERS[next].label}...`); loadServer(next); }
 
+function updateEpNav(){
+  const nav = document.getElementById('ep-nav-btns');
+  const lbl = document.getElementById('ep-current-label');
+  if(!nav) return;
+  if(curType==='tv'){
+    nav.style.display = 'flex';
+    lbl.textContent = `T${curSeason} · E${curEp}`;
+  } else {
+    nav.style.display = 'none';
+  }
+}
+
+function prevEpisode(){
+  if(curType!=='tv') return;
+  if(curEp > 1){
+    curEp--;
+    loadServer(curSrvIdx);
+    updateEpNav();
+    toast(`▶ Episódio anterior: T${curSeason} E${curEp}`);
+    // Atualiza lista visual se já carregada
+    document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
+    const cards = document.querySelectorAll('.episode-card');
+    if(cards[curEp-1]) cards[curEp-1].classList.add('active');
+    saveContinue(curId,curType,'','',curSeason,curEp);
+  } else {
+    toast('⛔ Primeiro episódio desta temporada');
+  }
+}
+
+function nextEpisode(){
+  if(curType!=='tv') return;
+  curEp++;
+  loadServer(curSrvIdx);
+  updateEpNav();
+  toast(`▶ Próximo episódio: T${curSeason} E${curEp}`);
+  document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
+  const cards = document.querySelectorAll('.episode-card');
+  if(cards[curEp-1]) cards[curEp-1].classList.add('active');
+  saveContinue(curId,curType,'','',curSeason,curEp);
+}
+
 function onFrameLoad(){
   const frame = document.getElementById('player-frame');
   if(!frame) return;
@@ -1216,6 +1270,7 @@ async function loadEpisodes(id,season){
         curSeason=season; curEp=ep.episode_number;
         document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
         card.classList.add('active'); await loadServer(curSrvIdx); await buildServerBtns();
+        updateEpNav();
         toast(`▶ T${season} E${ep.episode_number}: ${ep.name}`);
         // Salva temporada e episódio atual
         const _sc=getContinue(); if(_sc[curId]){ _sc[curId].season=curSeason; _sc[curId].ep=curEp; store.set('pf_cont',_sc); }
@@ -1276,6 +1331,7 @@ async function openDetails(id,type){
     await buildServerBtns(); await loadServer(0);
     if(type==='tv' && m.number_of_seasons){
       await loadSeasons(id, m.number_of_seasons);
+      updateEpNav();
       // Se foi restaurado da lista "Continuar", destaca o episódio e faz scroll
       if(_saved && _saved.season && _saved.ep){
         const activeCard = document.querySelector(`.ep-card.active`);
