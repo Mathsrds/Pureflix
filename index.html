@@ -434,7 +434,7 @@ let _directDB = null; // cache do JSON após primeiro carregamento
 async function loadDirectDB(){
   if(_directDB) return _directDB;
   try{
-    const r = await fetch('direct_links.json?v=5.0');
+    const r = await fetch('direct_links.json?v=6.0');
     _directDB = await r.json();
     console.log('[PureFlix Direct] JSON carregado:', Object.keys(_directDB).length, 'títulos');
     return _directDB;
@@ -1003,6 +1003,8 @@ function buildPlayerBox(url, srvLabel, autoplay){
 }
 
 function injectIframe(box, url){
+  console.log('[PureFlix Direct] injectIframe URL:', url ? url.substring(0,80) : 'NULL');
+
   // Loader
   const loader = document.createElement('div');
   loader.className = 'player-loader'; loader.id = 'player-loader';
@@ -1099,8 +1101,12 @@ function loadServer(i){
 function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando para ${SERVERS[next].label}...`); loadServer(next); }
 
 function onFrameLoad(){
+  console.log('[PureFlix Direct] onFrameLoad - iframe carregado');
   const frame=document.getElementById('player-frame');
-  if(!frame||!frame.src||frame.src===window.location.href) return;
+  if(!frame||!frame.src||frame.src===window.location.href) {
+    console.log('[PureFlix Direct] Frame sem src válido');
+    return;
+  }
   const loader=document.getElementById('player-loader');
   if(loader) loader.style.display='none';
   clearTimeout(fallbackTimer);
@@ -1272,64 +1278,7 @@ window.addEventListener('scroll', () => {
 });
 
 
-// ══════════════════════════════════════════════════════════════
-// 16. BLOQUEADOR AGRESSIVO DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
-// ══════════════════════════════════════════════════════════════
-(function(){
 
-  // ── A. Bloqueio SIMPLES: só window.open e _blank — não interfere nos players ──
-  window.open = function(){
-    console.log('[PureFlix] popup bloqueado');
-    return null;
-  };
-
-  document.addEventListener('click', function(e){
-    const a = e.target.tagName === 'A' ? e.target : e.target.closest('a');
-    if(a && a.target === '_blank'){
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('[PureFlix] link _blank bloqueado');
-    }
-  }, true);
-
-  // ── B. Auto-Resume: salva estado com localStorage para sobreviver a redirects ──
-  function pfSaveWatching(){
-    try{
-      localStorage.setItem('pf_watching', JSON.stringify({
-        hash:    window.location.hash,
-        id:      window._curId   || '',
-        type:    window._curType || '',
-        srv:     window._curSrv  || 0,
-        ts:      Date.now()
-      }));
-    }catch(e){}
-  }
-
-  function pfRestoreWatching(){
-    try{
-      const raw = localStorage.getItem('pf_watching');
-      if(!raw) return;
-      const w = JSON.parse(raw);
-      // Só restaura se foi há menos de 30 segundos (saiu por anúncio)
-      if(!w || (Date.now() - w.ts) > 30000) return;
-      localStorage.removeItem('pf_watching');
-      if(w.hash && w.hash.match(/^#(movie|tv)\/\d+/)){
-        // Redireciona de volta para o filme/série
-        setTimeout(()=>{ window.location.hash = w.hash; }, 300);
-      }
-    }catch(e){}
-  }
-
-  // Salva sempre que o usuário está assistindo
-  window.addEventListener('pagehide',        pfSaveWatching);
-  window.addEventListener('visibilitychange', ()=>{ if(document.hidden) pfSaveWatching(); });
-
-  // Restaura ao carregar/voltar para a página
-  pfRestoreWatching();
-  window.addEventListener('pageshow', (e)=>{ if(e.persisted) pfRestoreWatching(); });
-
-  console.log('[PureFlix] Proteção ativa ✓');
-})();
 
 
 // ══════════════════════════════════════════
