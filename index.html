@@ -285,6 +285,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -420,6 +421,7 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 // 2. SERVIDORES DE VÍDEO (Foco em Dublados)
 const SERVERS = [
   { label:'⭐ PureFlix Direct', direct:true, fn:null }, // tratado separadamente em loadServer()
+  { label:'EmbedMovies 🇧🇷',     fn:(id,t,s,e)=>t==='movie'?`https://cdn-embed.com/filme/${id}`:`https://cdn-embed.com/serie/${id}/${s||1}/${e||1}` },
   { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',          fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc Pro',         fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
