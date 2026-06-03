@@ -418,7 +418,7 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 // 2. SERVIDORES DE VÍDEO (Foco em Dublados)
 const SERVERS = [
-  { label:'⭐ PureFlix Direct', fn:(id,t,s,e)=>getDirectLink(id,t,s,e), direct:true },
+  { label:'⭐ PureFlix Direct', direct:true, fn:null }, // tratado separadamente em loadServer()
   { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',          fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc Pro',         fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
@@ -429,25 +429,38 @@ const SERVERS = [
 ];
 
 // ── SISTEMA DE LINKS DIRETOS ──
-let _directDB = null;
+let _directDB  = null;      // null = não carregado ainda, {} = carregado mas vazio
+let _directPrm = null;      // promise em andamento (evita fetch duplo)
 
 async function loadDirectDB(){
-  if(_directDB) return _directDB;
-  try{
-    const r = await fetch('direct_links.json');
-    if(!r.ok) throw new Error(r.status);
-    _directDB = await r.json();
-    console.log('[PureFlix Direct] Carregado:', Object.keys(_directDB).length, 'títulos');
-  }catch(e){
-    console.warn('[PureFlix Direct] Ficheiro não encontrado — servidor desativado:', e.message);
+  if(_directDB !== null) return _directDB;
+  if(_directPrm) return _directPrm;
+  _directPrm = (async()=>{
+    // Tenta múltiplos caminhos — resolve problemas de subpasta e servidor
+    const paths = [
+      'direct_links.json',
+      './direct_links.json',
+      location.pathname.replace(/\/[^/]*$/, '/') + 'direct_links.json',
+    ];
+    for(const path of paths){
+      try{
+        const r = await fetch(path, { cache:'no-store' });
+        if(!r.ok) continue;
+        _directDB = await r.json();
+        console.log(`[PureFlix Direct] ✅ Carregado (${path}):`, Object.keys(_directDB).length, 'títulos');
+        return _directDB;
+      }catch(e){ /* tenta próximo */ }
+    }
+    console.warn('[PureFlix Direct] ⚠️ direct_links.json não encontrado — verifique se o arquivo está na mesma pasta do index.html');
     _directDB = {};
-  }
-  return _directDB;
+    return _directDB;
+  })();
+  return _directPrm;
 }
 
-function getDirectLink(id, type, season, episode){
-  if(!_directDB) return null;
-  const entry = _directDB[String(id)];
+async function getDirectLink(id, type, season, episode){
+  const db = await loadDirectDB();
+  const entry = db[String(id)];
   if(!entry) return null;
   if(type === 'movie') return entry.url || null;
   const s = season || 1, ep = episode || 1;
@@ -456,7 +469,13 @@ function getDirectLink(id, type, season, episode){
 }
 
 function hasDirectLink(id, type, season, episode){
-  return !!getDirectLink(id, type, season, episode);
+  // Síncrono: só funciona se o DB já carregou
+  if(!_directDB) return false;
+  const entry = _directDB[String(id)];
+  if(!entry) return false;
+  if(type === 'movie') return !!(entry.url);
+  const s = season || 1, ep = episode || 1;
+  return (entry.episodes||[]).some(e => e.season===s && e.episode===ep && e.url);
 }
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
@@ -948,21 +967,34 @@ let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
 function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
 
 async function buildServerBtns(){
-  const g=document.getElementById('server-grid'); g.innerHTML='';
-  // Pré-carrega disponibilidade do link direto para o servidor atual
-  const directLink = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
-  const hasAnyDirect = !!directLink;
+  const g = document.getElementById('server-grid');
+  g.innerHTML = '';
 
-  SERVERS.forEach((s,i)=>{
-    const b=document.createElement('button');
-    const isDirectServer = s.direct;
-    const hasDir = isDirectServer && hasAnyDirect;
-    b.className='srv-btn'+(i===curSrvIdx?' active':'')+(isDirectServer&&!hasDir?' srv-unavail':'');
-    b.textContent = s.label + (hasDir?' ✓':'');
-    b.title = isDirectServer ? (hasDir?'Link direto disponível — sem anúncios!':'Sem link direto para este título') : '';
-    b.onclick=()=>loadServer(i);
+  // Renderiza TODOS os botões imediatamente — sem esperar o JSON
+  SERVERS.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.id = `srv-btn-${i}`;
+    b.className = 'srv-btn' + (i === curSrvIdx ? ' active' : '');
+    b.textContent = s.label;
+    b.onclick = () => loadServer(i);
     g.appendChild(b);
   });
+
+  // Em background: atualiza o badge do Direct quando o JSON carregar
+  const di = SERVERS.findIndex(s => s.direct);
+  if(di < 0) return;
+  getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null)
+    .then(url => {
+      const btn = document.getElementById(`srv-btn-${di}`);
+      if(!btn) return;
+      if(url){
+        btn.textContent = SERVERS[di].label + ' ✓';
+        btn.title = 'Link direto disponível — sem anúncios!';
+      } else {
+        btn.classList.add('srv-unavail');
+        btn.title = 'Sem link direto para este conteúdo';
+      }
+    }).catch(() => {});
 }
 
 function buildPlayerBox(url, srvLabel, autoplay){
@@ -1129,7 +1161,9 @@ async function loadServer(i){
   }
 
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  buildPlayerBox(getUrl(i), SERVERS[i].label, !isMobile);
+  const url = SERVERS[i].fn ? SERVERS[i].fn(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null) : null;
+  if(!url){ toast('Servidor indisponível.'); setTimeout(()=>loadServer((i+1)%SERVERS.length),800); return; }
+  buildPlayerBox(url, SERVERS[i].label, !isMobile);
   if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
 }
 
@@ -1475,3 +1509,6 @@ function doToggleWatchLater(id, type, title, poster_path, release, overview, rat
   </button>
 </nav>
 </bo
+
+dy>
+</html>
