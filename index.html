@@ -1009,50 +1009,62 @@ function injectIframe(box, url){
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
 
-  // Links do Blogger: srcdoc com script que força o player a preencher tudo
-  if(url && url.includes('blogger.com/video')){
+  // Função que gera srcdoc para qualquer URL — isola o player num documento próprio
+  function makeSrcdoc(embedUrl, isHLS){
+    // Codifica o URL em JSON para passar com segurança ao srcdoc
+    const safeUrl = JSON.stringify(embedUrl);
+    if(isHLS){
+      return `<!DOCTYPE html><html><head><style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{width:100%;height:100%;background:#000;overflow:hidden;}
+        video{width:100%;height:100%;display:block;object-fit:contain;}
+      </style></head><body>
+        <video id="v" controls autoplay playsinline></video>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"><\/script>
+        <script>
+          const v=document.getElementById('v');
+          const src=${safeUrl};
+          if(Hls.isSupported()){
+            const h=new Hls({enableWorker:false});
+            h.loadSource(src); h.attachMedia(v);
+            h.on(Hls.Events.MANIFEST_PARSED,()=>v.play().catch(()=>{}));
+          } else if(v.canPlayType('application/vnd.apple.mpegurl')){
+            v.src=src; v.play().catch(()=>{});
+          } else {
+            document.body.innerHTML='<p style="color:#fff;padding:20px">HLS não suportado neste browser.</p>';
+          }
+        <\/script>
+      </body></html>`;
+    } else {
+      // iframe genérico (Blogger, meusdoramas, etc.) com script fixSize
+      return `<!DOCTYPE html><html><head><style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{width:100vw;height:100vh;background:#000;overflow:hidden;}
+        iframe{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;border:none!important;}
+        video,object,embed{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;}
+      </style></head><body>
+        <iframe src=${safeUrl} frameborder="0"
+          allowfullscreen allow="autoplay; fullscreen *; encrypted-media; gyroscope"></iframe>
+        <script>
+          function fixSize(){
+            document.querySelectorAll('iframe,video,object,embed').forEach(el=>{
+              el.removeAttribute('width'); el.removeAttribute('height');
+              el.style.cssText='position:fixed!important;inset:0!important;width:100%!important;height:100%!important;border:none!important;';
+            });
+          }
+          fixSize(); setInterval(fixSize,800);
+          new MutationObserver(fixSize).observe(document.body,{childList:true,subtree:true,attributes:true});
+        <\/script>
+      </body></html>`;
+    }
+  }
+
+  const isHLS      = url && (url.includes('.m3u8') || url.includes('videohls'));
+  const isIframe   = url && (url.includes('blogger.com') || url.includes('meusdoramas') || url.includes('serv01.'));
+  
+  if(isHLS || isIframe){
     frame.setAttribute('data-direct','1');
-    frame.srcdoc = `<!DOCTYPE html><html><head><style>
-      *{margin:0;padding:0;box-sizing:border-box;}
-      html,body{width:100vw;height:100vh;background:#000;overflow:hidden;}
-      iframe#bi{position:fixed;inset:0;width:100%!important;height:100%!important;border:none;}
-      video,object,embed{position:fixed;inset:0;width:100%!important;height:100%!important;display:block;}
-    </style></head><body>
-      <iframe id="bi" src="${url}" frameborder="0"
-        allowfullscreen allow="autoplay; fullscreen *; encrypted-media"></iframe>
-      <script>
-        // Força dimensões no iframe interno e em qualquer video/object que o Blogger injetar
-        function fixSize(){
-          document.querySelectorAll('iframe,video,object,embed').forEach(el=>{
-            el.style.cssText='position:fixed!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;border:none!important;';
-            el.removeAttribute('width'); el.removeAttribute('height');
-          });
-        }
-        fixSize();
-        setInterval(fixSize, 500);
-        new MutationObserver(fixSize).observe(document.body,{childList:true,subtree:true});
-      <\/script>
-    </body></html>`;
-  } else if(url && (url.includes('.m3u8') || url.includes('videohls'))){
-    // HLS stream — usar hls.js via srcdoc
-    frame.setAttribute('data-direct','1');
-    frame.srcdoc = `<!DOCTYPE html><html><head><style>
-      *{margin:0;padding:0;box-sizing:border-box;}
-      html,body{width:100%;height:100%;background:#000;overflow:hidden;}
-      video{width:100%;height:100%;display:block;}
-    </style></head><body>
-      <video id="v" controls autoplay playsinline></video>
-      <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"><\/script>
-      <script>
-        const v=document.getElementById('v');
-        const src="${url.replace(/"/g,'&quot;')}";
-        if(Hls.isSupported()){
-          const h=new Hls(); h.loadSource(src); h.attachMedia(v); v.play();
-        } else if(v.canPlayType('application/vnd.apple.mpegurl')){
-          v.src=src; v.play();
-        }
-      <\/script>
-    </body></html>`;
+    frame.srcdoc = makeSrcdoc(url, isHLS);
   } else {
     frame.src = url;
   }
