@@ -186,6 +186,19 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .btn-close:hover{background:var(--red);}
 
 /* Mobile Adapts */
+/* Navegação de episódios */
+.ep-nav-row{display:none;margin-top:14px;align-items:center;justify-content:space-between;gap:12px;}
+.ep-nav-btn{padding:9px 18px;font-size:13px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.ep-nav-label{font-size:13px;color:var(--gray);font-weight:600;letter-spacing:.5px;text-align:center;flex:1;}
+@media(min-width:769px){
+  .ep-nav-row{justify-content:center;gap:24px;}
+  .ep-nav-label{flex:0 0 auto;min-width:80px;}
+}
+@media(max-width:768px){
+  .ep-nav-row{padding:0 4px;}
+  .ep-nav-btn{font-size:12px;padding:8px 12px;}
+}
+
 /* ═══════════════════════════════════════
    MOBILE — Estilo Netflix App
    ═══════════════════════════════════════ */
@@ -350,10 +363,10 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
           <span id="fallback-msg">⚠️ Tela preta detectada. Trocando servidor...</span>
           <button onclick="nextServer()">Trocar agora</button>
         </div>
-        <div id="ep-nav-btns" style="display:none;margin-top:12px;gap:10px;align-items:center;">
-          <button class="btn-more" onclick="prevEpisode()" style="padding:8px 16px;font-size:13px;"><i class="fas fa-step-backward"></i> Ep. Anterior</button>
-          <span id="ep-current-label" style="font-size:13px;color:var(--gray);"></span>
-          <button class="btn-more" onclick="nextEpisode()" style="padding:8px 16px;font-size:13px;">Próx. Ep. <i class="fas fa-step-forward"></i></button>
+        <div id="ep-nav-btns" class="ep-nav-row">
+          <button class="btn-more ep-nav-btn" onclick="prevEpisode()"><i class="fas fa-step-backward"></i> Ep. Anterior</button>
+          <span id="ep-current-label" class="ep-nav-label"></span>
+          <button class="btn-more ep-nav-btn" onclick="nextEpisode()">Próx. Ep. <i class="fas fa-step-forward"></i></button>
         </div>
         <div style="margin-top:16px;">
           <p class="player-label"><i class="fas fa-film"></i> Fontes de Vídeo</p>
@@ -769,14 +782,18 @@ async function loadSection(sec){
   const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
   wrap.innerHTML=`
     <div class="section-header"><span class="section-title">${sec.title}</span></div>
-    <div class="carousel-wrap"><div class="carousel" id="car-${sec.id}">${Array(8).fill('<div class="skel"></div>').join('')}</div></div>`;
+    <div class="carousel-wrap"><div class="carousel" id="car-${sec.id}">${Array(12).fill('<div class="skel"></div>').join('')}</div></div>`;
   document.getElementById('sections-container').appendChild(wrap);
   try{
-    const d=await api(sec.endpoint,{...sec.params,page:1});
-    const items=(d.results||[]).filter(m=>m.poster_path && !m.adult).slice(0,20);
-    if(!items.length){ wrap.remove(); return; } // remove seção vazia
-    secPages[sec.id]={sec, page:1, totalPages:d.total_pages||1};
-    const hasMore=(d.total_pages||1)>1;
+    const [d1,d2]=await Promise.all([
+      api(sec.endpoint,{...sec.params,page:1}),
+      api(sec.endpoint,{...sec.params,page:2})
+    ]);
+    const items=[...(d1.results||[]),...(d2.results||[])].filter(m=>m.poster_path && !m.adult).slice(0,40);
+    if(!items.length){ wrap.remove(); return; }
+    const totalPages=Math.max(d1.total_pages||1,d2.total_pages||1);
+    secPages[sec.id]={sec, page:2, totalPages:totalPages};
+    const hasMore=totalPages>2;
     wrap.replaceWith(makeCarousel(sec,items,sec.type,hasMore));
   }catch(e){ wrap.remove(); }
 }
@@ -786,9 +803,13 @@ async function loadMore(secId){
   const btn=document.getElementById('vm-'+secId);
   if(btn){ btn.disabled=true; btn.textContent='Carregando...'; }
   try{
-    const nextPage=state.page+1;
-    const d=await api(state.sec.endpoint,{...state.sec.params, page:nextPage});
-    const items=(d.results||[]).filter(m=>m.poster_path && !m.adult).slice(0,20);
+    const p1=state.page+1, p2=state.page+2;
+    const [d1,d2]=await Promise.all([
+      api(state.sec.endpoint,{...state.sec.params, page:p1}),
+      api(state.sec.endpoint,{...state.sec.params, page:p2})
+    ]);
+    const items=[...(d1.results||[]),...(d2.results||[])].filter(m=>m.poster_path && !m.adult).slice(0,40);
+    const totalPages=Math.max(d1.total_pages||1,d2.total_pages||1);
     const car=document.getElementById('car-'+secId);
     if(car){
       items.forEach(m=>{
@@ -821,9 +842,9 @@ async function loadMore(secId){
       });
       car.scrollBy({left:car.scrollWidth,behavior:'smooth'});
     }
-    state.page=nextPage;
+    state.page=p2;
     if(btn){
-      if(nextPage >= (d.total_pages||1)){
+      if(p2 >= totalPages){
         btn.style.display='none';
       } else {
         btn.disabled=false; btn.textContent='Ver mais ↓';
@@ -832,339 +853,6 @@ async function loadMore(secId){
   }catch(e){
     if(btn){ btn.disabled=false; btn.textContent='Ver mais ↓'; }
   }
-}
-
-// 8. FUNÇÕES DE NAVEGAÇÃO E MENUS
-function clearPage(hideHero, eventElement) {
-  clearTimeout(fallbackTimer);
-  document.getElementById('player-box').innerHTML='';
-  document.getElementById('page-home').style.display='block';
-  document.getElementById('page-details').style.display='none';
-  window.location.hash='';
-  document.getElementById('hero').style.display = hideHero ? 'none' : 'block';
-  const sc = document.getElementById('sections-container');
-  sc.innerHTML='';
-  // Espaçamento: quando hero está oculto, garante distância do header
-  sc.style.paddingTop = hideHero ? 'calc(var(--header-h) + 32px)' : '0';
-  // Fecha a barra de busca sempre que mudar de seção
-  document.getElementById('searchbar').classList.remove('open');
-
-  if(eventElement) {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      eventElement.classList.add('active');
-  }
-}
-
-async function goHome(e){
-  const el = e ? e.currentTarget : document.querySelector('.nav-btn[onclick="goHome(event)"]');
-  clearPage(false, el);
-  for(const sec of SECTIONS_HOME){
-    loadSection(sec);
-    await new Promise(r=>setTimeout(r,120));
-  }
-}
-
-async function showSection(catId, e){
-  clearPage(true, e?.currentTarget||null);
-  const categories = SECTIONS_CATS[catId];
-  if(!categories) return;
-  for(const sec of categories){
-    loadSection(sec);
-    await new Promise(r=>setTimeout(r,150));
-  }
-}
-
-function showFav(e){
-  clearPage(true, e?.currentTarget||null);
-  const sc = document.getElementById('sections-container');
-  const favs = Object.values(getFavs());
-  if(!favs.length){
-    sc.innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Você ainda não tem favoritos. ❤️</div></div>`;
-    return;
-  }
-  const wrap = document.createElement('div');
-  wrap.className = 'section';
-  wrap.innerHTML = `<div class="section-header"><span class="section-title">❤️ Meus Favoritos</span><span style="color:var(--gray);font-size:13px;">${favs.length} título${favs.length>1?'s':''}</span></div>`;
-
-  // Grid responsivo — sem carrossel, expandido para baixo
-  const grid = document.createElement('div');
-  grid.style.cssText = 'display:flex;flex-wrap:wrap;gap:14px;';
-
-  favs.forEach(f => {
-    const poster = f.poster || '';
-    const card = document.createElement('div');
-    card.style.cssText = 'position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
-    card.onclick = () => openDetails(f.id, f.type);
-    card.innerHTML = `
-      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
-        ${poster ? `<img src="${poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
-                 : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>`}
-        <div style="position:absolute;top:6px;left:6px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px;">${f.type==='movie'?'FILME':'SÉRIE'}</div>
-      </div>
-      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
-    `;
-    grid.appendChild(card);
-  });
-
-  wrap.appendChild(grid);
-  sc.appendChild(wrap);
-}
-
-function removeContinue(id){
-  const c=getContinue(); delete c[id]; store.set('pf_cont',c);
-}
-
-function showContinue(e){
-  clearPage(true, e?.currentTarget||null);
-  const cont=Object.values(getContinue()).sort((a,b)=>b.ts-a.ts);
-  const sc=document.getElementById('sections-container');
-  if(!cont.length){
-    sc.innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Nenhum conteúdo para continuar. 🎬</div></div>`;
-    return;
-  }
-  const sec=document.createElement('div');
-  sec.className='section';
-  sec.innerHTML=`<div class="section-header"><span class="section-title">▶️ Continuar Assistindo</span></div>`;
-  const grid=document.createElement('div');
-  grid.style.cssText='display:flex;flex-wrap:wrap;gap:14px;padding:4px 0;';
-  cont.forEach(f=>{
-    const card=document.createElement('div');
-    card.style.cssText='position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
-    card.onclick=()=>openDetails(f.id,f.type);
-    card.innerHTML=`
-      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
-        ${f.poster?`<img src="${f.poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
-                 :'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>'}
-        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.1);">
-          <div style="height:100%;width:60%;background:var(--red);"></div>
-        </div>
-        <button onclick="event.stopPropagation();removeContinue(${f.id});showContinue();"
-          style="position:absolute;top:6px;right:6px;width:24px;height:24px;background:rgba(0,0,0,.8);border:1px solid #555;border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:background .2s;"
-          onmouseover="this.style.background='var(--red)'" onmouseout="this.style.background='rgba(0,0,0,.8)'"
-          title="Remover da lista">✕</button>
-      </div>
-      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
-      ${f.type==='tv'?`<div style="font-size:11px;color:var(--gray);margin-top:2px;">T${f.season||1} · Ep ${f.ep||1}</div>`:''}
-    `;
-    grid.appendChild(card);
-  });
-  sec.appendChild(grid);
-  sc.appendChild(sec);
-}
-
-// 9. RECOMENDAÇÕES (Nova Função)
-async function loadRecommendations(id, type) {
-  const container = document.getElementById('recommendations-section');
-  const carousel = document.getElementById('recommendations-carousel');
-  carousel.innerHTML = '<div style="color:#555;padding:10px;">Buscando recomendações...</div>';
-  container.style.display = 'block';
-
-  try {
-    const d = await api(`/${type}/${id}/recommendations`);
-    const items = (d.results || []).filter(m => m.poster_path).slice(0, 15);
-    
-    if (items.length === 0) {
-      container.style.display = 'none';
-      return;
-    }
-
-    carousel.innerHTML = '';
-    items.forEach(m => {
-      const name = m.title || m.name || '';
-      const poster = `${IMG}/w500${m.poster_path}`;
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.title = name;
-      card.onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); openDetails(m.id, type); };
-      card.innerHTML = `<img src="${poster}" alt="${name}" loading="lazy"><div class="card-overlay"><div class="card-title">${name}</div></div>`;
-      carousel.appendChild(card);
-    });
-  } catch (e) {
-    container.style.display = 'none';
-  }
-}
-
-// 10. O PLAYER E SERVIDORES
-let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
-
-function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
-
-async function buildServerBtns(){
-  const g = document.getElementById('server-grid');
-  g.innerHTML = '';
-
-  // Renderiza TODOS os botões imediatamente — sem esperar o JSON
-  SERVERS.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.id = `srv-btn-${i}`;
-    b.className = 'srv-btn' + (i === curSrvIdx ? ' active' : '');
-    b.textContent = s.label;
-    b.onclick = () => loadServer(i);
-    g.appendChild(b);
-  });
-
-  // Em background: atualiza o badge do Direct quando o JSON carregar
-  const di = SERVERS.findIndex(s => s.direct);
-  if(di < 0) return;
-  getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null)
-    .then(url => {
-      const btn = document.getElementById(`srv-btn-${di}`);
-      if(!btn) return;
-      if(url){
-        btn.textContent = SERVERS[di].label + ' ✓';
-        btn.title = 'Link direto disponível — sem anúncios!';
-      } else {
-        btn.classList.add('srv-unavail');
-        btn.title = 'Sem link direto para este conteúdo';
-      }
-    }).catch(() => {});
-}
-
-function buildPlayerBox(url, srvLabel, autoplay){
-  const box = document.getElementById('player-box');
-  box.innerHTML = ''; // limpa iframe anterior
-
-  if(!autoplay){
-    // Mostra botão de play falso — iframe ainda não existe
-    const btn = document.createElement('div');
-    btn.id = 'fake-play-btn';
-    // Pega título do filme/série para exibir
-    const titleEl = document.getElementById('det-title');
-    const titleText = titleEl ? titleEl.textContent : '';
-    btn.innerHTML = `
-      <div class="play-title">${titleText}</div>
-      <div class="play-circle"><i class="fas fa-play"></i></div>
-      <div class="play-label">${srvLabel} — Toque para assistir</div>
-    `;
-    btn.addEventListener('click', function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      btn.remove();
-      injectIframe(box, url);
-    }, {once: true});
-    box.appendChild(btn);
-  } else {
-    injectIframe(box, url);
-  }
-}
-
-function injectIframe(box, url){
-  // Loader
-  const loader = document.createElement('div');
-  loader.className = 'player-loader'; loader.id = 'player-loader';
-  loader.innerHTML = '<div class="spinner"></div><p>Carregando stream...</p>';
-  box.appendChild(loader);
-
-  const frame = document.createElement('iframe');
-  frame.id = 'player-frame';
-  frame.allowFullscreen = true;
-  frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
-  frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
-  frame.addEventListener('load', onFrameLoad);
-  box.appendChild(frame);
-
-  const isHLS     = url && (url.includes('.m3u8') || url.includes('videohls'));
-  const isBlogger = url && url.includes('blogger.com/video.g');
-
-  if(isHLS){
-    // HLS: srcdoc com hls.js — src é passado via JS (JSON.stringify é correto aqui)
-    const safeUrl = JSON.stringify(url);
-    frame.setAttribute('data-direct','1');
-    frame.srcdoc = `<!DOCTYPE html><html><head><style>
-      *{margin:0;padding:0;box-sizing:border-box;}
-      html,body{width:100%;height:100%;background:#000;overflow:hidden;}
-      video{width:100%;height:100%;display:block;object-fit:contain;}
-    </style></head><body>
-      <video id="v" controls autoplay playsinline></video>
-      <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"><\/script>
-      <script>
-        const v=document.getElementById('v');
-        const src=${safeUrl};
-        if(Hls.isSupported()){
-          const h=new Hls({enableWorker:false});
-          h.loadSource(src); h.attachMedia(v);
-          h.on(Hls.Events.MANIFEST_PARSED,()=>v.play().catch(()=>{}));
-        } else if(v.canPlayType('application/vnd.apple.mpegurl')){
-          v.src=src; v.play().catch(()=>{});
-        } else {
-          document.body.innerHTML='<p style="color:#fff;padding:20px">HLS não suportado neste browser.</p>';
-        }
-      <\/script>
-    </body></html>`;
-
-  } else if(isBlogger){
-    // Blogger: carrega DIRETO no src do frame — não usar srcdoc (iframe aninhado bloqueia)
-    // O token do Blogger já é a URL de embed final — sem redirecionamentos
-    frame.setAttribute('data-direct','1');
-    frame.src = url;
-
-  } else {
-    // Todos os outros servidores (meusdoramas, vidsrc, etc.)
-    frame.src = url;
-  }
-
-  clearTimeout(fallbackTimer);
-  // Blogger e HLS podem demorar mais para mostrar vídeo — usar 20s
-  const timeout = (isHLS || isBlogger) ? 20000 : 12000;
-  fallbackTimer = setTimeout(()=>{
-    document.getElementById('fallback-msg').textContent = `⚠️ "${SERVERS[curSrvIdx].label}" pode estar com problemas. Tentar próximo?`;
-    document.getElementById('fallback-bar').classList.add('show');
-  }, timeout);
-}
-
-// Mostra aviso de servidor bloqueado (ex: meusdoramas 403)
-function showBlockedMessage(box, url){
-  // Remover frame e loader se existirem
-  box.innerHTML =
-    '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;">' +
-    '<div style="text-align:center;padding:30px 20px;">' +
-    '<div style="font-size:40px;margin-bottom:16px;">🔒</div>' +
-    '<p style="color:#ccc;font-size:14px;margin-bottom:20px;line-height:1.5;">' +
-    'Este servidor bloqueia reprodução em iframe.<br>Clique para assistir em nova aba.</p>' +
-    '<a href="' + url + '" target="_blank" rel="noopener" ' +
-    'style="background:#e50914;color:#fff;padding:12px 28px;border-radius:6px;' +
-    'font-weight:700;font-size:14px;text-decoration:none;display:inline-block;">' +
-    '▶ Abrir Player em Nova Aba</a>' +
-    '<p style="color:#666;font-size:11px;margin-top:14px;">Ou escolha outro servidor abaixo</p>' +
-    '</div></div>';
-  clearTimeout(fallbackTimer);
-  document.getElementById('fallback-bar').classList.remove('show');
-}
-
-async function loadServer(i){
-  curSrvIdx=i; clearTimeout(fallbackTimer);
-  document.getElementById('fallback-bar').classList.remove('show');
-  document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
-  window._curId   = curId;
-  window._curType = curType;
-  window._curSrv  = i;
-
-  // Servidor Direct: verificar se existe link antes de carregar
-  if(SERVERS[i].direct){
-    const url = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
-    if(!url){
-      toast('⭐ Sem link direto para este episódio. A tentar próximo servidor...');
-      setTimeout(()=>loadServer((i+1)%SERVERS.length), 1200);
-      return;
-    }
-    // meusdoramas bloqueia iframe — mostrar botão em vez de tentar carregar
-    if(url.includes('meusdoramas') || url.includes('serv01.')){
-      const box = document.getElementById('player-box');
-      box.innerHTML = ''; // limpar
-      showBlockedMessage(box, url);
-      if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
-      return;
-    }
-    buildPlayerBox(url, SERVERS[i].label, true);
-    if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
-    return;
-  }
-
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  const url = SERVERS[i].fn ? SERVERS[i].fn(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null) : null;
-  if(!url){ toast('Servidor indisponível.'); setTimeout(()=>loadServer((i+1)%SERVERS.length),800); return; }
-  buildPlayerBox(url, SERVERS[i].label, !isMobile);
-  if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
 }
 
 function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando para ${SERVERS[next].label}...`); loadServer(next); }
