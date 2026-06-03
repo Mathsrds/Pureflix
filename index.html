@@ -6,6 +6,7 @@
 <title>Pureflix</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="decode_urls.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════
    1. VARIÁVEIS E GERAIS
@@ -429,47 +430,33 @@ const SERVERS = [
 ];
 
 // ── SISTEMA DE LINKS DIRETOS ──
-let _directDB = null; // cache do JSON após primeiro carregamento
+let _directDB = null;
 
 async function loadDirectDB(){
   if(_directDB) return _directDB;
   try{
-    const r = await fetch('direct_links.json?v=6.0');
+    const r = await fetch('direct_links.json');
+    if(!r.ok) throw new Error(r.status);
     _directDB = await r.json();
-    console.log('[PureFlix Direct] JSON carregado:', Object.keys(_directDB).length, 'títulos');
-    return _directDB;
-  }catch(e){ 
-    console.error('[PureFlix Direct] ERRO ao carregar JSON:', e);
-    _directDB = {}; 
-    return {}; 
+    console.log('[PureFlix Direct] Carregado:', Object.keys(_directDB).length, 'títulos');
+  }catch(e){
+    console.warn('[PureFlix Direct] Ficheiro não encontrado — servidor desativado:', e.message);
+    _directDB = {};
   }
+  return _directDB;
 }
-
-// Preferência de áudio: 'dubbed' ou 'subbed'
-let directAudioPref = localStorage.getItem('pf_audio') || 'dubbed';
 
 function getDirectLink(id, type, season, episode){
   if(!_directDB) return null;
   const entry = _directDB[String(id)];
   if(!entry) return null;
-  // Filme
-  if(type === 'movie'){
-    return entry.dubbed_url || entry.subbed_url || entry.url || null;
-  }
-  // TV: encontrar episódio correto
+  if(type === 'movie') return entry.url || null;
   const s = season || 1, ep = episode || 1;
   const found = (entry.episodes||[]).find(e => e.season===s && e.episode===ep);
-  if(!found) return null;
-  // Prefer áudio configurado, fallback para o outro
-  if(directAudioPref === 'dubbed'){
-    return found.dubbed_url || found.subbed_url || null;
-  } else {
-    return found.subbed_url || found.dubbed_url || null;
-  }
+  return found ? (found.url || null) : null;
 }
 
 function hasDirectLink(id, type, season, episode){
-  if(!_directDB) return false;
   return !!getDirectLink(id, type, season, episode);
 }
 
@@ -961,14 +948,19 @@ let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
 
 function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
 
-function buildServerBtns(){
+async function buildServerBtns(){
   const g=document.getElementById('server-grid'); g.innerHTML='';
+  // Pré-carrega disponibilidade do link direto para o servidor atual
+  const directLink = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+  const hasAnyDirect = !!directLink;
+
   SERVERS.forEach((s,i)=>{
     const b=document.createElement('button');
-    const hasDir = s.direct && hasDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
-    b.className='srv-btn'+(i===curSrvIdx?' active':'')+(s.direct&&!hasDir?' srv-unavail':'');
+    const isDirectServer = s.direct;
+    const hasDir = isDirectServer && hasAnyDirect;
+    b.className='srv-btn'+(i===curSrvIdx?' active':'')+(isDirectServer&&!hasDir?' srv-unavail':'');
     b.textContent = s.label + (hasDir?' ✓':'');
-    b.title = s.direct ? (hasDir?'Link direto disponível — sem anúncios!':'Sem link direto para este título') : '';
+    b.title = isDirectServer ? (hasDir?'Link direto disponível — sem anúncios!':'Sem link direto para este título') : '';
     b.onclick=()=>loadServer(i);
     g.appendChild(b);
   });
@@ -1003,8 +995,6 @@ function buildPlayerBox(url, srvLabel, autoplay){
 }
 
 function injectIframe(box, url){
-  console.log('[PureFlix Direct] injectIframe URL:', url ? url.substring(0,80) : 'NULL');
-
   // Loader
   const loader = document.createElement('div');
   loader.className = 'player-loader'; loader.id = 'player-loader';
@@ -1019,10 +1009,33 @@ function injectIframe(box, url){
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
 
-  // Para TODOS os URLs, usar src direto em vez de srcdoc
-  // O srcdoc estava causando bloqueios de segurança no Blogger
-  if(url && (url.includes('.m3u8') || url.includes('videohls'))){
+  // Links do Blogger: srcdoc com script que força o player a preencher tudo
+  if(url && url.includes('blogger.com/video')){
+    frame.setAttribute('data-direct','1');
+    frame.srcdoc = `<!DOCTYPE html><html><head><style>
+      *{margin:0;padding:0;box-sizing:border-box;}
+      html,body{width:100vw;height:100vh;background:#000;overflow:hidden;}
+      iframe#bi{position:fixed;inset:0;width:100%!important;height:100%!important;border:none;}
+      video,object,embed{position:fixed;inset:0;width:100%!important;height:100%!important;display:block;}
+    </style></head><body>
+      <iframe id="bi" src="${url}" frameborder="0"
+        allowfullscreen allow="autoplay; fullscreen *; encrypted-media"></iframe>
+      <script>
+        // Força dimensões no iframe interno e em qualquer video/object que o Blogger injetar
+        function fixSize(){
+          document.querySelectorAll('iframe,video,object,embed').forEach(el=>{
+            el.style.cssText='position:fixed!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;border:none!important;';
+            el.removeAttribute('width'); el.removeAttribute('height');
+          });
+        }
+        fixSize();
+        setInterval(fixSize, 500);
+        new MutationObserver(fixSize).observe(document.body,{childList:true,subtree:true});
+      <\/script>
+    </body></html>`;
+  } else if(url && (url.includes('.m3u8') || url.includes('videohls'))){
     // HLS stream — usar hls.js via srcdoc
+    frame.setAttribute('data-direct','1');
     frame.srcdoc = `<!DOCTYPE html><html><head><style>
       *{margin:0;padding:0;box-sizing:border-box;}
       html,body{width:100%;height:100%;background:#000;overflow:hidden;}
@@ -1041,7 +1054,6 @@ function injectIframe(box, url){
       <\/script>
     </body></html>`;
   } else {
-    // Blogger, Meusdoramas, etc. — usar src direto
     frame.src = url;
   }
   clearTimeout(fallbackTimer);
@@ -1051,7 +1063,7 @@ function injectIframe(box, url){
   },12000);
 }
 
-function loadServer(i){
+async function loadServer(i){
   curSrvIdx=i; clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
   document.querySelectorAll('.srv-btn').forEach((b,j)=>{ b.classList.toggle('active',j===i); b.classList.remove('trying'); });
@@ -1061,7 +1073,7 @@ function loadServer(i){
 
   // Servidor Direct: verificar se existe link antes de carregar
   if(SERVERS[i].direct){
-    const url = getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    const url = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
     if(!url){
       // Sem link direto disponível — avisar e passar para próximo
       toast('⭐ Sem link direto para este episódio. A tentar próximo servidor...');
@@ -1081,12 +1093,12 @@ function loadServer(i){
 function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando para ${SERVERS[next].label}...`); loadServer(next); }
 
 function onFrameLoad(){
-  console.log('[PureFlix Direct] onFrameLoad - iframe carregado');
   const frame=document.getElementById('player-frame');
-  if(!frame||!frame.src||frame.src===window.location.href) {
-    console.log('[PureFlix Direct] Frame sem src válido');
-    return;
-  }
+  if(!frame) return;
+  // Aceita tanto frame.src normal como srcdoc (src fica vazio ou igual à página)
+  const hasSrc    = frame.src && frame.src !== window.location.href;
+  const hasSrcdoc = frame.hasAttribute('data-direct');
+  if(!hasSrc && !hasSrcdoc) return;
   const loader=document.getElementById('player-loader');
   if(loader) loader.style.display='none';
   clearTimeout(fallbackTimer);
@@ -1127,10 +1139,10 @@ async function loadEpisodes(id,season){
           <div class="ep-title">${ep.name||'Episódio '+ep.episode_number}</div>
           <div class="ep-desc">${ep.overview||''}</div>
         </div>`;
-      card.onclick=()=>{
+      card.onclick=async ()=>{
         curSeason=season; curEp=ep.episode_number;
         document.querySelectorAll('.episode-card').forEach(c=>c.classList.remove('active'));
-        card.classList.add('active'); loadServer(curSrvIdx); buildServerBtns();
+        card.classList.add('active'); await loadServer(curSrvIdx); await buildServerBtns();
         toast(`▶ T${season} E${ep.episode_number}: ${ep.name}`);
         // Salva temporada e episódio atual
         const _sc=getContinue(); if(_sc[curId]){ _sc[curId].season=curSeason; _sc[curId].ep=curEp; store.set('pf_cont',_sc); }
@@ -1188,7 +1200,7 @@ async function openDetails(id,type){
       </button>
     `;
 
-    buildServerBtns(); loadServer(0);
+    await buildServerBtns(); await loadServer(0);
     if(type==='tv' && m.number_of_seasons){
       await loadSeasons(id, m.number_of_seasons);
       // Se foi restaurado da lista "Continuar", destaca o episódio e faz scroll
@@ -1258,7 +1270,64 @@ window.addEventListener('scroll', () => {
 });
 
 
+// ══════════════════════════════════════════════════════════════
+// 16. BLOQUEADOR AGRESSIVO DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
+// ══════════════════════════════════════════════════════════════
+(function(){
 
+  // ── A. Bloqueio SIMPLES: só window.open e _blank — não interfere nos players ──
+  window.open = function(){
+    console.log('[PureFlix] popup bloqueado');
+    return null;
+  };
+
+  document.addEventListener('click', function(e){
+    const a = e.target.tagName === 'A' ? e.target : e.target.closest('a');
+    if(a && a.target === '_blank'){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('[PureFlix] link _blank bloqueado');
+    }
+  }, true);
+
+  // ── B. Auto-Resume: salva estado com localStorage para sobreviver a redirects ──
+  function pfSaveWatching(){
+    try{
+      localStorage.setItem('pf_watching', JSON.stringify({
+        hash:    window.location.hash,
+        id:      window._curId   || '',
+        type:    window._curType || '',
+        srv:     window._curSrv  || 0,
+        ts:      Date.now()
+      }));
+    }catch(e){}
+  }
+
+  function pfRestoreWatching(){
+    try{
+      const raw = localStorage.getItem('pf_watching');
+      if(!raw) return;
+      const w = JSON.parse(raw);
+      // Só restaura se foi há menos de 30 segundos (saiu por anúncio)
+      if(!w || (Date.now() - w.ts) > 30000) return;
+      localStorage.removeItem('pf_watching');
+      if(w.hash && w.hash.match(/^#(movie|tv)\/\d+/)){
+        // Redireciona de volta para o filme/série
+        setTimeout(()=>{ window.location.hash = w.hash; }, 300);
+      }
+    }catch(e){}
+  }
+
+  // Salva sempre que o usuário está assistindo
+  window.addEventListener('pagehide',        pfSaveWatching);
+  window.addEventListener('visibilitychange', ()=>{ if(document.hidden) pfSaveWatching(); });
+
+  // Restaura ao carregar/voltar para a página
+  pfRestoreWatching();
+  window.addEventListener('pageshow', (e)=>{ if(e.persisted) pfRestoreWatching(); });
+
+  console.log('[PureFlix] Proteção ativa ✓');
+})();
 
 
 // ══════════════════════════════════════════
@@ -1316,7 +1385,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 // 15. START DO SITE
 (async()=>{
   requestNotifPermission();
-  loadDirectDB(); // pré-carregar links diretos em background
+  // Pré-carrega links diretos em background — getDirectLink() aguarda automaticamente
+  loadDirectDB().catch(e => console.error('[PureFlix Direct] Erro no pré-carregamento:', e));
   loadHero(); goHome(null); window.onhashchange();
 })();
 
@@ -1361,5 +1431,4 @@ function doToggleWatchLater(id, type, title, poster_path, release, overview, rat
     <i class="fas fa-bookmark"></i>Minha Lista
   </button>
 </nav>
-</body>
-</html>
+</bo
