@@ -429,84 +429,29 @@ const SERVERS = [
 ];
 
 // ── SISTEMA DE LINKS DIRETOS ──
-let _directDB  = null;
-let _directPrm = null;
-
-// Decodifica tokens Blogger (Base64 → original) — embutido diretamente
-(function(){
-  const _h = 'blogger' + '.com/video.g';
-  const _p = 'tok' + 'en=';
-  const _re = new RegExp(_h.replace('.','[.]') + '[?]' + _p + '([A-Za-z0-9+/=]+)');
-  function _dec(url){
-    if(!url || url.indexOf(_h)===-1) return url;
-    try{ return url.replace(_re,(_,b64)=>_h+'?'+_p+atob(b64)); }catch(e){ return url; }
-  }
-  window._decodeDirectLinks = function(raw){
-    var out={};
-    Object.keys(raw).forEach(function(id){
-      var e=Object.assign({},raw[id]);
-      if(e.url) e.url=_dec(e.url);
-      if(e.episodes) e.episodes=e.episodes.map(function(ep){ return Object.assign({},ep,{url:_dec(ep.url)}); });
-      out[id]=e;
-    });
-    return out;
-  };
-})();
-
-// ─── URL base do direct_links.json ───────────────────────────────────────────
-// Se testar abrindo o arquivo direto no browser (sem servidor), configure aqui
-// com sua URL do GitHub Pages. Em produção deixe null — detecção automática.
-// Exemplo: 'https://seunome.github.io/pureflix/'
-const DIRECT_LINKS_BASEURL = null;
+let _directDB  = null;      // null = não carregado ainda, {} = carregado mas vazio
+let _directPrm = null;      // promise em andamento (evita fetch duplo)
 
 async function loadDirectDB(){
   if(_directDB !== null) return _directDB;
   if(_directPrm) return _directPrm;
   _directPrm = (async()=>{
-    const isSrcdoc = location.href === 'about:srcdoc'
-                  || location.origin === 'null'
-                  || location.origin === null
-                  || location.protocol === 'about:';
-
-    const paths = [];
-
-    // 1. URL explícita configurada manualmente (sempre tenta primeiro)
-    if(DIRECT_LINKS_BASEURL){
-      paths.push(DIRECT_LINKS_BASEURL.replace(/\/$/, '') + '/direct_links.json');
-    }
-
-    // 2. Caminhos automáticos — só funcionam com servidor HTTP real
-    if(!isSrcdoc){
-      const base = location.pathname.replace(/\/[^/]*$/, '/');
-      paths.push(
-        location.origin + base + 'direct_links.json',
-        'direct_links.json',
-        './direct_links.json',
-      );
-    }
-
-    if(paths.length === 0){
-      console.warn('[PureFlix Direct] Arquivo aberto sem servidor HTTP (about:srcdoc).');
-      console.warn('[PureFlix Direct] Links diretos desativados neste modo.');
-      console.warn('[PureFlix Direct] Solução: configure DIRECT_LINKS_BASEURL com sua URL do GitHub Pages.');
-      _directDB = {};
-      return _directDB;
-    }
-
+    // Tenta múltiplos caminhos — resolve problemas de subpasta e servidor
+    const paths = [
+      'direct_links.json',
+      './direct_links.json',
+      location.pathname.replace(/\/[^/]*$/, '/') + 'direct_links.json',
+    ];
     for(const path of paths){
       try{
-        console.log('[PureFlix Direct] Tentando:', path);
-        const r = await fetch(path);
-        if(!r.ok){ console.log(`[PureFlix Direct] ❌ ${path} → HTTP ${r.status}`); continue; }
-        _directDB = window._decodeDirectLinks(await r.json());
+        const r = await fetch(path, { cache:'no-store' });
+        if(!r.ok) continue;
+        _directDB = await r.json();
         console.log(`[PureFlix Direct] ✅ Carregado (${path}):`, Object.keys(_directDB).length, 'títulos');
         return _directDB;
-      }catch(e){
-        console.log(`[PureFlix Direct] ❌ ${path} → ${e.message}`);
-      }
+      }catch(e){ /* tenta próximo */ }
     }
-
-    console.error('[PureFlix Direct] ⚠️ direct_links.json não encontrado em nenhum caminho.');
+    console.warn('[PureFlix Direct] ⚠️ direct_links.json não encontrado — verifique se o arquivo está na mesma pasta do index.html');
     _directDB = {};
     return _directDB;
   })();
@@ -1099,17 +1044,8 @@ function injectIframe(box, url){
   const isBlogger = url && url.includes('blogger.com/video.g');
 
   if(isHLS){
-    // Extrai URL real do m3u8 se vier de wrapper anivideo.net (?d=URL)
-    let hlsSrc = url;
-    if(url.includes('videohls.php')){
-      const q = url.indexOf('?d=');
-      if(q !== -1){
-        const raw = url.slice(q + 3);
-        const amp = raw.indexOf('&nocache');
-        hlsSrc = decodeURIComponent(amp !== -1 ? raw.slice(0, amp) : raw);
-      }
-    }
-    const safeUrl = JSON.stringify(hlsSrc);
+    // HLS: srcdoc com hls.js — src é passado via JS (JSON.stringify é correto aqui)
+    const safeUrl = JSON.stringify(url);
     frame.setAttribute('data-direct','1');
     frame.srcdoc = `<!DOCTYPE html><html><head><style>
       *{margin:0;padding:0;box-sizing:border-box;}
