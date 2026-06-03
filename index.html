@@ -453,29 +453,52 @@ let _directPrm = null;
   };
 })();
 
+// ─── URL base do direct_links.json ───────────────────────────────────────────
+// Se testar abrindo o arquivo direto no browser (sem servidor), configure aqui
+// com sua URL do GitHub Pages. Em produção deixe null — detecção automática.
+// Exemplo: 'https://seunome.github.io/pureflix/'
+const DIRECT_LINKS_BASEURL = https://github.com/Mathsrds/Pureflix/blob/main/direct_links.json;
+
 async function loadDirectDB(){
   if(_directDB !== null) return _directDB;
   if(_directPrm) return _directPrm;
   _directPrm = (async()=>{
-    // Monta lista de caminhos a tentar — do mais específico ao mais genérico
-    const base = location.pathname.replace(/\/[^/]*$/, '/');
-    const paths = [
-      base + 'direct_links.json',                        // caminho absoluto relativo à pasta
-      location.origin + base + 'direct_links.json',      // URL completa com origin
-      'direct_links.json',                               // relativo simples
-      './direct_links.json',                             // relativo explícito
-    ];
+    const isSrcdoc = location.href === 'about:srcdoc'
+                  || location.origin === 'null'
+                  || location.origin === null
+                  || location.protocol === 'about:';
+
+    const paths = [];
+
+    // 1. URL explícita configurada manualmente (sempre tenta primeiro)
+    if(DIRECT_LINKS_BASEURL){
+      paths.push(DIRECT_LINKS_BASEURL.replace(/\/$/, '') + '/direct_links.json');
+    }
+
+    // 2. Caminhos automáticos — só funcionam com servidor HTTP real
+    if(!isSrcdoc){
+      const base = location.pathname.replace(/\/[^/]*$/, '/');
+      paths.push(
+        location.origin + base + 'direct_links.json',
+        'direct_links.json',
+        './direct_links.json',
+      );
+    }
+
+    if(paths.length === 0){
+      console.warn('[PureFlix Direct] Arquivo aberto sem servidor HTTP (about:srcdoc).');
+      console.warn('[PureFlix Direct] Links diretos desativados neste modo.');
+      console.warn('[PureFlix Direct] Solução: configure DIRECT_LINKS_BASEURL com sua URL do GitHub Pages.');
+      _directDB = {};
+      return _directDB;
+    }
 
     for(const path of paths){
       try{
         console.log('[PureFlix Direct] Tentando:', path);
         const r = await fetch(path);
-        if(!r.ok){
-          console.log(`[PureFlix Direct] ❌ ${path} → HTTP ${r.status}`);
-          continue;
-        }
-        const raw = await r.json();
-        _directDB = window._decodeDirectLinks(raw);
+        if(!r.ok){ console.log(`[PureFlix Direct] ❌ ${path} → HTTP ${r.status}`); continue; }
+        _directDB = window._decodeDirectLinks(await r.json());
         console.log(`[PureFlix Direct] ✅ Carregado (${path}):`, Object.keys(_directDB).length, 'títulos');
         return _directDB;
       }catch(e){
@@ -484,8 +507,6 @@ async function loadDirectDB(){
     }
 
     console.error('[PureFlix Direct] ⚠️ direct_links.json não encontrado em nenhum caminho.');
-    console.error('[PureFlix Direct] Verifique: o arquivo está na mesma pasta do index.html?');
-    console.error('[PureFlix Direct] URL atual:', location.href);
     _directDB = {};
     return _directDB;
   })();
