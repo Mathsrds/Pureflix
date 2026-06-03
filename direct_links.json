@@ -525,7 +525,7 @@
         "subbed_url": null
       }
     ]
-  },
+{
   "31910": {
     "title": "Naruto Shippuden",
     "type": "tv",
@@ -533,9 +533,9 @@
       {
         "season": 1,
         "episode": 1,
-        "dubbed_url": "https://www.blogger.com/video.g?token=AD6v5dx-7WRiCF8duytuB4WNqphIpz26rB1L7d77Yaw_N9rrwED0BVtjbMimphdNBGn42QzA1y3x2sbvZN26Hi_GvrpxeHydc9Pt82B4yq1Qq31uDPr67KDYYVPxKYR__aTxlKme3Zc",
-        "subbed_url": null
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx-7WRiCF8duytuB4WNqphIpz26rB1L7d77Yaw_N9rrwED0BVtjbMimphdNBGn42QzA1y3x2sbvZN26Hi_GvrpxeHydc9Pt82B4yq1Qq31uDPr67KDYYVPxKYR__aTxlKme3Zc"
       },
+
       {
         "season": 1,
         "episode": 2,
