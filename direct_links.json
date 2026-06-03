@@ -3,6 +3,7 @@
     "title": "Boruto: Naruto the Movie",
     "type": "movie",
     "dubbed_url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/08.mp4/index.m3u8",
+    "subbed_url": null
   },
   "85937": {
     "title": "Demon Slayer: Kimetsu no Yaiba",
@@ -503,7 +504,7 @@
       {
         "season": 1,
         "episode": 10,
-        "dubbed_url": "https://www.blogger.com/video.g?token=AD6v5dx2G0Pp02FzyVGWpfIT9km_yR59dUWba-8tR-CMdbuppdfC3MjU2095H0HnxM5eDvDFePMu1ctZFcc_MvDXKmQ3eFf4_mbM0-tBwCB8hwjjULHs385E",
+        "dubbed_url": "https://www.blogger.com/video.g?token=AD6v5dx2G0Pp02FzyVGWpfIT9km_yR59dUWba-8tR-CMdbuppdfC3MjU2095H0HnxM5eDvDFePMu1ctZFcc_MvDXKmQ3eFf4_mbM0-tBwCB8hwjjULHs385EP6rtggp5mdokprkyFd4",
         "subbed_url": null
       },
       {
@@ -525,7 +526,7 @@
         "subbed_url": null
       }
     ]
-{
+  },
   "31910": {
     "title": "Naruto Shippuden",
     "type": "tv",
@@ -533,9 +534,9 @@
       {
         "season": 1,
         "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=AD6v5dx-7WRiCF8duytuB4WNqphIpz26rB1L7d77Yaw_N9rrwED0BVtjbMimphdNBGn42QzA1y3x2sbvZN26Hi_GvrpxeHydc9Pt82B4yq1Qq31uDPr67KDYYVPxKYR__aTxlKme3Zc"
+        "dubbed_url": "https://www.blogger.com/video.g?token=AD6v5dx-7WRiCF8duytuB4WNqphIpz26rB1L7d77Yaw_N9rrwED0BVtjbMimphdNBGn42QzA1y3x2sbvZN26Hi_GvrpxeHydc9Pt82B4yq1Qq31uDPr67KDYYVPxKYR__aTxlKme3Zc",
+        "subbed_url": null
       },
-
       {
         "season": 1,
         "episode": 2,
