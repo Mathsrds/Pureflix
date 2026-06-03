@@ -457,21 +457,35 @@ async function loadDirectDB(){
   if(_directDB !== null) return _directDB;
   if(_directPrm) return _directPrm;
   _directPrm = (async()=>{
+    // Monta lista de caminhos a tentar — do mais específico ao mais genérico
+    const base = location.pathname.replace(/\/[^/]*$/, '/');
     const paths = [
-      'direct_links.json',
-      './direct_links.json',
-      location.pathname.replace(/\/[^/]*$/, '/') + 'direct_links.json',
+      base + 'direct_links.json',                        // caminho absoluto relativo à pasta
+      location.origin + base + 'direct_links.json',      // URL completa com origin
+      'direct_links.json',                               // relativo simples
+      './direct_links.json',                             // relativo explícito
     ];
+
     for(const path of paths){
       try{
-        const r = await fetch(path, { cache:'no-store' });
-        if(!r.ok) continue;
-        _directDB = window._decodeDirectLinks(await r.json());
+        console.log('[PureFlix Direct] Tentando:', path);
+        const r = await fetch(path);
+        if(!r.ok){
+          console.log(`[PureFlix Direct] ❌ ${path} → HTTP ${r.status}`);
+          continue;
+        }
+        const raw = await r.json();
+        _directDB = window._decodeDirectLinks(raw);
         console.log(`[PureFlix Direct] ✅ Carregado (${path}):`, Object.keys(_directDB).length, 'títulos');
         return _directDB;
-      }catch(e){ /* tenta próximo */ }
+      }catch(e){
+        console.log(`[PureFlix Direct] ❌ ${path} → ${e.message}`);
+      }
     }
-    console.warn('[PureFlix Direct] ⚠️ direct_links.json não encontrado');
+
+    console.error('[PureFlix Direct] ⚠️ direct_links.json não encontrado em nenhum caminho.');
+    console.error('[PureFlix Direct] Verifique: o arquivo está na mesma pasta do index.html?');
+    console.error('[PureFlix Direct] URL atual:', location.href);
     _directDB = {};
     return _directDB;
   })();
