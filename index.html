@@ -12,7 +12,7 @@
    ═══════════════════════════════════════════════════════ */
 :root{
   --red:#e50914; --red2:#b20710;
-  --bg:#0a0a0a; --bg2:#141414; --bg3:#1a1a1a
+  --bg:#0a0a0a; --bg2:#141414; --bg3:#1a1a1a;
   --white:#fff; --gray:#aaa; --light:#e5e5e5;
   --green:#46d369; --gold:#f5c518;
   --card-w:180px; --card-h:270px;
@@ -432,25 +432,41 @@ const SERVERS = [
 // ── SISTEMA DE LINKS DIRETOS ──
 let _directDB = null; // cache do JSON após primeiro carregamento
 
+let _directDB = null;
+let _directDBPromise = null;
+
 async function loadDirectDB(){
+  // Se já carregou, retorna imediatamente
   if(_directDB) return _directDB;
-  try{
-    const r = await fetch('direct_links.json?v=4.0');
-    _directDB = await r.json();
-    console.log('[PureFlix Direct] JSON carregado:', Object.keys(_directDB).length, 'títulos');
-    return _directDB;
-  }catch(e){ 
-    console.error('[PureFlix Direct] ERRO ao carregar JSON:', e);
-    _directDB = {}; 
-    return {}; 
-  }
+
+  // Se já está carregando, espera a mesma Promise
+  if(_directDBPromise) return _directDBPromise;
+
+  // Iniciar novo carregamento
+  _directDBPromise = (async () => {
+    try{
+      const r = await fetch('direct_links.json?v=4.0');
+      _directDB = await r.json();
+      console.log('[PureFlix Direct] JSON carregado:', Object.keys(_directDB).length, 'títulos');
+      return _directDB;
+    }catch(e){ 
+      console.error('[PureFlix Direct] ERRO ao carregar JSON:', e);
+      _directDB = {}; 
+      return {}; 
+    }
+  })();
+
+  return _directDBPromise;
 }
 
 // Preferência de áudio: 'dubbed' ou 'subbed'
 let directAudioPref = localStorage.getItem('pf_audio') || 'dubbed';
 
-function getDirectLink(id, type, season, episode){
-  if(!_directDB) {
+async function getDirectLink(id, type, season, episode){
+  // Garantir que o JSON está carregado
+  await loadDirectDB();
+
+  if(!_directDB || Object.keys(_directDB).length === 0) {
     console.log('[PureFlix Direct] _directDB está vazio!');
     return null;
   }
@@ -487,11 +503,15 @@ function getDirectLink(id, type, season, episode){
   return url;
 }
 
-function hasDirectLink(id, type, season, episode){
-  if(!_directDB) {
+async function hasDirectLink(id, type, season, episode){
+  // Garantir que o JSON está carregado
+  await loadDirectDB();
+
+  if(!_directDB || Object.keys(_directDB).length === 0) {
     console.log('[PureFlix Direct] hasDirectLink: _directDB vazio');
     return false;
   }
+
   const result = !!getDirectLink(id, type, season, episode);
   console.log('[PureFlix Direct] hasDirectLink:', id, result);
   return result;
@@ -985,9 +1005,13 @@ let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
 
 function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
 
-function buildServerBtns(){
+async function buildServerBtns(){
   const g=document.getElementById('server-grid'); g.innerHTML='';
   console.log('[PureFlix Direct] buildServerBtns - curId:', curId, 'curType:', curType);
+
+  // Esperar o JSON carregar antes de verificar links
+  await loadDirectDB();
+
   SERVERS.forEach((s,i)=>{
     const b=document.createElement('button');
     const hasDir = s.direct && hasDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
@@ -1095,7 +1119,7 @@ function injectIframe(box, url){
   },12000);
 }
 
-function loadServer(i){
+async function loadServer(i){
   console.log('[PureFlix Direct] loadServer:', i, SERVERS[i].label);
   curSrvIdx=i; clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
@@ -1107,7 +1131,7 @@ function loadServer(i){
   // Servidor Direct: verificar se existe link antes de carregar
   if(SERVERS[i].direct){
     console.log('[PureFlix Direct] Tentando carregar link direto...');
-    const url = getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+    const url = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
     console.log('[PureFlix Direct] URL retornado:', url ? url.substring(0,80)+'...' : 'NULL');
     if(!url){
       console.log('[PureFlix Direct] URL vazio - indo para próximo servidor');
@@ -1417,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 // 15. START DO SITE
 (async()=>{
   requestNotifPermission();
-  loadDirectDB(); // pré-carregar links diretos em background
+  await loadDirectDB(); // CARREGAR links diretos ANTES de tudo
   loadHero(); goHome(null); window.onhashchange();
 })();
 
