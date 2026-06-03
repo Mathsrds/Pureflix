@@ -6,7 +6,6 @@
 <title>Pureflix</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="decode_urls.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════
    1. VARIÁVEIS E GERAIS
@@ -1060,11 +1059,37 @@ function injectIframe(box, url){
   }
 
   const isHLS      = url && (url.includes('.m3u8') || url.includes('videohls'));
-  const isIframe   = url && (url.includes('blogger.com') || url.includes('meusdoramas') || url.includes('serv01.'));
-  
-  if(isHLS || isIframe){
+  const isBlogger  = url && url.includes('blogger.com');
+  const isMeudo    = url && (url.includes('meusdoramas') || url.includes('serv01.'));
+
+  if(isHLS){
+    // HLS: srcdoc com hls.js
     frame.setAttribute('data-direct','1');
-    frame.srcdoc = makeSrcdoc(url, isHLS);
+    frame.srcdoc = makeSrcdoc(url, true);
+  } else if(isBlogger){
+    // Blogger: srcdoc com iframe interno
+    frame.setAttribute('data-direct','1');
+    frame.srcdoc = makeSrcdoc(url, false);
+  } else if(isMeudo){
+    // meusdoramas bloqueia iframe (403) — mostrar botão para abrir em nova aba
+    frame.setAttribute('data-direct','1');
+    const loader2 = document.getElementById('player-loader');
+    if(loader2){
+      loader2.innerHTML =
+        '<div style="text-align:center;padding:30px 20px;">' +
+        '<div style="font-size:40px;margin-bottom:16px;">🔒</div>' +
+        '<p style="color:#ccc;font-size:14px;margin-bottom:20px;line-height:1.5;">' +
+        'Este servidor bloqueia reprodução<br>em iframe por segurança.</p>' +
+        '<a href="' + url + '" target="_blank" rel="noopener" ' +
+        'style="background:#e50914;color:#fff;padding:12px 28px;border-radius:6px;' +
+        'font-weight:700;font-size:14px;text-decoration:none;display:inline-block;">' +
+        '▶ Abrir Player em Nova Aba</a>' +
+        '<p style="color:#666;font-size:11px;margin-top:14px;">Ou escolha outro servidor abaixo</p>' +
+        '</div>';
+    }
+    clearTimeout(fallbackTimer);
+    document.getElementById('fallback-bar').classList.remove('show');
+    return;
   } else {
     frame.src = url;
   }
