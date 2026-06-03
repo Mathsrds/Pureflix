@@ -418,8 +418,9 @@ const IMG   = 'https://image.tmdb.org/t/p';
 const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 
 // 2. SERVIDORES DE VÍDEO (Foco em Dublados)
+// ATENÇÃO: PureFlix Direct NÃO tem fn síncrona — é sempre tratado via loadServer() com await
 const SERVERS = [
-  { label:'⭐ PureFlix Direct', fn:(id,t,s,e)=>getDirectLink(id,t,s,e), direct:true },
+  { label:'⭐ PureFlix Direct', direct:true, fn: null }, // fn=null: só via loadServer() async
   { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',          fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc Pro',         fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
@@ -994,24 +995,44 @@ async function loadRecommendations(id, type) {
 // 10. O PLAYER E SERVIDORES
 let curId, curType, curSeason=1, curEp=1, curSrvIdx=0, fallbackTimer;
 
-function getUrl(i){ return SERVERS[i].fn(curId,curType,curType==='tv'?curSeason:null,curType==='tv'?curEp:null); }
+function getUrl(i){
+  const srv = SERVERS[i];
+  if(!srv || !srv.fn) return null; // Direct não tem fn síncrona
+  return srv.fn(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
+}
 
 async function buildServerBtns(){
-  const g=document.getElementById('server-grid'); g.innerHTML='';
-  // Pré-carrega disponibilidade do link direto para o servidor atual
-  const directLink = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
-  const hasAnyDirect = !!directLink;
+  const g = document.getElementById('server-grid');
+  g.innerHTML = '';
 
-  SERVERS.forEach((s,i)=>{
-    const b=document.createElement('button');
-    const isDirectServer = s.direct;
-    const hasDir = isDirectServer && hasAnyDirect;
-    b.className='srv-btn'+(i===curSrvIdx?' active':'')+(isDirectServer&&!hasDir?' srv-unavail':'');
-    b.textContent = s.label + (hasDir?' ✓':'');
-    b.title = isDirectServer ? (hasDir?'Link direto disponível — sem anúncios!':'Sem link direto para este título') : '';
-    b.onclick=()=>loadServer(i);
+  // Renderiza todos os botões IMEDIATAMENTE (sem esperar o JSON)
+  SERVERS.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.id = `srv-btn-${i}`;
+    b.className = 'srv-btn' + (i === curSrvIdx ? ' active' : '');
+    b.textContent = s.label;
+    b.onclick = () => loadServer(i);
     g.appendChild(b);
   });
+
+  // Depois, em background, verifica se o Direct tem link e atualiza o badge
+  const directIdx = SERVERS.findIndex(s => s.direct);
+  if(directIdx < 0) return;
+
+  getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null)
+    .then(url => {
+      const btn = document.getElementById(`srv-btn-${directIdx}`);
+      if(!btn) return;
+      if(url){
+        btn.textContent = SERVERS[directIdx].label + ' ✓';
+        btn.title = 'Link direto disponível — sem anúncios!';
+      } else {
+        btn.textContent = SERVERS[directIdx].label;
+        btn.classList.add('srv-unavail');
+        btn.title = 'Sem link direto para este título';
+      }
+    })
+    .catch(() => {});
 }
 
 function buildPlayerBox(url, srvLabel, autoplay){
@@ -1121,18 +1142,25 @@ async function loadServer(i){
   if(SERVERS[i].direct){
     const url = await getDirectLink(curId, curType, curType==='tv'?curSeason:null, curType==='tv'?curEp:null);
     if(!url){
-      // Sem link direto disponível — avisar e passar para próximo
-      toast('⭐ Sem link direto para este episódio. A tentar próximo servidor...');
+      toast('⭐ Sem link direto para este episódio. Tentando próximo servidor...');
       setTimeout(()=>loadServer((i+1)%SERVERS.length), 1200);
       return;
     }
-    buildPlayerBox(url, SERVERS[i].label, true); // direct = sem fake-play, sem anúncios
+    // Garante que url é string (não Promise) antes de passar para buildPlayerBox
+    if(typeof url !== 'string'){
+      console.error('[PureFlix Direct] URL inválida (não é string):', url);
+      setTimeout(()=>loadServer((i+1)%SERVERS.length), 1200);
+      return;
+    }
+    buildPlayerBox(url, SERVERS[i].label, true);
     if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
     return;
   }
 
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  buildPlayerBox(getUrl(i), SERVERS[i].label, !isMobile);
+  const url = getUrl(i);
+  if(!url){ toast('Servidor indisponível. Tentando próximo...'); setTimeout(()=>loadServer((i+1)%SERVERS.length),800); return; }
+  buildPlayerBox(url, SERVERS[i].label, !isMobile);
   if(curType==='tv') saveContinue(curId,curType,'','',curSeason,curEp);
 }
 
@@ -1140,7 +1168,11 @@ function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando 
 
 function onFrameLoad(){
   const frame=document.getElementById('player-frame');
-  if(!frame||!frame.src||frame.src===window.location.href) return;
+  if(!frame) return;
+  // Ignora disparos com src vazio ou igual à própria página
+  const hasSrc    = frame.src && frame.src !== window.location.href;
+  const hasSrcdoc = !!frame.srcdoc;
+  if(!hasSrc && !hasSrcdoc) return;
   const loader=document.getElementById('player-loader');
   if(loader) loader.style.display='none';
   clearTimeout(fallbackTimer);
@@ -1474,3 +1506,5 @@ function doToggleWatchLater(id, type, title, poster_path, release, overview, rat
   </button>
 </nav>
 </bo
+dy>
+</html>
