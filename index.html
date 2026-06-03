@@ -1040,76 +1040,53 @@ function injectIframe(box, url){
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
 
-  // Função que gera srcdoc para qualquer URL — isola o player num documento próprio
-  function makeSrcdoc(embedUrl, isHLS){
-    // Codifica o URL em JSON para passar com segurança ao srcdoc
-    const safeUrl = JSON.stringify(embedUrl);
-    if(isHLS){
-      return `<!DOCTYPE html><html><head><style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        html,body{width:100%;height:100%;background:#000;overflow:hidden;}
-        video{width:100%;height:100%;display:block;object-fit:contain;}
-      </style></head><body>
-        <video id="v" controls autoplay playsinline></video>
-        <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"><\/script>
-        <script>
-          const v=document.getElementById('v');
-          const src=${safeUrl};
-          if(Hls.isSupported()){
-            const h=new Hls({enableWorker:false});
-            h.loadSource(src); h.attachMedia(v);
-            h.on(Hls.Events.MANIFEST_PARSED,()=>v.play().catch(()=>{}));
-          } else if(v.canPlayType('application/vnd.apple.mpegurl')){
-            v.src=src; v.play().catch(()=>{});
-          } else {
-            document.body.innerHTML='<p style="color:#fff;padding:20px">HLS não suportado neste browser.</p>';
-          }
-        <\/script>
-      </body></html>`;
-    } else {
-      // iframe genérico (Blogger, meusdoramas, etc.) com script fixSize
-      return `<!DOCTYPE html><html><head><style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        html,body{width:100vw;height:100vh;background:#000;overflow:hidden;}
-        iframe{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;border:none!important;}
-        video,object,embed{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;}
-      </style></head><body>
-        <iframe src=${safeUrl} frameborder="0"
-          allowfullscreen allow="autoplay; fullscreen *; encrypted-media; gyroscope"></iframe>
-        <script>
-          function fixSize(){
-            document.querySelectorAll('iframe,video,object,embed').forEach(el=>{
-              el.removeAttribute('width'); el.removeAttribute('height');
-              el.style.cssText='position:fixed!important;inset:0!important;width:100%!important;height:100%!important;border:none!important;';
-            });
-          }
-          fixSize(); setInterval(fixSize,800);
-          new MutationObserver(fixSize).observe(document.body,{childList:true,subtree:true,attributes:true});
-        <\/script>
-      </body></html>`;
-    }
-  }
-
-  const isHLS      = url && (url.includes('.m3u8') || url.includes('videohls'));
-  const isBlogger  = url && url.includes('blogger.com');
-  const isMeudo    = url && (url.includes('meusdoramas') || url.includes('serv01.'));
+  const isHLS     = url && (url.includes('.m3u8') || url.includes('videohls'));
+  const isBlogger = url && url.includes('blogger.com/video.g');
 
   if(isHLS){
-    // HLS: srcdoc com hls.js
+    // HLS: srcdoc com hls.js — src é passado via JS (JSON.stringify é correto aqui)
+    const safeUrl = JSON.stringify(url);
     frame.setAttribute('data-direct','1');
-    frame.srcdoc = makeSrcdoc(url, true);
+    frame.srcdoc = `<!DOCTYPE html><html><head><style>
+      *{margin:0;padding:0;box-sizing:border-box;}
+      html,body{width:100%;height:100%;background:#000;overflow:hidden;}
+      video{width:100%;height:100%;display:block;object-fit:contain;}
+    </style></head><body>
+      <video id="v" controls autoplay playsinline></video>
+      <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"><\/script>
+      <script>
+        const v=document.getElementById('v');
+        const src=${safeUrl};
+        if(Hls.isSupported()){
+          const h=new Hls({enableWorker:false});
+          h.loadSource(src); h.attachMedia(v);
+          h.on(Hls.Events.MANIFEST_PARSED,()=>v.play().catch(()=>{}));
+        } else if(v.canPlayType('application/vnd.apple.mpegurl')){
+          v.src=src; v.play().catch(()=>{});
+        } else {
+          document.body.innerHTML='<p style="color:#fff;padding:20px">HLS não suportado neste browser.</p>';
+        }
+      <\/script>
+    </body></html>`;
+
   } else if(isBlogger){
-    // Blogger: srcdoc com iframe interno
+    // Blogger: carrega DIRETO no src do frame — não usar srcdoc (iframe aninhado bloqueia)
+    // O token do Blogger já é a URL de embed final — sem redirecionamentos
     frame.setAttribute('data-direct','1');
-    frame.srcdoc = makeSrcdoc(url, false);
+    frame.src = url;
+
   } else {
+    // Todos os outros servidores (meusdoramas, vidsrc, etc.)
     frame.src = url;
   }
+
   clearTimeout(fallbackTimer);
-  fallbackTimer=setTimeout(()=>{
-    document.getElementById('fallback-msg').textContent=`⚠️ "${SERVERS[curSrvIdx].label}" pode estar com problemas. Tentar próximo?`;
+  // Blogger e HLS podem demorar mais para mostrar vídeo — usar 20s
+  const timeout = (isHLS || isBlogger) ? 20000 : 12000;
+  fallbackTimer = setTimeout(()=>{
+    document.getElementById('fallback-msg').textContent = `⚠️ "${SERVERS[curSrvIdx].label}" pode estar com problemas. Tentar próximo?`;
     document.getElementById('fallback-bar').classList.add('show');
-  },12000);
+  }, timeout);
 }
 
 // Mostra aviso de servidor bloqueado (ex: meusdoramas 403)
@@ -1170,20 +1147,29 @@ async function loadServer(i){
 function nextServer(){ const next=(curSrvIdx+1)%SERVERS.length; toast(`Trocando para ${SERVERS[next].label}...`); loadServer(next); }
 
 function onFrameLoad(){
-  const frame=document.getElementById('player-frame');
+  const frame = document.getElementById('player-frame');
   if(!frame) return;
-  // Aceita tanto frame.src normal como srcdoc (src fica vazio ou igual à página)
-  const hasSrc    = frame.src && frame.src !== window.location.href;
+  const hasSrc    = frame.src && frame.src !== window.location.href && frame.src !== 'about:blank';
   const hasSrcdoc = frame.hasAttribute('data-direct');
   if(!hasSrc && !hasSrcdoc) return;
-  const loader=document.getElementById('player-loader');
-  if(loader) loader.style.display='none';
+
+  // Esconde o loader
+  const loader = document.getElementById('player-loader');
+  if(loader) loader.style.display = 'none';
+
+  // Para HLS (srcdoc): o load do srcdoc é quase instantâneo, então o
+  // timer já foi definido em injectIframe com 20s — não reseta aqui
+  if(hasSrcdoc && !hasSrc) return;
+
+  // Para todos os outros (src direto, incluindo Blogger):
+  // cancela o timer anterior e inicia um novo
   clearTimeout(fallbackTimer);
   document.getElementById('fallback-bar').classList.remove('show');
-  fallbackTimer=setTimeout(()=>{
-    document.getElementById('fallback-msg').textContent='⚠️ Tela preta? Tente outro servidor.';
+  const isBlogger = frame.src && frame.src.includes('blogger.com');
+  fallbackTimer = setTimeout(()=>{
+    document.getElementById('fallback-msg').textContent = '⚠️ Tela preta? Tente outro servidor.';
     document.getElementById('fallback-bar').classList.add('show');
-  },8000);
+  }, isBlogger ? 20000 : 8000);
 }
 
 // 11. SÉRIES: TEMPORADAS E EPISÓDIOS
