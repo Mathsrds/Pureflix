@@ -6,7 +6,7 @@
 <title>Pureflix</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="decode_urls.js?v=2.0"></script>
+<script src="decode_urls.js?v=3.1"></script>
 <style>
 /* ═══════════════════════════════════════════════════════
    1. VARIÁVEIS E GERAIS
@@ -435,7 +435,7 @@ let _directDB = null; // cache do JSON após primeiro carregamento
 async function loadDirectDB(){
   if(_directDB) return _directDB;
   try{
-    const r = await fetch('direct_links.json?v=2.0');
+    const r = await fetch('direct_links.json?v=3.1');
     const raw = await r.json();
     _directDB = decodeDirectLinks(raw);
     return _directDB;
