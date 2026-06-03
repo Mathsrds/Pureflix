@@ -1019,30 +1019,9 @@ function injectIframe(box, url){
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
 
-  // Links do Blogger: srcdoc com script que força o player a preencher tudo
-  if(url && url.includes('blogger.com/video')){
-    frame.srcdoc = `<!DOCTYPE html><html><head><style>
-      *{margin:0;padding:0;box-sizing:border-box;}
-      html,body{width:100vw;height:100vh;background:#000;overflow:hidden;}
-      iframe#bi{position:fixed;inset:0;width:100%!important;height:100%!important;border:none;}
-      video,object,embed{position:fixed;inset:0;width:100%!important;height:100%!important;display:block;}
-    </style></head><body>
-      <iframe id="bi" src="${url}" frameborder="0"
-        allowfullscreen allow="autoplay; fullscreen *; encrypted-media"></iframe>
-      <script>
-        // Força dimensões no iframe interno e em qualquer video/object que o Blogger injetar
-        function fixSize(){
-          document.querySelectorAll('iframe,video,object,embed').forEach(el=>{
-            el.style.cssText='position:fixed!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;border:none!important;';
-            el.removeAttribute('width'); el.removeAttribute('height');
-          });
-        }
-        fixSize();
-        setInterval(fixSize, 500);
-        new MutationObserver(fixSize).observe(document.body,{childList:true,subtree:true});
-      <\/script>
-    </body></html>`;
-  } else if(url && (url.includes('.m3u8') || url.includes('videohls'))){
+  // Para TODOS os URLs, usar src direto em vez de srcdoc
+  // O srcdoc estava causando bloqueios de segurança no Blogger
+  if(url && (url.includes('.m3u8') || url.includes('videohls'))){
     // HLS stream — usar hls.js via srcdoc
     frame.srcdoc = `<!DOCTYPE html><html><head><style>
       *{margin:0;padding:0;box-sizing:border-box;}
@@ -1062,6 +1041,7 @@ function injectIframe(box, url){
       <\/script>
     </body></html>`;
   } else {
+    // Blogger, Meusdoramas, etc. — usar src direto
     frame.src = url;
   }
   clearTimeout(fallbackTimer);
