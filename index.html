@@ -1077,10 +1077,9 @@ function injectIframe(box, url){
 
   const frame = document.createElement('iframe');
   frame.id = 'player-frame';
-  // allowFullscreen removido — já coberto por allow="fullscreen *" abaixo (os dois conflitam)
-  // allow-fullscreen removido do sandbox — NÃO é um token válido de sandbox
-  // allow-same-origin mantido pois alguns embeds precisam de acesso à própria origem
-  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-presentation');
+  frame.allowFullscreen = true;
+  // sandbox: permite scripts e mesma origem, mas BLOQUEIA popups, top-navigation e modais
+  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-presentation allow-fullscreen');
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
   frame.setAttribute('referrerpolicy','no-referrer');
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
@@ -1468,10 +1467,8 @@ window.addEventListener('scroll', () => {
   const _origAppend = Element.prototype.appendChild;
   Element.prototype.appendChild = function(node){
     if(node && node.tagName === 'IFRAME' && node.id !== 'player-frame'){
-      // Iframes injetados por scripts (ads, popups) recebem sandbox mínimo
-      // allow-same-origin REMOVIDO — ads não precisam de acesso à mesma origem
-      // e a combinação allow-scripts + allow-same-origin permite escapar o sandbox
-      node.setAttribute('sandbox','allow-scripts allow-presentation');
+      // Se algum script injetar iframe escondido, força sandbox
+      node.setAttribute('sandbox','allow-scripts allow-same-origin');
       node.removeAttribute('allow-popups');
       node.removeAttribute('allow-top-navigation');
     }
