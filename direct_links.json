@@ -13,6 +13,16 @@
     "title": "Naruto Shippuden O Filme: Laços",
     "type": "movie",
     "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/02.mp4/index.m3u8&nocache1771203529"
+      },
+  "207468": {
+    "title": "Kaiju No. 8",
+    "type": "tv",
+    "episodes": [
+      {
+        "season": 1,
+        "episode": 3,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzw69W2raosMTAdjzB9HliDTaV8czzkJOPeF5_9S-cM0sENsgi2B_imD-0hVmu2O77KsY-yv4QyIT2G13CiAdA-aT_edcbRrwLcZyrqcd6q71AEoqONmKlx5S-rsW166ykH5MlG"
+      },
   },
   "31910": {
     "title": "Naruto Shippuden",
