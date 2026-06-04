@@ -151,6 +151,33 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .fallback-bar{margin-top:10px;display:none;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);border-radius:6px;padding:10px 16px;font-size:13px;color:orange;align-items:center;justify-content:space-between;gap:10px;}
 .fallback-bar.show{display:flex;}
 .fallback-bar button{background:orange;color:#000;border:none;border-radius:4px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+/* ═══════════════════════════════════════════════════════
+   OTIMIZAÇÕES DE PERFORMANCE E MEMÓRIA
+   ═══════════════════════════════════════════════════════ */
+
+/* Isolamento de renderização para cards - reduz repaint */
+.card{contain:layout style paint;content-visibility:auto;contain-intrinsic-size:0 270px;}
+
+/* Seções fora da viewport não renderizam até serem visíveis */
+.section{content-visibility:auto;contain-intrinsic-size:auto 300px;}
+
+/* Imagens com placeholder para evitar layout shift */
+.card-thumb{background:#1a1a1a;}
+.no-img{background:linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)!important;display:flex!important;align-items:center;justify-content:center;}
+.no-img::after{content:'🎬';font-size:40px;opacity:.3;}
+
+/* Reduzir repaints no header */
+#header{will-change:transform,background;contain:layout style;}
+
+/* Scroll suave com momentum nativo */
+.carousel{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
+
+/* Server grid otimizado */
+.server-grid{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
+
+/* Esconder conteúdo não essencial inicialmente */
+#sections-container{content-visibility:auto;}
+
 
 /* Temporadas (Apenas Séries) */
 .seasons-section{margin-top:24px;}
@@ -298,6 +325,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -347,7 +375,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   <div class="btn-close" onclick="closeDetails()"><i class="fas fa-times"></i></div>
   <div class="det-backdrop" id="det-backdrop"></div>
   <div class="det-body">
-    <div class="det-poster"><img id="det-poster" src="" alt=""></div>
+    <div class="det-poster"><img id="det-poster" src="" alt="" decoding="async"></div>
     <div class="det-info">
       <h1 class="det-title" id="det-title"></h1>
       <div class="det-tags" id="det-tags"></div>
@@ -408,11 +436,30 @@ function isInWatchLater(id){return getWatchLater().some(x=>String(x.id)===String
 function addWatchLater(item){
   const list=getWatchLater();
   if(list.some(x=>String(x.id)===String(item.id))) return false;
-  list.unshift({id:item.id,type:item.type||item.media_type||'movie',title:item.title||item.name||'',poster:item.poster||item.poster_path||'',backdrop:item.backdrop||item.backdrop_path||'',release:item.release||item.release_date||item.first_air_date||'',overview:item.overview||'',rating:item.rating||item.vote_average||'',savedAt:Date.now()});
+  list.unshift({id:item.id,type:item.type||item.media_type||'movie',title:item.title||item.name||'',poster:normalizePoster(item.poster||item.poster_path||''),backdrop:normalizePoster(item.backdrop||item.backdrop_path||''),release:item.release||item.release_date||item.first_air_date||'',overview:item.overview||'',rating:item.rating||item.vote_average||'',savedAt:Date.now()});
   saveWatchLater(list); return true;
 }
 function removeWatchLater(id){saveWatchLater(getWatchLater().filter(x=>String(x.id)!==String(id)));}
 function toggleWatchLater(item){if(isInWatchLater(item.id)){removeWatchLater(item.id);return false;}else{addWatchLater(item);return true;}}
+
+// Normaliza URL de poster para garantir que sempre seja completa
+function normalizePoster(poster){
+  if(!poster) return '';
+  if(poster.startsWith('http')) return poster;
+  if(poster.startsWith('/')) return `${IMG}/w500${poster}`;
+  return `${IMG}/w500/${poster}`;
+}
+
+// Cache de imagens em memória para evitar recarregar
+const IMG_CACHE = new Set();
+function preloadImage(src){
+  if(!src || IMG_CACHE.has(src)) return;
+  const img = new Image();
+  img.decoding = 'async';
+  img.fetchPriority = 'low';
+  img.src = src;
+  IMG_CACHE.add(src);
+}
 
 /* ══ NOTIFICATIONS (inline) ══ */
 const NOTIF_KEY='pf_notifications';
@@ -626,6 +673,16 @@ async function api(path, params={}) {
   } catch(e) { return {}; }
 }
 
+// Limpar cache de API periodicamente para evitar consumo excessivo de memória
+setInterval(()=>{
+  const keys = Object.keys(MEM);
+  if(keys.length > 200){
+    // Remove 50% das entradas mais antigas (FIFO simples)
+    keys.slice(0, Math.floor(keys.length/2)).forEach(k=>delete MEM[k]);
+    console.log('[PureFlix] Cache de API limpo:', keys.length, '→', Object.keys(MEM).length);
+  }
+}, 300000); // a cada 5 minutos
+
 // 5. BANCO DE DADOS LOCAL (Favoritos e Continuar)
 const store = {
   get:(k)=>{ try{ return JSON.parse(localStorage.getItem(k)||'{}') }catch{ return {} } },
@@ -635,7 +692,7 @@ function getFavs(){ return store.get('pf_favs'); }
 function toggleFav(id,type,name,poster){
   const f=getFavs();
   if(f[id]){ delete f[id]; toast('Removido dos favoritos'); }
-  else{ f[id]={id,type,name,poster}; toast('⭐ Adicionado aos favoritos!'); }
+  else{ f[id]={id,type,name,poster:normalizePoster(poster)}; toast('⭐ Adicionado aos favoritos!'); }
   store.set('pf_favs',f);
   document.querySelectorAll(`.card-btn.fav[data-id="${id}"]`).forEach(b=>{
     b.classList.toggle('fav-on',!!f[id]); b.title = f[id]?'Remover':'Favoritar';
@@ -643,7 +700,7 @@ function toggleFav(id,type,name,poster){
 }
 function getContinue(){ return store.get('pf_cont'); }
 function saveContinue(id,type,name,poster,season,ep){
-  const c=getContinue(); c[id]={id,type,name,poster,season,ep,ts:Date.now()};
+  const c=getContinue(); c[id]={id,type,name,poster:normalizePoster(poster),season,ep,ts:Date.now()};
   store.set('pf_cont',c);
 }
 
@@ -746,7 +803,7 @@ function makeCarousel(sec, items, type, hasMore){
     card.className='card'; card.title=name;
     card.onclick=()=>openDetails(m.id,itemType);
     card.innerHTML=`
-      ${poster?`<img src="${poster}" alt="${name}" class="card-thumb" loading="lazy" onerror="this.style.display='none'">`:''}
+      ${poster?`<img src="${poster}" alt="${name}" class="card-thumb" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=''+this.src.replace('w500','w300');this.onerror=function(){this.style.display='none';}">`:''}
       ${itemType==='tv'?'<div class="card-badge">SÉRIE</div>':''}
       ${contData?`<div class="card-continue" style="width:60%"></div>`:''}
       <div class="card-overlay">
@@ -776,13 +833,26 @@ function scrollSrv(dir){
 
 // Rastreia página atual de cada seção para "Ver mais"
 const secPages={};
+let _ioObserver = null;
 
-async function loadSection(sec){
-  const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
-  wrap.innerHTML=`
-    <div class="section-header"><span class="section-title">${sec.title}</span></div>
-    <div class="carousel-wrap"><div class="carousel" id="car-${sec.id}">${Array(12).fill('<div class="skel"></div>').join('')}</div></div>`;
-  document.getElementById('sections-container').appendChild(wrap);
+// Lazy load de seções via Intersection Observer — só carrega quando visível
+function initSectionObserver(){
+  if(_ioObserver) return;
+  if(!('IntersectionObserver' in window)) return;
+  _ioObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const sec = entry.target._secData;
+        if(sec && !entry.target._loaded){
+          entry.target._loaded = true;
+          loadSectionData(entry.target, sec);
+        }
+      }
+    });
+  }, {rootMargin:'200px 0px', threshold:0.01});
+}
+
+async function loadSectionData(wrap, sec){
   try{
     const [d1,d2]=await Promise.all([
       api(sec.endpoint,{...sec.params,page:1}),
@@ -795,6 +865,27 @@ async function loadSection(sec){
     const hasMore=totalPages>2;
     wrap.replaceWith(makeCarousel(sec,items,sec.type,hasMore));
   }catch(e){ wrap.remove(); }
+}
+
+async function loadSection(sec){
+  const wrap=document.createElement('div'); wrap.className='section'; wrap.id='sec-'+sec.id;
+  wrap._secData = sec;
+  wrap._loaded = false;
+  wrap.innerHTML=`
+    <div class="section-header"><span class="section-title">${sec.title}</span></div>
+    <div class="carousel-wrap"><div class="carousel" id="car-${sec.id}">${Array(6).fill('<div class="skel"></div>').join('')}</div></div>`;
+  document.getElementById('sections-container').appendChild(wrap);
+
+  // Se for as primeiras 3 seções, carrega imediatamente. O restante usa lazy load.
+  const allSections = Array.from(document.querySelectorAll('.section'));
+  const idx = allSections.indexOf(wrap);
+  if(idx < 3){
+    wrap._loaded = true;
+    loadSectionData(wrap, sec);
+  } else {
+    initSectionObserver();
+    if(_ioObserver) _ioObserver.observe(wrap);
+  }
 }
 
 async function loadMore(secId){
@@ -823,7 +914,7 @@ async function loadMore(secId){
         card.className='card'; card.title=name;
         card.onclick=()=>openDetails(m.id,itemType);
         card.innerHTML=`
-          ${poster?`<img src="${poster}" alt="${name}" class="card-thumb" loading="lazy" onerror="this.style.display='none'">`:''}
+          ${poster?`<img src="${poster}" alt="${name}" class="card-thumb" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=''+this.src.replace('w500','w300');this.onerror=function(){this.style.display='none';}">`:''}
           ${itemType==='tv'?'<div class="card-badge">SÉRIE</div>':''}
           ${contData?`<div class="card-continue" style="width:60%"></div>`:''}
           <div class="card-overlay">
@@ -911,14 +1002,14 @@ function showFav(e){
   grid.style.cssText = 'display:flex;flex-wrap:wrap;gap:14px;';
 
   favs.forEach(f => {
-    const poster = f.poster || '';
+    const poster = normalizePoster(f.poster);
     const card = document.createElement('div');
     card.style.cssText = 'position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
     card.onclick = () => openDetails(f.id, f.type);
     card.innerHTML = `
-      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
-        ${poster ? `<img src="${poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
-                 : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>`}
+      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;" class="${poster?'':'no-img'}">
+        ${poster ? `<img src="${poster}" alt="${f.name||''}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('no-img');">`
+                 : ''}
         <div style="position:absolute;top:6px;left:6px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px;">${f.type==='movie'?'FILME':'SÉRIE'}</div>
       </div>
       <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name||'Sem título'}</div>
@@ -944,17 +1035,18 @@ function showContinue(e){
   }
   const sec=document.createElement('div');
   sec.className='section';
-  sec.innerHTML=`<div class="section-header"><span class="section-title">▶️ Continuar Assistindo</span></div>`;
+  sec.innerHTML=`<div class="section-header"><span class="section-title">▶️ Continuar Assistindo</span><span style="color:var(--gray);font-size:13px;">${cont.length} título${cont.length>1?'s':''}</span></div>`;
   const grid=document.createElement('div');
   grid.style.cssText='display:flex;flex-wrap:wrap;gap:14px;padding:4px 0;';
   cont.forEach(f=>{
+    const poster = normalizePoster(f.poster);
     const card=document.createElement('div');
     card.style.cssText='position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
     card.onclick=()=>openDetails(f.id,f.type);
     card.innerHTML=`
-      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;">
-        ${f.poster?`<img src="${f.poster}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
-                 :'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:30px;">🎬</div>'}
+      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;" class="${poster?'':'no-img'}">
+        ${poster?`<img src="${poster}" alt="${f.name||''}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('no-img');">`
+                 :''}
         <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.1);">
           <div style="height:100%;width:60%;background:var(--red);"></div>
         </div>
@@ -1078,8 +1170,11 @@ function injectIframe(box, url){
   const frame = document.createElement('iframe');
   frame.id = 'player-frame';
   frame.allowFullscreen = true;
-  // sandbox: permite scripts e mesma origem, mas BLOQUEIA popups, top-navigation e modais
-  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-presentation allow-fullscreen');
+  // sandbox: permite scripts, forms (necessário para alguns players como WarezCDN),
+  // apresentação e mesma origem. allow-popups e allow-top-navigation são DEIXADOS DE FORA
+  // para bloquear anúncios e redirecionamentos. allow-forms é necessário para players
+  // que usam POST/form para carregar o vídeo.
+  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-presentation allow-forms');
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
   frame.setAttribute('referrerpolicy','no-referrer');
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
@@ -1377,7 +1472,15 @@ function closeDetails() {
     localStorage.removeItem('pf_watching'); // usuário fechou voluntariamente
     window._curId = ''; window._curType = ''; window._curSrv = 0;
     document.getElementById('page-details').style.display='none'; document.getElementById('page-home').style.display='block';
-    window.location.hash=''; document.getElementById('player-box').innerHTML='';
+    window.location.hash=''; 
+    // Limpar iframe para liberar memória de vídeo
+    const box = document.getElementById('player-box');
+    if(box) box.innerHTML='';
+    // Forçar garbage collection do iframe (remove referências)
+    const frame = document.getElementById('player-frame');
+    if(frame){ frame.src='about:blank'; frame.remove(); }
+    // Limpar timeouts pendentes
+    clearTimeout(fallbackTimer);
 }
 
 // 13. BUSCA
@@ -1467,8 +1570,9 @@ window.addEventListener('scroll', () => {
   const _origAppend = Element.prototype.appendChild;
   Element.prototype.appendChild = function(node){
     if(node && node.tagName === 'IFRAME' && node.id !== 'player-frame'){
-      // Se algum script injetar iframe escondido, força sandbox
-      node.setAttribute('sandbox','allow-scripts allow-same-origin');
+      // Iframes injetados por scripts (ads, popups) recebem sandbox MÍNIMO
+      // SEM allow-same-origin (impede escape) e SEM allow-forms (impede submits de ads)
+      node.setAttribute('sandbox','allow-scripts allow-presentation');
       node.removeAttribute('allow-popups');
       node.removeAttribute('allow-top-navigation');
     }
