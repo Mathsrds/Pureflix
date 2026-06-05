@@ -33,7 +33,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 #header{position:fixed;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;padding:0 4%;z-index:900;transition: background 0.4s, transform 0.3s ease-in-out;}
 #header.solid{background:var(--bg2);box-shadow:0 2px 20px rgba(0,0,0,.6);}
 .logo{cursor:pointer;margin-right:30px;flex-shrink:0;display:flex;align-items:center;}
-.logo-img{height:36px;width:auto;display:block;transition:transform .2s;}
+.logo-img{height:42px;width:auto;display:block;transition:transform .2s;}
 .logo:hover .logo-img{transform:scale(1.05);}
 .nav{display:flex;gap:6px;align-items:center;}
 .nav-btn{background:none;border:none;color:var(--gray);font-family:'Barlow',sans-serif;font-size:13px;padding:6px 10px;cursor:pointer;border-radius:4px;transition:all .2s;white-space:nowrap;}
@@ -420,7 +420,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   #header{padding:0 16px;background:transparent;transform:none!important;}
   #header.solid{background:rgba(10,10,10,.97)!important;box-shadow:0 2px 12px rgba(0,0,0,.6);}
   .logo{margin-right:0;}
-.logo-img{height:28px;}
+.logo-img{height:34px;}
   .nav{display:none!important;}
   .header-right{gap:12px;}
   .header-right button{font-size:18px;}
@@ -624,13 +624,47 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 /* ══ WATCHLATER (inline) ══ */
 const WL_KEY='pf_watchlater';
 function getWatchLater(){try{return JSON.parse(localStorage.getItem(WL_KEY)||'[]');}catch(e){return[];}}
-function saveWatchLater(list){localStorage.setItem(WL_KEY,JSON.stringify(list));}
+function saveWatchLater(list){
+  try{
+    localStorage.setItem(WL_KEY,JSON.stringify(list));
+  }catch(e){
+    if(e.name === 'QuotaExceededError'){
+      console.error('[PureFlix] localStorage cheio! Removendo itens antigos...');
+      // Remove os 3 itens mais antigos e tenta novamente
+      list.sort((a,b)=> (b.savedAt||0) - (a.savedAt||0));
+      const trimmed = list.slice(0, Math.max(1, list.length - 3));
+      localStorage.setItem(WL_KEY, JSON.stringify(trimmed));
+      toast('⚠️ Lista estava cheia. Itens antigos removidos.');
+    } else {
+      throw e;
+    }
+  }
+}
 function isInWatchLater(id){return getWatchLater().some(x=>String(x.id)===String(id));}
 function addWatchLater(item){
   const list=getWatchLater();
   if(list.some(x=>String(x.id)===String(item.id))) return false;
-  list.unshift({id:item.id,type:item.type||item.media_type||'movie',title:item.title||item.name||'',poster:normalizePoster(item.poster||item.poster_path||''),backdrop:normalizePoster(item.backdrop||item.backdrop_path||''),release:item.release||item.release_date||item.first_air_date||'',overview:item.overview||'',rating:item.rating||item.vote_average||'',savedAt:Date.now()});
-  saveWatchLater(list); return true;
+  // Limita overview para evitar localStorage cheio (máx 500 chars)
+  const overview = (item.overview||'').substring(0,500);
+  list.unshift({
+    id:item.id,
+    type:item.type||item.media_type||'movie',
+    title:item.title||item.name||'',
+    poster:normalizePoster(item.poster||item.poster_path||''),
+    backdrop:normalizePoster(item.backdrop||item.backdrop_path||''),
+    release:item.release||item.release_date||item.first_air_date||'',
+    overview:overview,
+    rating:item.rating||item.vote_average||'',
+    savedAt:Date.now()
+  });
+  try{
+    saveWatchLater(list);
+    return true;
+  }catch(e){
+    console.error('[PureFlix] Erro ao salvar na lista:', e);
+    toast('❌ Erro: lista cheia ou dados muito grandes');
+    return false;
+  }
 }
 function removeWatchLater(id){saveWatchLater(getWatchLater().filter(x=>String(x.id)!==String(id)));}
 function toggleWatchLater(item){if(isInWatchLater(item.id)){removeWatchLater(item.id);return false;}else{addWatchLater(item);return true;}}
@@ -893,16 +927,27 @@ const store = {
 function getFavs(){ return store.get('pf_favs'); }
 function toggleFav(id,type,name,poster){
   const f=getFavs();
+  const isNowFav = !f[id];
   if(f[id]){ delete f[id]; toast('Removido dos favoritos'); }
   else{ f[id]={id,type,name,poster:normalizePoster(poster)}; toast('⭐ Adicionado aos favoritos!'); }
   store.set('pf_favs',f);
+  // Atualiza cards nos carrosséis
   document.querySelectorAll(`.card-btn.fav[data-id="${id}"]`).forEach(b=>{
     b.classList.toggle('fav-on',!!f[id]); b.title = f[id]?'Remover':'Favoritar';
   });
+  // Atualiza botão na página de detalhes (se existir)
+  const detBtn = document.querySelector('#det-btns button[onclick*="toggleFav"]');
+  if(detBtn){
+    detBtn.innerHTML = `<i class="fas fa-heart"></i> ${isNowFav?'Remover':'Favoritar'}`;
+  }
 }
 function getContinue(){ return store.get('pf_cont'); }
 function saveContinue(id,type,name,poster,season,ep){
-  const c=getContinue(); c[id]={id,type,name,poster:normalizePoster(poster),season,ep,ts:Date.now()};
+  const c=getContinue();
+  // Se já existe, preserva o poster atual se o novo estiver vazio
+  const existing = c[id] || {};
+  const finalPoster = normalizePoster(poster) || existing.poster || '';
+  c[id]={id,type,name,poster:finalPoster,season,ep,ts:Date.now()};
   store.set('pf_cont',c);
 }
 
@@ -2167,16 +2212,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
 function doToggleWatchLater(id, type, title, poster_path, release, overview, rating){
   const item = {
     id, type, title,
-    poster: poster_path ? (poster_path.startsWith('http') ? poster_path : poster_path) : '',
-    release, overview, rating
+    poster: normalizePoster(poster_path),
+    release, overview: (overview||'').substring(0,500), rating
   };
   const added = toggleWatchLater(item);
-  const btn = document.getElementById('wl-btn-'+id);
-  if(btn){
-    btn.innerHTML = added
-      ? '<i class="fas fa-bookmark"></i> Na Lista'
-      : '<i class="fas fa-bookmark"></i> Minha Lista';
-  }
+  // Atualiza TODOS os botões de Minha Lista na página (detalhes + cards)
+  document.querySelectorAll('[id^="wl-btn-"]').forEach(btn => {
+    const btnId = btn.id.replace('wl-btn-','');
+    if(String(btnId) === String(id)){
+      btn.innerHTML = added
+        ? '<i class="fas fa-bookmark"></i> Na Lista'
+        : '<i class="fas fa-bookmark"></i> Minha Lista';
+    }
+  });
   toast(added ? '🔖 Adicionado à Minha Lista!' : '🗑️ Removido da Minha Lista');
   if(added){
     addNotification(item);
