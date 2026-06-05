@@ -40,7 +40,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .avatar{width:30px;height:30px;background:var(--red);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
 
 /* Busca */
-#searchbar{position:fixed;top:var(--header-h);left:0;right:0;background:rgba(10,10,10,.97);padding:14px 4%;z-index:899;border-bottom:1px solid #222;display:none;}
+#searchbar{position:fixed;top:var(--header-h);left:0;right:0;background:linear-gradient(180deg,rgba(10,10,10,.98) 0%,rgba(10,10,10,.92) 100%);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:14px 4% 0;z-index:899;border-bottom:none;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4);}
 #searchbar.open{display:flex;gap:10px;}
 #searchbar input{flex:1;background:#1e1e1e;border:1px solid #333;border-radius:6px;padding:10px 16px;color:#fff;font-size:15px;font-family:'Barlow',sans-serif;outline:none;}
 #searchbar input:focus{border-color:#555;}
@@ -53,7 +53,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s;background:center/cover no-repeat;}
 .hero-slide.active{opacity:1;}
 .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.4) 40%,transparent 70%), linear-gradient(to right,rgba(10,10,10,.85) 0%,transparent 55%);}
-.hero-content{position:absolute;bottom:8%;left:4%;max-width:540px;z-index:10;}
+.hero-content{position:absolute;bottom:10%;left:4%;max-width:540px;z-index:10;}
 .hero-grad{background:linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,.6) 40%, transparent 100%);}
 .hero-tags{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
 .hero-tag{font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:2px;text-transform:uppercase;}
@@ -72,8 +72,8 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .hero-dot{width:6px;height:6px;background:rgba(255,255,255,.3);border-radius:50%;cursor:pointer;transition:all .3s;}
 .hero-dot.active{width:20px;border-radius:3px;background:var(--red);}
 
-#page-home{padding-bottom:60px;}
-.section{padding:0 4%;margin-top:24px;}
+#page-home{padding-bottom:60px;padding-top:8px;}
+.section{padding:0 4%;margin-top:32px;}
 .section-header{display:flex;align-items:baseline;gap:14px;margin-bottom:16px;}
 .section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;}
 
@@ -508,9 +508,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   #mobile-nav{display:none;}
 }
 </style>
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
+
 <base target="_blank">
 </head>
 <body>
@@ -525,7 +523,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
     <button class="nav-btn" onclick="showSection('brasil', event)">🇧🇷 Brasil</button>
     <button class="nav-btn" onclick="showFav(event)">Favoritos</button>
     <button class="nav-btn" onclick="showContinue(event)">Continuar</button>
-    <button class="nav-btn" onclick="window.location.href='assistir-mais-tarde.html'">🔖 Minha Lista</button>
+    <button class="nav-btn" onclick="showWatchLater(event)">🔖 Minha Lista</button>
   </div>
   <div class="header-right">
     <button onclick="toggleSearch()" title="Buscar"><i class="fas fa-search"></i></button>
@@ -551,7 +549,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   <button class="mob-cat" onclick="mobCat(this,'brasil')">🇧🇷 Brasil</button>
   <button class="mob-cat" onclick="mobCat(this,'fav')">Favoritos</button>
   <button class="mob-cat" onclick="mobCat(this,'continue')">Continuar</button>
-  <button class="mob-cat" onclick="window.location.href='assistir-mais-tarde.html'">🔖 Minha Lista</button>
+  <button class="mob-cat" onclick="mobCat(this,'watchlater')">🔖 Minha Lista</button>
 </div>
 
 <div id="page-home">
@@ -916,7 +914,7 @@ let heroItems=[], heroIdx=0, heroTimer;
 async function loadHero(){
   try{
     // Cache de 1h no localStorage
-    const HERO_KEY='pf_hero_cache', HERO_TTL=3600000;
+    const HERO_KEY='pf_hero_cache', HERO_TTL=1800000;
     const cached=store.get(HERO_KEY);
     let results;
     if(cached.ts && Date.now()-cached.ts < HERO_TTL && cached.items?.length){
@@ -942,7 +940,7 @@ async function loadHero(){
       dots.appendChild(d2);
     });
     renderHeroContent(0);
-    heroTimer=setInterval(()=>setHero((heroIdx+1)%heroItems.length),7000);
+    heroTimer=setInterval(()=>setHero((heroIdx+1)%heroItems.length),45000);
   }catch(err){}
 }
 function setHero(i){
@@ -1182,6 +1180,10 @@ async function goHome(e){
     loadSection(sec);
     await new Promise(r=>setTimeout(r,120));
   }
+  // Processa hash inicial após carregar (para links diretos de outras páginas)
+  if(window.location.hash.match(/^#(movie|tv)\/\d+/)){
+    window.onhashchange();
+  }
 }
 
 async function showSection(catId, e){
@@ -1232,6 +1234,42 @@ function showFav(e){
 
 function removeContinue(id){
   const c=getContinue(); delete c[id]; store.set('pf_cont',c);
+}
+
+function showWatchLater(e){
+  clearPage(true, e?.currentTarget||null);
+  const sc = document.getElementById('sections-container');
+  const list = getWatchLater();
+  if(!list.length){
+    sc.innerHTML = `<div class="section"><div class="empty-row" style="padding:60px">Sua lista está vazia. 🔖<br><span style="font-size:13px;color:#666;margin-top:8px;display:block;">Adicione filmes e séries clicando em "Minha Lista" nos detalhes.</span></div></div>`;
+    return;
+  }
+  const wrap = document.createElement('div');
+  wrap.className = 'section';
+  wrap.innerHTML = `<div class="section-header"><span class="section-title">🔖 Minha Lista</span><span style="color:var(--gray);font-size:13px;">${list.length} título${list.length>1?'s':''}</span></div>`;
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:flex;flex-wrap:wrap;gap:14px;';
+  list.forEach(item => {
+    const poster = normalizePoster(item.poster);
+    const card = document.createElement('div');
+    card.style.cssText = 'position:relative;flex-shrink:0;width:var(--card-w);cursor:pointer;';
+    card.onclick = () => openDetails(item.id, item.type);
+    card.innerHTML = `
+      <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:2/3;background:#111;" class="${poster?'':'no-img'}">
+        ${poster ? `<img src="${poster}" alt="${item.title||''}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('no-img');">` : ''}
+        <div style="position:absolute;top:6px;left:6px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px;">${item.type==='movie'?'FILME':'SÉRIE'}</div>
+        <button onclick="event.stopPropagation();removeWatchLater(${item.id});showWatchLater();"
+          style="position:absolute;top:6px;right:6px;width:24px;height:24px;background:rgba(0,0,0,.8);border:1px solid #555;border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:background .2s;"
+          onmouseover="this.style.background='var(--red)'" onmouseout="this.style.background='rgba(0,0,0,.8)'"
+          title="Remover da lista">✕</button>
+      </div>
+      <div style="margin-top:6px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.title||'Sem título'}</div>
+      ${item.type==='tv' && item.season?`<div style="font-size:11px;color:var(--gray);margin-top:2px;">T${item.season} · Ep ${item.episode||1}</div>`:''}
+    `;
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  sc.appendChild(wrap);
 }
 
 function showContinue(e){
@@ -2061,15 +2099,17 @@ function mobNav(btn, section){
   if(section==='home')       { goHome(null); syncMobileCat('home'); }
   else if(section==='fav')   { showFav(null); syncMobileCat('fav'); }
   else if(section==='continue'){ showContinue(null); syncMobileCat('continue'); }
+  else if(section==='watchlater'){ showWatchLater(null); syncMobileCat('watchlater'); }
 }
 function mobCat(btn, section){
   mobCatActive(btn);
   if(section==='home')        goHome(null);
   else if(section==='fav')    showFav(null);
   else if(section==='continue') showContinue(null);
+  else if(section==='watchlater') showWatchLater(null);
   else                        showSection(section, null);
   // Sincroniza bottom nav
-  const map = {home:'mbn-home',fav:'mbn-fav',continue:'mbn-continue'};
+  const map = {home:'mbn-home',fav:'mbn-fav',continue:'mbn-continue',watchlater:'mbn-watchlater'};
   if(map[section]){
     mobNavActive(document.getElementById(map[section]));
   } else {
@@ -2138,7 +2178,7 @@ function doToggleWatchLater(id, type, title, poster_path, release, overview, rat
   <button class="mob-nav-btn" id="mbn-continue" onclick="mobNav(this,'continue')">
     <i class="fas fa-play-circle"></i>Continuar
   </button>
-  <button class="mob-nav-btn" onclick="window.location.href='assistir-mais-tarde.html'">
+  <button class="mob-nav-btn" id="mbn-watchlater" onclick="mobNav(this,'watchlater')">
     <i class="fas fa-bookmark"></i>Minha Lista
   </button>
 </nav>
