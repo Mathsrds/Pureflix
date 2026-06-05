@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <title>Pureflix</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -30,7 +32,9 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
    ═══════════════════════════════════════════════════════ */
 #header{position:fixed;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;padding:0 4%;z-index:900;transition: background 0.4s, transform 0.3s ease-in-out;}
 #header.solid{background:var(--bg2);box-shadow:0 2px 20px rgba(0,0,0,.6);}
-.logo{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--red);letter-spacing:3px;cursor:pointer;margin-right:30px;flex-shrink:0;}
+.logo{cursor:pointer;margin-right:30px;flex-shrink:0;display:flex;align-items:center;}
+.logo-img{height:36px;width:auto;display:block;transition:transform .2s;}
+.logo:hover .logo-img{transform:scale(1.05);}
 .nav{display:flex;gap:6px;align-items:center;}
 .nav-btn{background:none;border:none;color:var(--gray);font-family:'Barlow',sans-serif;font-size:13px;padding:6px 10px;cursor:pointer;border-radius:4px;transition:all .2s;white-space:nowrap;}
 .nav-btn:hover,.nav-btn.active{color:var(--white);background:rgba(255,255,255,.08);}
@@ -415,7 +419,8 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   /* Header mobile: transparente no topo, escuro ao rolar */
   #header{padding:0 16px;background:transparent;transform:none!important;}
   #header.solid{background:rgba(10,10,10,.97)!important;box-shadow:0 2px 12px rgba(0,0,0,.6);}
-  .logo{font-size:26px;margin-right:0;}
+  .logo{margin-right:0;}
+.logo-img{height:28px;}
   .nav{display:none!important;}
   .header-right{gap:12px;}
   .header-right button{font-size:18px;}
@@ -514,7 +519,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 <body>
 
 <div id="header">
-  <div class="logo" onclick="goHome(event)">PUREFLIX</div>
+  <div class="logo" onclick="goHome(event)"><img src="logo.png" alt="Pureflix" class="logo-img"></div>
   <div class="nav">
     <button class="nav-btn active" onclick="goHome(event)">Início</button>
     <button class="nav-btn" onclick="showSection('movies', event)">Filmes</button>
