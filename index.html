@@ -53,7 +53,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 /* ═══════════════════════════════════════════════════════
    3. HERO (BANNER PRINCIPAL) E CARROSSÉIS
    ═══════════════════════════════════════════════════════ */
-#hero{height:70vh;position:relative;overflow:hidden;}
+#hero{height:78vh;position:relative;overflow:hidden;}
 .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s;background:center/cover no-repeat;}
 .hero-slide.active{opacity:1;}
 .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.4) 40%,transparent 70%), linear-gradient(to right,rgba(10,10,10,.85) 0%,transparent 55%);}
@@ -1277,7 +1277,7 @@ function showWatchLater(e){
   sc.appendChild(wrap);
 }
 
-function showContinue(e){
+async function showContinue(e){
   clearPage(true, e?.currentTarget||null);
   const cont=Object.values(getContinue()).sort((a,b)=>b.ts-a.ts);
   const sc=document.getElementById('sections-container');
@@ -1285,6 +1285,23 @@ function showContinue(e){
     sc.innerHTML=`<div class="section"><div class="empty-row" style="padding:60px">Nenhum conteúdo para continuar. 🎬</div></div>`;
     return;
   }
+
+  // Pré-busca posters faltantes da API
+  const missingPosters = cont.filter(f => !f.poster);
+  if(missingPosters.length){
+    await Promise.all(missingPosters.map(async f => {
+      try{
+        const d = await api(`/${f.type}/${f.id}`, {});
+        if(d && d.poster_path){
+          f.poster = `${IMG}/w500${d.poster_path}`;
+          // Atualiza no localStorage
+          const c = getContinue(); 
+          if(c[f.id]){ c[f.id].poster = f.poster; store.set('pf_cont',c); }
+        }
+      }catch(e){}
+    }));
+  }
+
   const sec=document.createElement('div');
   sec.className='section';
   sec.innerHTML=`<div class="section-header"><span class="section-title">▶️ Continuar Assistindo</span><span style="color:var(--gray);font-size:13px;">${cont.length} título${cont.length>1?'s':''}</span></div>`;
@@ -1325,7 +1342,7 @@ async function loadRecommendations(id, type) {
 
   try {
     const d = await api(`/${type}/${id}/recommendations`);
-    const items = (d.results || []).filter(m => m.poster_path).slice(0, 15);
+    const items = (d.results || []).filter(m => m.poster_path).slice(0, 24);
     
     if (items.length === 0) {
       container.style.display = 'none';
@@ -1809,8 +1826,8 @@ async function doLiveSearch(q){
       api('/search/tv',{query:q,region:'BR'})
     ]);
 
-    const movies = (mv.results||[]).filter(m=>m.poster_path).slice(0,5).map(m=>({...m,media_type:'movie'}));
-    const tvs = (tv.results||[]).filter(m=>m.poster_path).slice(0,5).map(m=>({...m,media_type:'tv'}));
+    const movies = (mv.results||[]).filter(m=>m.poster_path).slice(0,10).map(m=>({...m,media_type:'movie'}));
+    const tvs = (tv.results||[]).filter(m=>m.poster_path).slice(0,10).map(m=>({...m,media_type:'tv'}));
 
     let html = '';
 
