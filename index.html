@@ -212,6 +212,187 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .btn-close{position:fixed;top:16px;right:4%;width:38px;height:38px;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;z-index:960;transition:background .2s;}
 .btn-close:hover{background:var(--red);}
 
+
+/* ═══════════════════════════════════════════════════════
+   BARRA DE BUSCA FLUIDA + LIVE SEARCH DROPDOWN
+   ═══════════════════════════════════════════════════════ */
+#searchbar{
+  position:fixed;
+  top:var(--header-h);
+  left:0;
+  right:0;
+  z-index:899;
+  background:linear-gradient(180deg, rgba(10,10,10,.98) 0%, rgba(10,10,10,.95) 100%);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  transition:all .3s ease;
+  max-height:0;
+  overflow:hidden;
+}
+#searchbar.open{
+  display:flex;
+  max-height:85vh;
+  padding:12px 4% 0;
+}
+.searchbar-inner{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  max-width:700px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  padding:4px 16px;
+  transition:all .25s ease;
+}
+.searchbar-inner:focus-within{
+  background:rgba(255,255,255,.1);
+  border-color:rgba(255,255,255,.25);
+  box-shadow:0 0 0 3px rgba(229,9,20,.15);
+}
+.search-icon{
+  color:var(--gray);
+  font-size:16px;
+  flex-shrink:0;
+}
+#searchInput{
+  flex:1;
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:16px;
+  font-family:'Barlow',sans-serif;
+  padding:10px 0;
+  outline:none;
+}
+#searchInput::placeholder{color:rgba(255,255,255,.35);}
+.search-close{
+  background:none;
+  border:none;
+  color:var(--gray);
+  font-size:16px;
+  cursor:pointer;
+  padding:6px;
+  border-radius:50%;
+  transition:all .2s;
+  flex-shrink:0;
+  width:32px;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.search-close:hover{background:rgba(255,255,255,.1);color:#fff;}
+
+/* Dropdown de resultados live search */
+.search-dropdown{
+  width:100%;
+  max-width:700px;
+  margin-top:8px;
+  max-height:calc(85vh - 80px);
+  overflow-y:auto;
+  padding-bottom:16px;
+  display:none;
+}
+.search-dropdown.open{display:block;}
+.search-dropdown::-webkit-scrollbar{width:4px;}
+.search-dropdown::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
+
+.search-section-title{
+  font-size:11px;
+  font-weight:700;
+  color:var(--gray);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin:16px 0 8px;
+  padding:0 4px;
+}
+.search-result-item{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all .15s;
+  text-decoration:none;
+  color:inherit;
+}
+.search-result-item:hover{background:rgba(255,255,255,.08);}
+.search-result-item img{
+  width:40px;
+  height:60px;
+  border-radius:4px;
+  object-fit:cover;
+  background:#1a1a1a;
+  flex-shrink:0;
+}
+.search-result-item .sr-info{flex:1;min-width:0;}
+.search-result-item .sr-title{
+  font-size:14px;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-bottom:2px;
+}
+.search-result-item .sr-meta{
+  font-size:12px;
+  color:var(--gray);
+}
+.search-result-item .sr-badge{
+  font-size:10px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:4px;
+  text-transform:uppercase;
+  flex-shrink:0;
+}
+.search-result-item .sr-badge.movie{background:rgba(229,9,20,.2);color:#ff6b6b;}
+.search-result-item .sr-badge.tv{background:rgba(70,211,105,.15);color:var(--green);}
+
+.search-loading{
+  text-align:center;
+  padding:20px;
+  color:var(--gray);
+  font-size:13px;
+}
+.search-loading .spinner-inline{
+  width:20px;height:20px;
+  border:2px solid #333;
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  display:inline-block;
+  vertical-align:middle;
+  margin-right:8px;
+}
+.search-no-results{
+  text-align:center;
+  padding:24px;
+  color:var(--gray);
+  font-size:14px;
+}
+.search-view-all{
+  display:block;
+  text-align:center;
+  padding:10px;
+  margin-top:8px;
+  color:var(--red);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  border-radius:8px;
+  transition:all .15s;
+}
+.search-view-all:hover{background:rgba(229,9,20,.1);}
+
 /* Mobile Adapts */
 /* Navegação de episódios */
 .ep-nav-row{display:none;margin-top:14px;align-items:center;justify-content:space-between;gap:12px;}
@@ -241,7 +422,12 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   .avatar{width:28px;height:28px;font-size:12px;border-radius:4px;}
 
   /* Barra de busca mobile */
-  #searchbar{top:var(--header-h);padding:10px 16px;}
+  #searchbar.open{padding:10px 16px 0;}
+  .searchbar-inner{max-width:100%;padding:4px 12px;}
+  #searchInput{font-size:15px;padding:8px 0;}
+  .search-dropdown{max-width:100%;}
+  .search-result-item{padding:6px 8px;}
+  .search-result-item img{width:32px;height:48px;}
   #searchbar input{font-size:14px;padding:9px 14px;}
 
   /* Pills de categoria horizontais (abaixo do header) */
@@ -348,8 +534,12 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 </div>
 
 <div id="searchbar">
-  <input id="searchInput" type="text" placeholder="Buscar filmes, séries, animes..." onkeydown="if(event.key==='Enter')doSearch()">
-  <button onclick="doSearch()"><i class="fas fa-search"></i> Buscar</button>
+  <div class="searchbar-inner">
+    <i class="fas fa-search search-icon"></i>
+    <input id="searchInput" type="text" placeholder="Buscar filmes, séries, animes..." autocomplete="off" spellcheck="false">
+    <button class="search-close" onclick="toggleSearch()" title="Fechar"><i class="fas fa-times"></i></button>
+  </div>
+  <div id="search-dropdown" class="search-dropdown"></div>
 </div>
 
 <!-- Pills de categoria mobile -->
@@ -508,27 +698,36 @@ async function loadDirectDB(){
   if(_directPrm) return _directPrm;
   _directPrm = (async()=>{
     // Tenta múltiplos caminhos — resolve problemas de subpasta e servidor
+    const basePath = location.pathname.replace(/\/[^/]*$/, '/');
     const paths = [
       // URL absoluta do GitHub Pages (prioridade máxima)
       'https://mathsrds.github.io/Pureflix/direct_links.json',
-      // Caminhos relativos (fallback para outros servidores)
+      // Raw GitHub como fallback (se Pages estiver off)
+      'https://raw.githubusercontent.com/mathsrds/Pureflix/main/direct_links.json',
+      'https://raw.githubusercontent.com/mathsrds/Pureflix/master/direct_links.json',
+      // Caminhos relativos (fallback para hospedagem própria)
       'direct_links.json',
       './direct_links.json',
-      location.pathname.replace(/\/[^/]*$/, '/') + 'direct_links.json',
+      basePath + 'direct_links.json',
+      basePath + 'assets/direct_links.json',
+      basePath + 'data/direct_links.json',
     ];
+
     for(const path of paths){
       try{
-        const r = await fetch(path, { cache:'no-store' });
-        if(!r.ok) continue;
+        const r = await fetch(path, { cache:'no-store', mode:'cors' });
+        if(!r.ok){ console.log(`[PureFlix Direct] ❌ ${path} → HTTP ${r.status}`); continue; }
         const text = await r.text();
         // Verifica se é JSON válido (proteção contra HTML de erro 404)
-        if(text.trim().startsWith('<')) continue;
-        _directDB = JSON.parse(text);
+        if(text.trim().startsWith('<')){ console.log(`[PureFlix Direct] ❌ ${path} → respondeu HTML`); continue; }
+        // Tenta fazer parse
+        try{ _directDB = JSON.parse(text); }catch(parseErr){ console.log(`[PureFlix Direct] ❌ ${path} → JSON inválido`); continue; }
         console.log(`[PureFlix Direct] ✅ Carregado (${path}):`, Object.keys(_directDB).length, 'títulos');
         return _directDB;
-      }catch(e){ /* tenta próximo */ }
+      }catch(e){ console.log(`[PureFlix Direct] ❌ ${path} → ${e.message || 'erro de rede'}`); }
     }
-    console.warn('[PureFlix Direct] ⚠️ direct_links.json não encontrado — verifique se o arquivo está na mesma pasta do index.html');
+
+    console.warn('[PureFlix Direct] ⚠️ direct_links.json não encontrado em nenhum servidor. O PureFlix Direct estará indisponível, mas os outros players (EmbedMovies, VidSrc, etc.) continuam funcionando normalmente.');
     _directDB = {};
     return _directDB;
   })();
@@ -958,7 +1157,17 @@ function clearPage(hideHero, eventElement) {
   // Espaçamento: quando hero está oculto, garante distância do header
   sc.style.paddingTop = hideHero ? 'calc(var(--header-h) + 32px)' : '0';
   // Fecha a barra de busca sempre que mudar de seção
-  document.getElementById('searchbar').classList.remove('open');
+  const searchbar = document.getElementById('searchbar');
+  const dropdown = document.getElementById('search-dropdown');
+  if(searchbar){
+    searchbar.classList.remove('open');
+    if(dropdown){
+      dropdown.classList.remove('open');
+      dropdown.innerHTML = '';
+    }
+    const input = document.getElementById('searchInput');
+    if(input) input.value = '';
+  }
 
   if(eventElement) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1483,22 +1692,154 @@ function closeDetails() {
     clearTimeout(fallbackTimer);
 }
 
-// 13. BUSCA
+// 13. BUSCA FLUIDA + LIVE SEARCH
+let _searchDebounce = null;
+let _searchAbort = null;
+
 function toggleSearch(){
-  const b=document.getElementById('searchbar'); b.classList.toggle('open');
-  if(b.classList.contains('open')) document.getElementById('searchInput').focus();
+  const bar = document.getElementById('searchbar');
+  const input = document.getElementById('searchInput');
+  const dropdown = document.getElementById('search-dropdown');
+
+  if(bar.classList.contains('open')){
+    bar.classList.remove('open');
+    dropdown.classList.remove('open');
+    dropdown.innerHTML = '';
+    input.value = '';
+    input.blur();
+  } else {
+    bar.classList.add('open');
+    setTimeout(()=>input.focus(), 100);
+  }
 }
 
-async function doSearch(){
-  const q=document.getElementById('searchInput').value.trim(); if(!q) return;
-  document.getElementById('searchbar').classList.remove('open');
+// Fecha busca ao pressionar ESC
+ document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    const bar = document.getElementById('searchbar');
+    if(bar.classList.contains('open')) toggleSearch();
+  }
+});
+
+// Live search com debounce
+function initLiveSearch(){
+  const input = document.getElementById('searchInput');
+  if(!input) return;
+
+  input.addEventListener('input', (e)=>{
+    const q = e.target.value.trim();
+    const dropdown = document.getElementById('search-dropdown');
+
+    clearTimeout(_searchDebounce);
+    if(_searchAbort){ _searchAbort.abort(); _searchAbort = null; }
+
+    if(!q){
+      dropdown.innerHTML = '';
+      dropdown.classList.remove('open');
+      return;
+    }
+
+    dropdown.innerHTML = '<div class="search-loading"><div class="spinner-inline"></div> Buscando...</div>';
+    dropdown.classList.add('open');
+
+    _searchDebounce = setTimeout(()=> doLiveSearch(q), 350);
+  });
+
+  // Enter = busca completa na página
+  input.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+      clearTimeout(_searchDebounce);
+      if(_searchAbort){ _searchAbort.abort(); _searchAbort = null; }
+      doFullSearch(e.target.value.trim());
+    }
+  });
+}
+
+async function doLiveSearch(q){
+  if(!q || q.length < 2) return;
+  const dropdown = document.getElementById('search-dropdown');
+
+  try{
+    _searchAbort = new AbortController();
+    const [mv,tv] = await Promise.all([
+      api('/search/movie',{query:q,region:'BR'}),
+      api('/search/tv',{query:q,region:'BR'})
+    ]);
+
+    const movies = (mv.results||[]).filter(m=>m.poster_path).slice(0,5).map(m=>({...m,media_type:'movie'}));
+    const tvs = (tv.results||[]).filter(m=>m.poster_path).slice(0,5).map(m=>({...m,media_type:'tv'}));
+
+    let html = '';
+
+    if(movies.length){
+      html += `<div class="search-section-title">🎬 Filmes</div>`;
+      movies.forEach(m=>{
+        const year = (m.release_date||'').split('-')[0];
+        const rating = m.vote_average ? `⭐ ${m.vote_average.toFixed(1)}` : '';
+        html += `
+          <div class="search-result-item" onclick="openDetails(${m.id},'movie');toggleSearch();">
+            <img src="${IMG}/w200${m.poster_path}" alt="${m.title}" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <div class="sr-info">
+              <div class="sr-title">${m.title}</div>
+              <div class="sr-meta">${rating} ${year}</div>
+            </div>
+            <span class="sr-badge movie">Filme</span>
+          </div>`;
+      });
+    }
+
+    if(tvs.length){
+      html += `<div class="search-section-title">📺 Séries</div>`;
+      tvs.forEach(m=>{
+        const year = (m.first_air_date||'').split('-')[0];
+        const rating = m.vote_average ? `⭐ ${m.vote_average.toFixed(1)}` : '';
+        html += `
+          <div class="search-result-item" onclick="openDetails(${m.id},'tv');toggleSearch();">
+            <img src="${IMG}/w200${m.poster_path}" alt="${m.name}" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <div class="sr-info">
+              <div class="sr-title">${m.name}</div>
+              <div class="sr-meta">${rating} ${year}</div>
+            </div>
+            <span class="sr-badge tv">Série</span>
+          </div>`;
+      });
+    }
+
+    if(!movies.length && !tvs.length){
+      html = `<div class="search-no-results">Nenhum resultado para "${q}" 😕</div>`;
+    } else {
+      html += `<div class="search-view-all" onclick="doFullSearch('${q.replace(/'/g,"\'")}')">Ver todos os resultados →</div>`;
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.classList.add('open');
+
+  }catch(e){
+    dropdown.innerHTML = `<div class="search-no-results">Erro na busca. Tente novamente.</div>`;
+  }
+}
+
+async function doFullSearch(q){
+  if(!q) return;
+  toggleSearch();
   clearPage(true, null);
+
+  const sc = document.getElementById('sections-container');
+  sc.innerHTML = '<div class="section"><div class="search-loading" style="padding:60px"><div class="spinner-inline"></div> Buscando resultados...</div></div>';
+
   try{
     const [mv,tv]=await Promise.all([ api('/search/movie',{query:q,region:'BR'}), api('/search/tv',{query:q,region:'BR'}) ]);
     const all=[...(mv.results||[]).map(m=>({...m,media_type:'movie'})), ...(tv.results||[]).map(m=>({...m,media_type:'tv'}))]
               .filter(m=>m.poster_path).sort((a,b)=>b.popularity-a.popularity);
-    document.getElementById('sections-container').appendChild(makeCarousel({id:'search',title:`🔎 Resultados para "${q}"`,endpoint:'',params:{}},all,'movie'));
-  }catch(e){}
+    sc.innerHTML = '';
+    if(!all.length){
+      sc.innerHTML = `<div class="section"><div class="empty-row" style="padding:60px">Nenhum resultado para "${q}" 😕</div></div>`;
+      return;
+    }
+    sc.appendChild(makeCarousel({id:'search',title:`🔎 Resultados para "${q}"`,endpoint:'',params:{}},all,'movie'));
+  }catch(e){
+    sc.innerHTML = `<div class="section"><div class="empty-row" style="padding:60px">Erro na busca. Tente novamente.</div></div>`;
+  }
 }
 
 // 14. EVENTOS DE JANELA E SCROLL INTELIGENTE
@@ -1525,61 +1866,145 @@ window.addEventListener('scroll', () => {
 
 
 // ══════════════════════════════════════════════════════════════
-// 16. BLOQUEADOR AGRESSIVO DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
+// 16. BLOQUEADOR INTELIGENTE DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
 // ══════════════════════════════════════════════════════════════
 (function(){
 
-  // ── A. Bloqueio AGRESSIVO de popups e janelas ──
+  // ── LISTA DE DOMÍNIOS DE PLAYERS LEGÍTIMOS ──
+  // Estes domínios NUNCA serão bloqueados pelo anti-anúncio
+  const ALLOWED_DOMAINS = [
+    'vidsrc.to', 'vidsrc.me', 'vidsrc.pro',
+    'cdn-embed.com', 'embedmovies.org',
+    'warezcdn.site', 'warezcdn.lat',
+    '2embed.cc', '2embed.ru',
+    'multiembed.mov', 'multiembed.cc',
+    'autoembed.co', 'autoembed.cc',
+    'youtube.com', 'youtu.be', 'googlevideo.com',
+    'blogger.com', 'blogspot.com',
+    'jwpcdn.com', 'jwplayer.com',
+    'cloudflare.com', 'cdnjs.cloudflare.com',
+    'jsdelivr.net', 'unpkg.com',
+    'themoviedb.org', 'tmdb.org',
+    'image.tmdb.org'
+  ];
+
+  function isAllowedUrl(url){
+    if(!url) return false;
+    try{
+      const u = new URL(url, window.location.href);
+      return ALLOWED_DOMAINS.some(d => u.hostname.includes(d));
+    }catch(e){ return false; }
+  }
+
+  // ── A. Bloqueio INTELIGENTE de popups ──
+  // Só bloqueia popups que NÃO são de players legítimos
   const _origOpen = window.open;
   window.open = function(url, target, features){
+    if(isAllowedUrl(url)){
+      console.log('[PureFlix] popup de player permitido:', url);
+      return _origOpen.call(window, url, target, features);
+    }
     console.log('[PureFlix] popup bloqueado:', url);
     return null;
   };
-  // Bloqueia também window.open via prototype (alguns scripts sobrescrevem)
-  try{ delete window.open; window.open = function(){ return null; }; }catch(e){}
 
-  // Bloqueia clicar em links _blank antes de abrir
-  document.addEventListener('click', function(e){
-    const a = e.target.tagName === 'A' ? e.target : e.target.closest('a');
-    if(a && (a.target === '_blank' || a.getAttribute('rel')==='noopener noreferrer')){
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('[PureFlix] link externo bloqueado');
-      return false;
-    }
-  }, true);
-
-  // ── B. Proteção contra redirecionamento forçado da página ──
+  // ── B. Proteção contra redirecionamento FORÇADO por anúncios ──
+  // Só bloqueia se a URL de destino NÃO for um player legítimo
+  let _lastNavTime = 0;
   window.addEventListener('beforeunload', function(e){
-    // Se o hash indica que estamos assistindo, confirma antes de sair
+    // Se o hash indica que estamos assistindo
     if(window.location.hash.match(/^#(movie|tv)\/\d+/)){
-      e.preventDefault();
-      e.returnValue = '';
-      return '';
+      // Só bloqueia se foi há menos de 2 segundos (redirecionamento forçado)
+      if(Date.now() - _lastNavTime < 2000){
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
     }
   });
+  // Marca quando o usuário clicou em algo legítimo
+  document.addEventListener('click', ()=>{ _lastNavTime = Date.now(); }, true);
 
-  // ── C. Bloquear dialogs irritantes de embeds ──
+  // ── C. Bloquear dialogs de ANÚNCIOS (não de players) ──
+  // Só bloqueia se o caller não for um iframe de player
+  function isFromPlayerFrame(){
+    try{
+      // Se estamos dentro de um iframe, verificar se é o player-frame
+      return window.frameElement && window.frameElement.id === 'player-frame';
+    }catch(e){ return false; }
+  }
   try{
-    window.alert   = function(){ console.log('[PureFlix] alert bloqueado'); };
-    window.confirm = function(){ console.log('[PureFlix] confirm bloqueado'); return false; };
-    window.prompt  = function(){ console.log('[PureFlix] prompt bloqueado'); return null; };
+    const _origAlert = window.alert;
+    window.alert = function(msg){
+      if(isFromPlayerFrame()){ console.log('[PureFlix] alert de player permitido:', msg); return _origAlert(msg); }
+      console.log('[PureFlix] alert bloqueado:', msg);
+    };
+    const _origConfirm = window.confirm;
+    window.confirm = function(msg){
+      if(isFromPlayerFrame()) return _origConfirm(msg);
+      console.log('[PureFlix] confirm bloqueado:', msg); return false;
+    };
+    const _origPrompt = window.prompt;
+    window.prompt = function(msg){
+      if(isFromPlayerFrame()) return _origPrompt(msg);
+      console.log('[PureFlix] prompt bloqueado:', msg); return null;
+    };
   }catch(e){}
 
-  // ── D. Impedir que iframes recém-inseridos escapem do sandbox ──
+  // ── D. Proteção contra iframes de ANÚNCIOS ──
+  // Só aplica sandbox restrito a iframes que PARECEM ser anúncios
   const _origAppend = Element.prototype.appendChild;
   Element.prototype.appendChild = function(node){
     if(node && node.tagName === 'IFRAME' && node.id !== 'player-frame'){
-      // Iframes injetados por scripts (ads, popups) recebem sandbox MÍNIMO
-      // SEM allow-same-origin (impede escape) e SEM allow-forms (impede submits de ads)
-      node.setAttribute('sandbox','allow-scripts allow-presentation');
-      node.removeAttribute('allow-popups');
-      node.removeAttribute('allow-top-navigation');
+      const src = node.src || node.getAttribute('src') || '';
+      const width = node.width || node.style.width || '';
+      const height = node.height || node.style.height || '';
+
+      // Se o iframe é de um player legítimo, NÃO toca no sandbox
+      if(isAllowedUrl(src)){
+        console.log('[PureFlix] iframe de player permitido:', src);
+        return _origAppend.call(this, node);
+      }
+
+      // Se o iframe é muito pequeno (provável anúncio) ou invisível
+      const isTiny = (parseInt(width) > 0 && parseInt(width) < 100) || 
+                   (parseInt(height) > 0 && parseInt(height) < 100);
+      const isHidden = node.style.display === 'none' || node.style.visibility === 'hidden' ||
+                       node.style.opacity === '0' || node.getAttribute('hidden') !== null;
+
+      if(isTiny || isHidden || !src){
+        // Anúncio detectado: sandbox restrito
+        node.setAttribute('sandbox','allow-scripts allow-presentation');
+        node.removeAttribute('allow-popups');
+        node.removeAttribute('allow-top-navigation');
+        console.log('[PureFlix] iframe de anúncio sandboxed');
+      }
+      // Se não parece anúncio, deixa como está (pode ser componente legítimo)
     }
     return _origAppend.call(this, node);
   };
 
-  // ── B. Auto-Resume: salva estado com localStorage para sobreviver a redirects ──
+  // ── E. Bloquear links _blank SUSPEITOS ──
+  // Permite links de players, bloqueia links de anúncios
+  document.addEventListener('click', function(e){
+    const a = e.target.tagName === 'A' ? e.target : e.target.closest('a');
+    if(!a) return;
+    const href = a.href || a.getAttribute('href') || '';
+    const target = a.target || '';
+    const rel = a.getAttribute('rel') || '';
+
+    // Só bloqueia se for _blank E não for domínio permitido
+    if(target === '_blank' || rel.includes('noopener')){
+      if(!isAllowedUrl(href)){
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('[PureFlix] link externo de anúncio bloqueado:', href);
+        return false;
+      }
+    }
+  }, true);
+
+  // ── F. Auto-Resume: salva estado com localStorage ──
   function pfSaveWatching(){
     try{
       localStorage.setItem('pf_watching', JSON.stringify({
@@ -1597,25 +2022,20 @@ window.addEventListener('scroll', () => {
       const raw = localStorage.getItem('pf_watching');
       if(!raw) return;
       const w = JSON.parse(raw);
-      // Só restaura se foi há menos de 30 segundos (saiu por anúncio)
       if(!w || (Date.now() - w.ts) > 30000) return;
       localStorage.removeItem('pf_watching');
       if(w.hash && w.hash.match(/^#(movie|tv)\/\d+/)){
-        // Redireciona de volta para o filme/série
         setTimeout(()=>{ window.location.hash = w.hash; }, 300);
       }
     }catch(e){}
   }
 
-  // Salva sempre que o usuário está assistindo
   window.addEventListener('pagehide',        pfSaveWatching);
   window.addEventListener('visibilitychange', ()=>{ if(document.hidden) pfSaveWatching(); });
-
-  // Restaura ao carregar/voltar para a página
   pfRestoreWatching();
   window.addEventListener('pageshow', (e)=>{ if(e.persisted) pfRestoreWatching(); });
 
-  console.log('[PureFlix] Proteção ativa ✓');
+  console.log('[PureFlix] Proteção inteligente ativa ✓');
 })();
 
 
@@ -1677,6 +2097,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // Pré-carrega links diretos em background — getDirectLink() aguarda automaticamente
   loadDirectDB().catch(e => console.error('[PureFlix Direct] Erro no pré-carregamento:', e));
   loadHero(); goHome(null); window.onhashchange();
+  // Inicializa live search
+  initLiveSearch();
 })();
 
 // Função para toggling da Minha Lista diretamente do index
