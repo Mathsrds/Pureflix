@@ -641,19 +641,6 @@ function saveWatchLater(list){
   }
 }
 function isInWatchLater(id){return getWatchLater().some(x=>String(x.id)===String(id));}
-// Escapa string para uso seguro em atributos HTML onclick
-function escapeHtmlAttr(str){
-  if(!str) return '';
-  return String(str)
-    .replace(/\/g,'\\')
-    .replace(/'/g,"\'")
-    .replace(/"/g,'\"')
-    .replace(/
-/g,'\n')
-    .replace(/
-/g,'\r');
-}
-
 function addWatchLater(item){
   const list=getWatchLater();
   if(list.some(x=>String(x.id)===String(item.id))) return false;
@@ -942,19 +929,17 @@ function toggleFav(id,type,name,poster){
   const f=getFavs();
   const isNowFav = !f[id];
   if(f[id]){ delete f[id]; toast('Removido dos favoritos'); }
-  else{ f[id]={id,type,name:name||'',poster:normalizePoster(poster)}; toast('⭐ Adicionado aos favoritos!'); }
+  else{ f[id]={id,type,name,poster:normalizePoster(poster)}; toast('⭐ Adicionado aos favoritos!'); }
   store.set('pf_favs',f);
   // Atualiza cards nos carrosséis
   document.querySelectorAll(`.card-btn.fav[data-id="${id}"]`).forEach(b=>{
     b.classList.toggle('fav-on',!!f[id]); b.title = f[id]?'Remover':'Favoritar';
   });
   // Atualiza botão na página de detalhes (se existir)
-  const detBtns = document.querySelectorAll('#det-btns button');
-  detBtns.forEach(btn => {
-    if(btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleFav')){
-      btn.innerHTML = `<i class="fas fa-heart"></i> ${isNowFav?'Remover':'Favoritar'}`;
-    }
-  });
+  const detBtn = document.querySelector('#det-btns button[onclick*="toggleFav"]');
+  if(detBtn){
+    detBtn.innerHTML = `<i class="fas fa-heart"></i> ${isNowFav?'Remover':'Favoritar'}`;
+  }
 }
 function getContinue(){ return store.get('pf_cont'); }
 function saveContinue(id,type,name,poster,season,ep){
@@ -1763,21 +1748,13 @@ async function openDetails(id,type){
     document.getElementById('det-synopsis').textContent=m.overview||'Sinopse não disponível.';
     
     const trailer=(m.videos?.results||[]).find(v=>v.type==='Trailer'&&v.site==='YouTube');
-    // Armazena dados do item atual para uso seguro (evita quebrar HTML com aspas no título/overview)
-    window._currentItem = {
-      id, type, name: m.title||m.name||'',
-      poster: m.poster_path?IMG+'/w500'+m.poster_path:'',
-      release: m.release_date||m.first_air_date||'',
-      overview: m.overview||'',
-      rating: m.vote_average||0
-    };
     document.getElementById('det-btns').innerHTML=`
       <button class="btn-watch" onclick="loadServer(0)"><i class="fas fa-play"></i> Assistir</button>
       ${trailer?`<button class="btn-more" onclick="openTrailer('${trailer.key}')"><i class="fab fa-youtube"></i> Trailer</button>`:''}
-      <button class="btn-more" onclick="toggleFav(${id},'${type}','${escapeHtmlAttr(name)}','${escapeHtmlAttr(m.poster_path?IMG+'/w500'+m.poster_path:'')}')"\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
+      <button class="btn-more" onclick="toggleFav(${id},'${type}','${name.replace(/'/g,"\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
         <i class="fas fa-heart"></i> ${getFavs()[id]?'Remover':'Favoritar'}
       </button>
-      <button class="btn-more" id="wl-btn-${id}" onclick="doToggleWatchLater(${id})">
+      <button class="btn-more" id="wl-btn-${id}" onclick="doToggleWatchLater(${id},'${type}','${name.replace(/'/g,"\\'")}','${m.poster_path||''}','${m.release_date||m.first_air_date||''}','${m.overview||''}',${m.vote_average||0})">
         <i class="fas fa-bookmark"></i> ${isInWatchLater(id)?'Na Lista':'Minha Lista'}
       </button>
     `;
@@ -2232,26 +2209,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })();
 
 // Função para toggling da Minha Lista diretamente do index
-function doToggleWatchLater(id){
-  // Busca dados do item atual (armazenado em openDetails) ou do cache
-  let itemData = window._currentItem;
-  if(!itemData || String(itemData.id) !== String(id)){
-    // Fallback: tenta reconstruir do que temos
-    const fav = getFavs()[id];
-    itemData = { id, type: curType||'movie', name: 'Título '+id, poster: '', release: '', overview: '', rating: 0 };
-    if(fav){ itemData.name = fav.name; itemData.poster = fav.poster; itemData.type = fav.type; }
-  }
-
+function doToggleWatchLater(id, type, title, poster_path, release, overview, rating){
   const item = {
-    id: itemData.id,
-    type: itemData.type,
-    title: itemData.name,
-    poster: normalizePoster(itemData.poster),
-    release: itemData.release,
-    overview: (itemData.overview||'').substring(0,500),
-    rating: itemData.rating
+    id, type, title,
+    poster: normalizePoster(poster_path),
+    release, overview: (overview||'').substring(0,500), rating
   };
-
   const added = toggleWatchLater(item);
   // Atualiza TODOS os botões de Minha Lista na página (detalhes + cards)
   document.querySelectorAll('[id^="wl-btn-"]').forEach(btn => {
