@@ -866,6 +866,680 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   .ep-poster{width:170px;}
   .list-grid{grid-template-columns:repeat(6,1fr);}
 }
+
+/* ═══════════════════════════════════════════════════════
+   CALENDÁRIO PUREFLIX — ESTILO EXCLUSIVO
+   ═══════════════════════════════════════════════════════ */
+
+/* Hero do Calendário */
+.cal-hero{
+  position:relative;
+  height:50vh;min-height:300px;max-height:480px;
+  display:flex;align-items:flex-end;
+  padding:0 4% 48px;
+  margin-bottom:32px;
+  overflow:hidden;
+}
+.cal-hero::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.5) 50%,rgba(10,10,10,.2) 100%);
+  z-index:1;
+}
+.cal-hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 100%, rgba(229,9,20,.15) 0%, transparent 60%);
+  z-index:1;pointer-events:none;
+}
+.cal-hero-bg{
+  position:absolute;inset:0;
+  background:center/cover no-repeat;
+  filter:blur(8px) brightness(.35) saturate(1.2);
+  transform:scale(1.1);
+  transition:transform 8s ease;
+}
+.cal-hero:hover .cal-hero-bg{transform:scale(1.15);}
+.cal-hero-content{position:relative;z-index:2;max-width:640px;}
+.cal-hero-pretitle{
+  font-size:12px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--red);
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.cal-hero-pretitle::before{
+  content:'';width:24px;height:2px;background:var(--red);border-radius:2px;
+}
+.cal-hero-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:52px;font-weight:900;
+  letter-spacing:.5px;line-height:.95;
+  margin-bottom:14px;
+  background:linear-gradient(to right,#fff 60%,var(--red));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.cal-hero-sub{
+  font-size:15px;color:var(--gray);line-height:1.6;
+  max-width:520px;margin-bottom:18px;
+}
+.cal-hero-stats{
+  display:flex;gap:20px;align-items:center;
+}
+.cal-stat{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  padding:8px 18px;border-radius:8px;
+  font-size:13px;font-weight:600;color:#ccc;
+}
+.cal-stat i{color:var(--red);font-size:14px;}
+.cal-stat strong{color:#fff;font-weight:700;}
+
+/* Banner de hoje — estilo destaque */
+.today-banner{
+  margin:0 4% 32px;
+  background:linear-gradient(135deg, rgba(229,9,20,.18), rgba(229,9,20,.05));
+  border:1px solid rgba(229,9,20,.25);
+  border-radius:16px;
+  padding:20px 28px;
+  display:flex;align-items:center;gap:18px;
+  position:relative;overflow:hidden;
+  animation:pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow{
+  0%,100%{box-shadow:0 0 0 rgba(229,9,20,0);}
+  50%{box-shadow:0 0 30px rgba(229,9,20,.15);}
+}
+.today-banner::before{
+  content:'';position:absolute;top:-50%;left:-10%;width:40%;height:200%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),transparent);
+  transform:rotate(25deg);animation:shine 6s infinite;
+}
+@keyframes shine{
+  0%{left:-60%;} 20%{left:120%;} 100%{left:120%;}
+}
+.today-banner i{
+  font-size:32px;color:var(--red);
+  filter:drop-shadow(0 0 8px rgba(229,9,20,.5));
+  flex-shrink:0;
+}
+.today-banner-text strong{
+  font-size:18px;font-weight:800;color:#fff;display:block;margin-bottom:4px;
+}
+.today-banner-text p{
+  font-size:13px;color:var(--gray);margin:0;
+}
+
+/* Grupos de dia redesenhados */
+.day-group{margin-bottom:44px;animation:fade-up .5s ease both;}
+@keyframes fade-up{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.day-header{
+  display:flex;align-items:center;gap:14px;
+  padding:0 4%;margin-bottom:20px;
+}
+.day-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;font-weight:900;
+  letter-spacing:.5px;
+  white-space:nowrap;
+  position:relative;
+}
+.day-label.today{
+  color:var(--red);
+  text-shadow:0 0 20px rgba(229,9,20,.3);
+}
+.day-label.future{color:var(--green);}
+.day-label.past{color:var(--gray);}
+.day-badge{
+  font-size:10px;font-weight:800;
+  letter-spacing:1.5px;padding:5px 12px;
+  border-radius:20px;text-transform:uppercase;
+}
+.day-badge.hoje{
+  background:var(--red);color:#fff;
+  box-shadow:0 4px 16px rgba(229,9,20,.4);
+}
+.day-badge.novo{
+  background:var(--green);color:#000;
+}
+.day-badge.atrasado{
+  background:var(--orange);color:#000;
+}
+.day-badge.count{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:#888;font-size:9px;font-weight:700;
+  padding:4px 10px;border-radius:12px;
+}
+.day-line{
+  flex:1;height:1px;
+  background:linear-gradient(to right,rgba(255,255,255,.12),transparent);
+}
+
+/* Carrossel horizontal */
+.h-scroll{
+  display:flex;gap:14px;
+  padding:4px 4% 18px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.h-scroll::-webkit-scrollbar{display:none;}
+
+/* Card de episódio — redesenhado */
+.ep-card{
+  flex-shrink:0;
+  width:155px;
+  cursor:pointer;
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  background:linear-gradient(160deg,#1c1c1c,#111);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 6px 20px rgba(0,0,0,.5);
+  transition:transform .28s cubic-bezier(.25,.46,.45,.94),box-shadow .28s;
+}
+.ep-card:hover{
+  transform:translateY(-8px) scale(1.04);
+  box-shadow:0 20px 40px rgba(0,0,0,.7);
+  border-color:rgba(255,255,255,.15);
+}
+.ep-card:active{transform:scale(.97);}
+
+.ep-poster{
+  width:155px;aspect-ratio:2/3;
+  background:#1a1a1a;
+  position:relative;
+  overflow:hidden;
+}
+.ep-poster img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;transition:transform .4s ease;
+}
+.ep-card:hover .ep-poster img{transform:scale(1.08);}
+
+/* Placeholder sem imagem */
+.ep-poster .no-img{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;font-size:40px;
+  background:linear-gradient(135deg,#1a1a1a,#111);
+}
+.ep-poster .no-img span{
+  font-size:10px;color:#444;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+}
+
+/* Status badges com glow por tipo */
+.ep-status{
+  position:absolute;top:8px;left:8px;
+  font-size:9px;font-weight:900;
+  letter-spacing:1px;
+  padding:4px 10px;border-radius:6px;
+  text-transform:uppercase;
+  line-height:1;
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.1);
+}
+.ep-status.hoje{
+  background:var(--red);color:#fff;
+  box-shadow:0 4px 16px rgba(229,9,20,.5);
+  border-color:rgba(229,9,20,.5);
+  animation:pulse-badge 2s ease-in-out infinite;
+}
+@keyframes pulse-badge{
+  0%,100%{box-shadow:0 4px 16px rgba(229,9,20,.5);}
+  50%{box-shadow:0 4px 24px rgba(229,9,20,.8);}
+}
+.ep-status.atualizado{
+  background:rgba(70,211,105,.9);color:#000;
+  box-shadow:0 4px 12px rgba(70,211,105,.3);
+}
+.ep-status.futuro{
+  background:rgba(0,0,0,.7);
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;
+}
+.ep-status.atrasado{
+  background:var(--orange);color:#000;
+}
+
+/* Badge de tipo (canto superior direito) */
+.ep-type-badge{
+  position:absolute;top:8px;right:8px;
+  font-size:9px;font-weight:900;
+  letter-spacing:.5px;
+  padding:3px 8px;border-radius:4px;
+  text-transform:uppercase;
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.15);
+  z-index:2;
+}
+.ep-type-badge.anime{
+  background:rgba(255,107,157,.2);color:#ff6b9d;border-color:rgba(255,107,157,.4);
+}
+.ep-type-badge.serie{
+  background:rgba(78,205,196,.2);color:#4ecdc4;border-color:rgba(78,205,196,.4);
+}
+.ep-type-badge.dorama{
+  background:rgba(167,139,250,.2);color:#a78bfa;border-color:rgba(167,139,250,.4);
+}
+.ep-type-badge.filme{
+  background:rgba(245,197,24,.2);color:#f5c518;border-color:rgba(245,197,24,.4);
+}
+
+/* Lista badge */
+.ep-list-badge{
+  position:absolute;bottom:10px;right:10px;
+  background:var(--red);color:#fff;font-size:9px;font-weight:800;
+  padding:4px 8px;border-radius:5px;letter-spacing:.5px;
+  pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.4);
+}
+
+/* Overlay para passados */
+.ep-poster.past::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(0,0,0,.25);
+}
+
+/* Info do card */
+.ep-info{padding:12px 12px 14px;}
+.ep-title{
+  font-size:13px;font-weight:700;
+  line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;color:#f0f0f0;margin-bottom:6px;
+  transition:color .2s;
+}
+.ep-card:hover .ep-title{color:#fff;}
+.ep-meta{
+  font-size:10px;color:var(--gray);
+  display:flex;flex-direction:column;gap:3px;
+}
+.ep-ep{
+  font-size:11px;color:#aaa;font-weight:700;
+  letter-spacing:.3px;
+}
+.ep-countdown{
+  font-size:10px;font-weight:700;
+  color:var(--green);
+  display:flex;align-items:center;gap:4px;
+  margin-top:4px;
+}
+.ep-countdown i{font-size:9px;}
+
+/* Info da janela redesenhada */
+.cal-window-info{
+  margin:0 4% 28px;
+  background:linear-gradient(90deg, rgba(229,9,20,.1), rgba(229,9,20,.02));
+  border-left:3px solid var(--red);
+  padding:14px 20px;
+  border-radius:0 12px 12px 0;
+  display:flex;align-items:center;gap:14px;
+}
+.cal-window-info i{color:var(--red);font-size:18px;}
+.cal-window-info p{
+  font-size:13px;
+  color:var(--gray);
+  line-height:1.5;
+  margin:0;
+}
+.cal-window-info strong{color:#fff;font-weight:700;}
+
+/* Calendário mensal grid — estilo melhorado */
+.cal-grid-wrap{padding:0 4%;margin-bottom:40px;}
+.cal-grid-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;
+  letter-spacing:.5px;
+  color:#fff;
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.cal-grid-title::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,rgba(255,255,255,.1),transparent);
+}
+.cal-grid{
+  display:grid;
+  grid-template-columns:repeat(7, 1fr);
+  gap:8px;
+}
+.cal-head{
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  color:#555;
+  padding:10px 0;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.cal-day{
+  aspect-ratio:1;
+  border-radius:12px;
+  background:#151515;
+  border:1px solid rgba(255,255,255,.04);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  cursor:default;
+  transition:all .2s;
+  min-height:55px;
+  font-size:15px;
+  font-weight:700;
+  color:#888;
+}
+.cal-day.empty{
+  background:transparent;
+  border:none;
+}
+.cal-day.has-content{
+  background:linear-gradient(135deg, rgba(229,9,20,.12), rgba(229,9,20,.04));
+  border-color:rgba(229,9,20,.25);
+  cursor:pointer;
+  color:var(--red);
+  font-weight:800;
+  box-shadow:0 4px 12px rgba(229,9,20,.1);
+}
+.cal-day.has-content:hover{
+  background:linear-gradient(135deg, rgba(229,9,20,.2), rgba(229,9,20,.08));
+  border-color:var(--red);
+  transform:scale(1.08);
+  box-shadow:0 8px 24px rgba(229,9,20,.2);
+}
+.cal-day.is-today{
+  background:var(--red) !important;
+  border-color:var(--red) !important;
+  color:#fff !important;
+  font-size:18px;
+  box-shadow:0 8px 24px rgba(229,9,20,.4);
+  animation:pulse-today 2s ease-in-out infinite;
+}
+@keyframes pulse-today{
+  0%,100%{box-shadow:0 8px 24px rgba(229,9,20,.4);}
+  50%{box-shadow:0 8px 32px rgba(229,9,20,.7);}
+}
+.cal-day.is-today.has-content{
+  background:linear-gradient(135deg, var(--red), #ff4444) !important;
+}
+.cal-day.is-past{opacity:.55;}
+.cal-day.is-past .cal-day-num{color:#555;}
+.cal-day.is-future .cal-day-num{color:#aaa;}
+.cal-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--red);
+  margin-top:4px;
+  box-shadow:0 0 6px var(--red);
+}
+
+/* Calendário visual mensal — estilo melhorado */
+.cal-visual-wrap{padding:0 4%;margin-bottom:48px;}
+.cal-visual-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:24px;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.cal-visual-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:32px;font-weight:900;
+  letter-spacing:.5px;
+  color:#fff;
+  position:relative;
+  padding-bottom:8px;
+}
+.cal-visual-title::after{
+  content:'';position:absolute;bottom:0;left:0;width:40px;height:3px;
+  background:var(--red);border-radius:2px;
+}
+.cal-visual-subtitle{
+  font-size:13px;color:var(--gray);
+  margin-top:6px;
+}
+.cal-visual-legend{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.cal-legend-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;color:var(--gray);
+}
+.cal-legend-dot{
+  width:8px;height:8px;border-radius:50%;
+}
+.cal-legend-dot.hoje{background:var(--red);box-shadow:0 0 6px var(--red);}
+.cal-legend-dot.passado{background:#555;}
+.cal-legend-dot.futuro{background:var(--green);}
+.cal-legend-dot.lancamento{background:var(--red);box-shadow:0 0 8px var(--red);}
+
+/* Calendário visual — células redesenhadas */
+.cal-table{
+  display:grid;
+  grid-template-columns:repeat(7, 1fr);
+  gap:8px;
+}
+.cal-table-head{
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  color:#555;
+  padding:10px 0;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.cal-table-cell{
+  aspect-ratio:1;
+  border-radius:14px;
+  background:#151515;
+  border:1px solid rgba(255,255,255,.04);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  cursor:default;
+  transition:all .25s cubic-bezier(.25,.46,.45,.94);
+  min-height:60px;
+}
+.cal-table-cell.empty{
+  background:transparent;
+  border:none;
+}
+.cal-table-cell:hover:not(.empty){
+  background:#1e1e1e;
+  border-color:rgba(255,255,255,.12);
+  transform:translateY(-2px);
+}
+.cal-day-num{
+  font-size:16px;
+  font-weight:700;
+  color:#888;
+  line-height:1;
+  transition:all .2s;
+}
+.cal-table-cell:hover .cal-day-num{color:#ccc;}
+
+/* Estados do dia */
+.cal-table-cell.is-today{
+  background:var(--red) !important;
+  border-color:var(--red) !important;
+}
+.cal-table-cell.is-today .cal-day-num{
+  color:#fff !important;
+  font-size:20px;
+  font-weight:900;
+}
+.cal-table-cell.is-today::after{
+  content:'HOJE';
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:1.5px;
+  color:rgba(255,255,255,.9);
+  margin-top:4px;
+}
+.cal-table-cell.is-past{opacity:.45;}
+.cal-table-cell.is-past .cal-day-num{color:#444;}
+.cal-table-cell.is-future .cal-day-num{color:#aaa;}
+
+/* Dia com lançamento */
+.cal-table-cell.has-launch{
+  background:linear-gradient(135deg, rgba(229,9,20,.15), rgba(229,9,20,.05));
+  border-color:rgba(229,9,20,.3);
+  cursor:pointer;
+}
+.cal-table-cell.has-launch:hover{
+  background:linear-gradient(135deg, rgba(229,9,20,.25), rgba(229,9,20,.1));
+  border-color:var(--red);
+  transform:scale(1.08) translateY(-4px);
+  box-shadow:0 12px 32px rgba(229,9,20,.25);
+  z-index:10;
+}
+.cal-table-cell.has-launch .cal-day-num{
+  color:var(--red);
+  font-weight:900;
+  font-size:18px;
+}
+.cal-table-cell.has-launch.is-future{
+  background:linear-gradient(135deg, rgba(70,211,105,.12), rgba(70,211,105,.04));
+  border-color:rgba(70,211,105,.25);
+}
+.cal-table-cell.has-launch.is-future .cal-day-num{
+  color:var(--green);
+}
+.cal-table-cell.has-launch.is-future:hover{
+  background:linear-gradient(135deg, rgba(70,211,105,.2), rgba(70,211,105,.08));
+  border-color:var(--green);
+  box-shadow:0 12px 32px rgba(70,211,105,.2);
+}
+
+/* Indicador de conteúdo */
+.cal-launch-indicator{
+  position:absolute;
+  bottom:8px;
+  display:flex;
+  gap:3px;
+  align-items:center;
+}
+.cal-launch-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 4px var(--red);
+}
+.cal-launch-dot.anime{background:#ff6b9d;box-shadow:0 0 4px #ff6b9d;}
+.cal-launch-dot.serie{background:#4ecdc4;box-shadow:0 0 4px #4ecdc4;}
+.cal-launch-dot.dorama{background:#a78bfa;box-shadow:0 0 4px #a78bfa;}
+.cal-launch-dot.filme{background:#f5c518;box-shadow:0 0 4px #f5c518;}
+.cal-launch-count{
+  font-size:9px;
+  font-weight:900;
+  color:var(--red);
+  margin-left:2px;
+}
+.cal-table-cell.has-launch.is-future .cal-launch-dot{
+  background:var(--green);
+  box-shadow:0 0 4px var(--green);
+}
+.cal-table-cell.has-launch.is-future .cal-launch-count{
+  color:var(--green);
+}
+
+/* Tooltip redesenhado */
+.cal-table-cell.has-launch::before{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 10px);
+  left:50%;
+  transform:translateX(-50%) scale(0);
+  background:#1a1a1a;
+  border:1px solid rgba(255,255,255,.1);
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:11px;
+  color:#fff;
+  white-space:nowrap;
+  z-index:100;
+  opacity:0;
+  transition:all .25s cubic-bezier(.25,.46,.45,.94);
+  pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.6);
+  font-weight:600;
+}
+.cal-table-cell.has-launch:hover::before{
+  transform:translateX(-50%) scale(1);
+  opacity:1;
+}
+
+/* Navegação do calendário */
+.cal-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  margin-bottom:28px;
+}
+.cal-nav-btn{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:#fff;
+  width:40px;height:40px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:14px;
+  transition:all .2s;
+}
+.cal-nav-btn:hover{
+  background:var(--red);
+  border-color:var(--red);
+  transform:scale(1.1);
+  box-shadow:0 4px 16px rgba(229,9,20,.3);
+}
+.cal-nav-month{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;
+  font-weight:800;
+  color:#fff;
+  min-width:200px;
+  text-align:center;
+  letter-spacing:.5px;
+}
+
+/* Responsivo */
+@media(max-width:768px){
+  .cal-hero{height:40vh;min-height:220px;padding:0 16px 32px;}
+  .cal-hero-title{font-size:32px;}
+  .cal-hero-sub{font-size:13px;}
+  .cal-hero-stats{flex-wrap:wrap;gap:10px;}
+  .today-banner{padding:16px 20px;margin:0 16px 24px;}
+  .today-banner i{font-size:24px;}
+  .today-banner-text strong{font-size:15px;}
+  .ep-card{width:135px;}
+  .ep-poster{width:135px;}
+  .day-label{font-size:20px;}
+  .cal-table-cell{min-height:45px;border-radius:10px;}
+  .cal-day-num{font-size:13px;}
+  .cal-table-cell.is-today .cal-day-num{font-size:16px;}
+  .cal-visual-title{font-size:24px;}
+  .cal-grid-title{font-size:22px;}
+  .h-scroll{padding:4px 16px 14px;gap:10px;}
+  .cal-window-info{margin:0 16px 20px;}
+}
+@media(min-width:1200px){
+  .ep-card{width:170px;}
+  .ep-poster{width:170px;}
+}
 </style>
 <base target="_blank">
 <base target="_blank">
@@ -1541,7 +2215,7 @@ function renderCalScroll(){
   windowInfo.className='cal-window-info';
   const pastDays = Math.ceil((TODAY - WINDOW_PAST) / 86400000);
   const futureDays = Math.ceil((WINDOW_FUTURE - TODAY) / 86400000);
-  windowInfo.innerHTML=`<p><strong>📅 Janela de Lançamentos:</strong> ${pastDays} dias passados + ${futureDays} dias futuros</p>`;
+  windowInfo.innerHTML=`<p><i class="fas fa-calendar-alt"></i> <strong>📅 Janela de Lançamentos:</strong> ${pastDays} dias passados + ${futureDays} dias futuros</p>`;
   cont.appendChild(windowInfo);
 
   if(!filteredCalData.length){
@@ -1549,19 +2223,31 @@ function renderCalScroll(){
     return;
   }
 
-  // Info da janela
-  const windowInfo = document.createElement('div');
-  windowInfo.className='cal-window-info';
-  windowInfo.innerHTML=`<p><strong>📅 Janela de Lançamentos:</strong> Últimos 10 dias + Próximos 20 dias</p>`;
-  cont.appendChild(windowInfo);
-
-  // Banner hoje
+  // Hero do calendário — backdrop do primeiro item de hoje ou do primeiro disponível
   const todayItems = filteredCalData.filter(i=>isToday(i.air_date));
+  const heroItem = todayItems[0] || filteredCalData[0];
+  const hero = document.createElement('div');
+  hero.className='cal-hero';
+  const heroBg = heroItem && (heroItem.backdrop_path || heroItem.poster_path) ? (heroItem.backdrop_path || heroItem.poster_path) : '';
+  hero.innerHTML = `
+    <div class="cal-hero-bg" style="${heroBg ? `background-image:url('${heroBg}')` : ''}"></div>
+    <div class="cal-hero-content">
+      <div class="cal-hero-pretitle">Calendário PureFlix</div>
+      <h1 class="cal-hero-title">Lançamentos</h1>
+      <p class="cal-hero-sub">Acompanhe os novos episódios de séries, animes e doramas. Nunca perca um lançamento!</p>
+      <div class="cal-hero-stats">
+        <div class="cal-stat"><i class="fas fa-tv"></i> <strong>${filteredCalData.length}</strong> lançamentos</div>
+        <div class="cal-stat"><i class="fas fa-fire"></i> <strong>${todayItems.length}</strong> hoje</div>
+      </div>
+    </div>`;
+  cont.appendChild(hero);
+
+  // Banner hoje redesenhado
   if(todayItems.length){
     const banner = document.createElement('div');
-    banner.className='countdown-banner';
+    banner.className='today-banner';
     banner.innerHTML=`<i class="fas fa-bell"></i>
-      <div class="countdown-text"><strong>${todayItems.length} lançamento${todayItems.length>1?'s':''} hoje!</strong><p>Novos episódios disponíveis agora</p></div>`;
+      <div class="today-banner-text"><strong>${todayItems.length} lançamento${todayItems.length>1?'s':''} hoje!</strong><p>Novos episódios disponíveis agora. Aproveite!</p></div>`;
     cont.appendChild(banner);
   }
 
@@ -1573,11 +2259,12 @@ function renderCalScroll(){
     groups[k].push(item);
   });
 
-  Object.keys(groups).sort().forEach(dateKey => {
+  Object.keys(groups).sort().forEach((dateKey, idx) => {
     if(dateKey==='sem-data') return;
     const items = groups[dateKey];
     const group = document.createElement('div');
     group.className='day-group';
+    group.style.animationDelay = (idx * 0.08) + 's';
 
     const today = isToday(dateKey);
     const past = isPast(dateKey);
@@ -1589,15 +2276,19 @@ function renderCalScroll(){
     const dh = document.createElement('div');
     dh.className='day-header';
     dh.innerHTML = `
-      <span class="day-label ${labelCls}">${today?'📅 Hoje':fmtDate(dateKey)}</span>
+      <span class="day-label ${labelCls}">${today?'🔴 Hoje':fmtDate(dateKey)}</span>
       ${badge}
-      <span class="day-badge" style="background:rgba(255,255,255,.06);color:#777;font-size:9px;font-weight:600;padding:3px 8px;border-radius:10px;">${items.length} título${items.length>1?'s':''}</span>
+      <span class="day-badge count">${items.length} título${items.length>1?'s':''}</span>
       <div class="day-line"></div>`;
     group.appendChild(dh);
 
     const scroll = document.createElement('div');
     scroll.className='h-scroll';
-    items.forEach(item => scroll.appendChild(makeCalCard(item)));
+    items.forEach((item, i) => {
+      const card = makeCalCard(item);
+      card.style.animation = `fade-up .4s ease ${i * 0.05}s both`;
+      scroll.appendChild(card);
+    });
     group.appendChild(scroll);
     cont.appendChild(group);
   });
@@ -1618,18 +2309,27 @@ function makeCalCard(item){
 
   const listBadge = item._inWatchLater ? `<span class="ep-list-badge">🔖 LISTA</span>` : '';
 
+  // Contador de dias para futuros
+  let countdown = '';
+  if(date && isFuture(date)){
+    const d = new Date(date+'T00:00:00');
+    const diff = Math.ceil((d - TODAY) / 86400000);
+    countdown = `<div class="ep-countdown"><i class="fas fa-clock"></i> Em ${diff} dia${diff>1?'s':''}</div>`;
+  }
+
   card.innerHTML = `
     <div class="ep-poster ${pastClass}">
       ${item.poster_path ? `<img src="${item.poster_path}" alt="${item.title||''}" loading="lazy" onerror="this.style.display='none';this.parentElement.querySelector('.no-img').style.display='flex';">` : ''}
       <div class="no-img" style="${item.poster_path?'display:none;':''}">${typeIcon}<span>${type==='filme'?'Filme':type==='anime'?'Anime':type==='dorama'?'Dorama':'Série'}</span></div>
       <span class="ep-status ${statusCls}">${statusTxt}</span>
+      <span class="ep-type-badge ${type}">${type}</span>
       ${listBadge}
     </div>
     <div class="ep-info">
       <div class="ep-title">${item.title||item.name||'—'}</div>
       <div class="ep-meta">
         <span class="ep-ep">${item.season_number?'T'+item.season_number+' ':''}${item.episode_number?'Ep '+item.episode_number:''}</span>
-        <span>${typeIcon} ${type==='filme'?'Filme':type==='anime'?'Anime':type==='dorama'?'Dorama':'Série'}</span>
+        ${countdown}
       </div>
     </div>`;
   card.onclick = () => openModal(item);
