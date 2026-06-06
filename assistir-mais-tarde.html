@@ -868,6 +868,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 }
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -1048,7 +1049,7 @@ const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 
 /* Janela de tempo: 10 dias passados, 20 dias futuros */
 const WINDOW_PAST  = new Date(TODAY); WINDOW_PAST.setDate(WINDOW_PAST.getDate()-10);
-const WINDOW_FUTURE= new Date(TODAY); WINDOW_FUTURE.setDate(WINDOW_FUTURE.getDate()+20);
+const WINDOW_FUTURE= new Date(TODAY); WINDOW_FUTURE.setDate(WINDOW_FUTURE.getDate()+10);
 
 /* ═══════════════════════════════════════════════════════
    UTILITÁRIOS
@@ -1137,7 +1138,10 @@ function showPage(page, btn){
   window.scrollTo({top:0,behavior:'smooth'});
 
   if(page==='lista') renderLista();
-  else if(page==='calendario' && calData.length===0) initCalendario();
+  else if(page==='calendario'){
+    if(calData.length===0) initCalendario();
+    else renderCalAll();
+  }
 }
 
 function setNavActive(btn){
@@ -1268,6 +1272,9 @@ async function initCalendario(){
     toast('📅 Mostrando lançamentos de exemplo');
   }
 
+  // Garantir array válido
+  if(!Array.isArray(calData)) calData = [];
+
   // Normalizar
   calData = calData.map(item => ({
     ...item,
@@ -1330,26 +1337,47 @@ async function fetchCalendarTMDB(){
 
   const items = [];
 
-  // Buscar séries em exibição (on_the_air) — cobre ~2 semanas
-  const onAirPages = [1,2,3];
+  // 1. Buscar séries no ar hoje (mais preciso para lançamentos recentes)
+  try{
+    const airingToday = await fetchTMDB('/tv/airing_today', {page:1});
+    if(airingToday && airingToday.results){
+      airingToday.results.slice(0,20).forEach(show => {
+        const poster = show.poster_path ? CAL_IMG + show.poster_path : '';
+        const type = detectType({
+          type: show.genre_ids?.includes(16) ? 'anime' : 'serie',
+          original_language: show.original_language,
+          origin_country: show.origin_country?.join(',') || ''
+        });
+        items.push({
+          title: show.name, episode_title: 'Novo episódio',
+          episode_number: null, season_number: null,
+          air_date: fmt(TODAY), poster_path: poster,
+          status: 'Hoje', type: type, tmdb_id: show.id
+        });
+      });
+    }
+  }catch(e){ console.log('[Calendário] airing_today falhou:', e.message); }
+
+  // 2. Buscar séries em exibição (on_the_air) — cobre ~2 semanas
+  const onAirPages = [1,2];
   const onAirResults = await Promise.allSettled(
     onAirPages.map(p => fetchTMDB('/tv/on_the_air', {page:p}))
   );
 
   const shows = new Map();
   onAirResults.forEach(r => {
-    if(r.status==='fulfilled' && r.value.results){
+    if(r.status==='fulfilled' && r.value && r.value.results){
       r.value.results.forEach(s => { if(!shows.has(s.id)) shows.set(s.id, s); });
     }
   });
 
-  // Buscar detalhes de cada série
-  const showList = [...shows.values()].slice(0, 50);
+  // 3. Buscar detalhes de cada série (limitado a 20 para não sobrecarregar)
+  const showList = [...shows.values()].slice(0, 20);
 
   await Promise.allSettled(showList.map(async show => {
     try {
       const det = await fetchTMDB(`/tv/${show.id}`, {append_to_response:'external_ids'});
-      if(!det.last_episode_to_air && !det.next_episode_to_air) return;
+      if(!det || (!det.last_episode_to_air && !det.next_episode_to_air)) return;
 
       const poster = show.poster_path ? CAL_IMG + show.poster_path : '';
       const type = detectType({
@@ -1389,8 +1417,35 @@ async function fetchCalendarTMDB(){
     } catch(e){}
   }));
 
-  if(!items.length) throw new Error('Sem dados');
-  return items;
+  // 4. Buscar filmes upcoming (lançamentos futuros)
+  try{
+    const upcoming = await fetchTMDB('/movie/upcoming', {region:'BR', page:1});
+    if(upcoming && upcoming.results){
+      upcoming.results.slice(0,10).forEach(m => {
+        if(m.release_date && isInWindow(m.release_date)){
+          items.push({
+            title: m.title, episode_title: '',
+            episode_number: null, season_number: null,
+            air_date: m.release_date,
+            poster_path: m.poster_path ? CAL_IMG + m.poster_path : '',
+            status: m.release_date===fmt(TODAY)?'Hoje':'Futuro',
+            type: 'filme', tmdb_id: m.id
+          });
+        }
+      });
+    }
+  }catch(e){ console.log('[Calendário] upcoming movies falhou:', e.message); }
+
+  // Remover duplicados por tmdb_id + air_date
+  const seen = new Set();
+  const unique = [];
+  items.forEach(it => {
+    const key = (it.tmdb_id||'') + '_' + (it.air_date||'') + '_' + (it.episode_number||'');
+    if(!seen.has(key)){ seen.add(key); unique.push(it); }
+  });
+
+  if(!unique.length) throw new Error('Sem dados');
+  return unique;
 }
 
 function demoData(){
@@ -1402,13 +1457,17 @@ function demoData(){
   const d5 = new Date(TODAY); d5.setDate(d5.getDate()+5);
   const d7 = new Date(TODAY); d7.setDate(d7.getDate()+7);
   const d10 = new Date(TODAY); d10.setDate(d10.getDate()+10);
+  const d_1 = new Date(TODAY); d_1.setDate(d_1.getDate()-1);
   const d_3 = new Date(TODAY); d_3.setDate(d_3.getDate()-3);
   const d_5 = new Date(TODAY); d_5.setDate(d_5.getDate()-5);
+  const d_7 = new Date(TODAY); d_7.setDate(d_7.getDate()-7);
+  const d_10 = new Date(TODAY); d_10.setDate(d_10.getDate()-10);
   const fmt = d => d.toISOString().split('T')[0];
 
   return [
-    {title:'One Piece',episode_title:'O Despertar do Haki Real',episode_number:1115,season_number:1,air_date:fmt(d_5),poster_path:'https://image.tmdb.org/t/p/w500/cMD9Ygz11zjJzAovURpO75Qg7rT.jpg',status:'Atualizado',type:'anime',tmdb_id:37854},
-    {title:'Naruto Shippuden',episode_title:'A Batalha Final',episode_number:500,season_number:21,air_date:fmt(d_3),poster_path:'https://image.tmdb.org/t/p/w500/xppeysfvDKVx775MFuH8Z9ex394.jpg',status:'Atualizado',type:'anime',tmdb_id:31910},
+    {title:'One Piece',episode_title:'O Despertar do Haki Real',episode_number:1115,season_number:1,air_date:fmt(d_10),poster_path:'https://image.tmdb.org/t/p/w500/cMD9Ygz11zjJzAovURpO75Qg7rT.jpg',status:'Atualizado',type:'anime',tmdb_id:37854},
+    {title:'Naruto Shippuden',episode_title:'A Batalha Final',episode_number:500,season_number:21,air_date:fmt(d_7),poster_path:'https://image.tmdb.org/t/p/w500/xppeysfvDKVx775MFuH8Z9ex394.jpg',status:'Atualizado',type:'anime',tmdb_id:31910},
+    {title:'Bleach: Thousand-Year',episode_title:'O Blood War',episode_number:12,season_number:1,air_date:fmt(d_5),poster_path:'https://image.tmdb.org/t/p/w500/6U9w8z2m3z7lY5m3z7lY5m3z7lY.jpg',status:'Atualizado',type:'anime',tmdb_id:30984},
     {title:'Demon Slayer',episode_title:'O Pilar das Chamas',episode_number:14,season_number:4,air_date:today,poster_path:'https://image.tmdb.org/t/p/w500/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg',status:'Hoje',type:'anime',tmdb_id:85937},
     {title:'Jujutsu Kaisen',episode_title:'Shibuya — Capítulo Final',episode_number:24,season_number:2,air_date:today,poster_path:'https://image.tmdb.org/t/p/w500/oENcSMBsHasHASnBiAbTAa4bT4j.jpg',status:'Hoje',type:'anime',tmdb_id:95479},
     {title:'Stranger Things',episode_title:'O Fim do Upside Down',episode_number:9,season_number:5,air_date:today,poster_path:'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg',status:'Hoje',type:'serie',tmdb_id:66732},
@@ -1477,8 +1536,16 @@ function renderCalScroll(){
   cont.style.display='block'; calView.style.display='none'; calVisual.style.display='none';
   cont.innerHTML='';
 
+  // Sempre mostrar info da janela
+  const windowInfo = document.createElement('div');
+  windowInfo.className='cal-window-info';
+  const pastDays = Math.ceil((TODAY - WINDOW_PAST) / 86400000);
+  const futureDays = Math.ceil((WINDOW_FUTURE - TODAY) / 86400000);
+  windowInfo.innerHTML=`<p><strong>📅 Janela de Lançamentos:</strong> ${pastDays} dias passados + ${futureDays} dias futuros</p>`;
+  cont.appendChild(windowInfo);
+
   if(!filteredCalData.length){
-    cont.innerHTML = `<div class="state-box" style="min-height:40vh;"><i class="fas fa-calendar-times"></i><p>Nenhum conteúdo encontrado</p></div>`;
+    cont.innerHTML += `<div class="state-box" style="min-height:40vh;"><i class="fas fa-calendar-times"></i><p>Nenhum conteúdo nesta janela. Tente ajustar os filtros!</p></div>`;
     return;
   }
 
