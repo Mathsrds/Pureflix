@@ -2340,60 +2340,7 @@ window.addEventListener('scroll', () => {
 
 
 
-// ═══════════════════════════════════════════════════════
-// GESTOS DE SWIPE NO MOBILE (Bottom Sheet)
-// ═══════════════════════════════════════════════════════
-(function(){
-  let startY = 0, startX = 0, currentY = 0;
-  const sheet = document.getElementById('page-details');
-  const content = sheet ? sheet.querySelector('.sheet-content') : null;
 
-  if(!content) return;
-
-  content.addEventListener('touchstart', function(e){
-    if(e.touches.length !== 1) return;
-    startY = e.touches[0].clientY;
-    startX = e.touches[0].clientX;
-    currentY = startY;
-    content.style.transition = 'none';
-  }, {passive:true});
-
-  content.addEventListener('touchmove', function(e){
-    if(e.touches.length !== 1) return;
-    currentY = e.touches[0].clientY;
-    const deltaY = currentY - startY;
-    const deltaX = Math.abs(e.touches[0].clientX - startX);
-
-    // Só permite swipe down se estiver no topo do scroll e movimento vertical > horizontal
-    if(deltaY > 0 && deltaX < deltaY * 1.5 && content.scrollTop <= 0){
-      const translate = Math.min(deltaY * 0.5, 200);
-      content.style.transform = `translateY(${translate}px)`;
-      const opacity = Math.max(1 - (deltaY / 400), 0.3);
-      sheet.style.opacity = opacity;
-    }
-  }, {passive:true});
-
-  content.addEventListener('touchend', function(e){
-    const deltaY = currentY - startY;
-    content.style.transition = '';
-    sheet.style.opacity = '';
-
-    if(deltaY > 100 && content.scrollTop <= 0){
-      // Swipe down suficiente -> fechar
-      closeDetails();
-    } else {
-      // Voltar ao normal
-      content.style.transform = '';
-    }
-  }, {passive:true});
-
-  // Pull-to-refresh prevention no sheet
-  content.addEventListener('touchmove', function(e){
-    if(content.scrollTop <= 0 && e.touches[0].clientY > startY){
-      e.preventDefault();
-    }
-  }, {passive:false});
-})();
 
 // ══════════════════════════════════════════════════════════════
 // 16. BLOQUEADOR INTELIGENTE DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
