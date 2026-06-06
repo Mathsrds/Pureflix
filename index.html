@@ -1570,8 +1570,36 @@ function showWatchLater(e){
   clearPage(true, e?.currentTarget||null);
   const sc = document.getElementById('sections-container');
   const list = getWatchLater();
+
+  // Banner do Calendário — sempre visível no topo da Minha Lista
+  const calBanner = document.createElement('div');
+  calBanner.className = 'section';
+  calBanner.style.cssText = 'margin-bottom:20px;';
+  calBanner.innerHTML = `
+    <div onclick="window.location.href='assistir-mais-tarde.html'" style="
+      background:linear-gradient(135deg, rgba(229,9,20,.15), rgba(229,9,20,.05));
+      border:1px solid rgba(229,9,20,.2);
+      border-radius:12px;
+      padding:16px 20px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      cursor:pointer;
+      transition:all .25s;
+      position:relative;
+      overflow:hidden;
+    " onmouseover="this.style.borderColor='rgba(229,9,20,.4)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(229,9,20,.15)';" onmouseout="this.style.borderColor='rgba(229,9,20,.2)';this.style.transform='';this.style.boxShadow='';">
+      <div style="font-size:28px;flex-shrink:0;">📅</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;">Calendário de Lançamentos</div>
+        <div style="font-size:13px;color:var(--gray);line-height:1.4;">Acompanhe os novos episódios de séries, animes e doramas</div>
+      </div>
+      <i class="fas fa-chevron-right" style="color:var(--red);font-size:14px;flex-shrink:0;"></i>
+    </div>`;
+  sc.appendChild(calBanner);
+
   if(!list.length){
-    sc.innerHTML = `<div class="section"><div class="empty-row" style="padding:60px">Sua lista está vazia. 🔖<br><span style="font-size:13px;color:#666;margin-top:8px;display:block;">Adicione filmes e séries clicando em "Minha Lista" nos detalhes.</span></div></div>`;
+    sc.innerHTML += `<div class="section"><div class="empty-row" style="padding:60px">Sua lista está vazia. 🔖<br><span style="font-size:13px;color:#666;margin-top:8px;display:block;">Adicione filmes e séries clicando em "Minha Lista" nos detalhes.</span></div></div>`;
     return;
   }
   const wrap = document.createElement('div');
