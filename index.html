@@ -511,6 +511,246 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 @media(min-width:769px){
   #mobile-cats{display:none;}
   #mobile-nav{display:none;}
+  .sheet-backdrop{display:none;}
+  .sheet-handle{display:none;}
+  #page-details{position:fixed;inset:0;overflow-y:auto;}
+  #page-details .sheet-content{border-radius:0;min-height:100vh;}
+  #page-details .det-backdrop{border-radius:0;height:calc(420px + var(--header-h));}
+  .swipe-hint{display:none;}
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE APP-LIKE — Bottom Sheet, Gestos, Transições
+   ═══════════════════════════════════════════════════════ */
+
+@media(max-width:768px){
+  :root{--card-w:140px;--card-h:210px;--header-h:52px;}
+
+  /* Header ultra-compacto */
+  #header{padding:0 14px;height:var(--header-h);background:transparent;}
+  #header.solid{background:rgba(10,10,10,.97)!important;}
+  .logo-img{height:30px;}
+  .header-right{gap:10px;}
+  .header-right button{font-size:17px;padding:6px;}
+  .avatar{width:26px;height:26px;font-size:11px;}
+
+  /* Hero mobile redesenhado */
+  #hero{height:55vh;min-height:200px;max-height:380px;}
+  .hero-content{bottom:8%;left:14px;right:14px;max-width:100%;}
+  .hero-title{font-size:28px;line-height:1.05;letter-spacing:.5px;}
+  .hero-tags{gap:6px;margin-bottom:10px;}
+  .hero-tag{font-size:10px;padding:3px 8px;}
+  .hero-desc{font-size:13px;line-height:1.5;max-height:60px;-webkit-line-clamp:3;}
+  .hero-btns{gap:8px;margin-top:16px;}
+  .hero-btns button{font-size:13px;padding:9px 16px;gap:6px;}
+  .hero-dots{bottom:4%;left:14px;}
+  .hero-dot{width:5px;height:5px;}
+  .hero-dot.active{width:16px;}
+
+  /* Pills sticky com blur */
+  #mobile-cats{
+    display:flex;gap:6px;padding:8px 14px 6px;
+    overflow-x:auto;scrollbar-width:none;
+    position:sticky;top:var(--header-h);z-index:800;
+    background:linear-gradient(to bottom, var(--bg) 70%, transparent);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,.04);
+  }
+  .mob-cat{
+    flex-shrink:0;padding:5px 14px;border-radius:18px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.05);
+    color:#bbb;font-size:12px;font-weight:600;
+    white-space:nowrap;transition:all .2s;
+    font-family:'Barlow',sans-serif;
+    letter-spacing:.3px;
+  }
+  .mob-cat.active,.mob-cat:active{
+    background:var(--red);color:#fff;border-color:var(--red);
+    box-shadow:0 4px 14px rgba(229,9,20,.3);
+  }
+
+  /* Carrosséis mobile */
+  .section{padding:0 14px;margin-top:24px;}
+  .section-title{font-size:17px;margin-bottom:12px;}
+  .carousel{gap:8px;}
+  .card{flex:0 0 var(--card-w);border-radius:8px;}
+  .card-thumb{border-radius:8px;}
+  .card:hover{transform:scale(1.04);}
+  .card-overlay{padding:10px;}
+  .card-title{font-size:11px;}
+  .card-meta{font-size:10px;}
+  .card-actions{gap:6px;margin-top:6px;}
+  .card-btn{width:26px;height:26px;font-size:10px;}
+
+  /* Bottom Sheet — Página de Detalhes Mobile */
+  #page-details{
+    position:fixed;inset:auto 0 0 0;
+    top:0;
+    background:transparent;
+    z-index:950;
+    display:none;
+    overflow-y:auto;
+    padding-top:0;
+    transition:none;
+  }
+  #page-details.open{
+    display:block;
+    animation:sheetUp .35s cubic-bezier(.25,.46,.45,.94) both;
+  }
+  @keyframes sheetUp{
+    from{transform:translateY(100%);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+  }
+  @keyframes sheetDown{
+    from{transform:translateY(0);opacity:1;}
+    to{transform:translateY(100%);opacity:0;}
+  }
+  #page-details.closing{
+    animation:sheetDown .3s cubic-bezier(.55,.085,.68,.53) both;
+  }
+
+  /* Backdrop do sheet */
+  .sheet-backdrop{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);
+    z-index:949;opacity:0;pointer-events:none;
+    transition:opacity .3s;
+  }
+  .sheet-backdrop.open{opacity:1;pointer-events:auto;}
+
+  /* Handle do sheet */
+  .sheet-handle{
+    width:36px;height:4px;background:rgba(255,255,255,.25);
+    border-radius:2px;margin:10px auto 0;
+    flex-shrink:0;
+  }
+
+  /* Conteúdo do sheet */
+  .sheet-content{
+    background:var(--bg);
+    border-radius:20px 20px 0 0;
+    min-height:85vh;
+    position:relative;
+    z-index:951;
+    padding-bottom:calc(env(safe-area-inset-bottom) + 20px);
+  }
+
+  /* Detalhes mobile redesenhados */
+  .det-backdrop{
+    height:35vh;min-height:180px;max-height:280px;
+    border-radius:20px 20px 0 0;
+    overflow:hidden;
+  }
+  .det-backdrop::after{
+    background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.5) 50%,transparent 85%);
+  }
+  .det-body{
+    flex-direction:column;
+    margin-top:-60px;
+    padding:0 16px 80px;
+    gap:16px;
+    max-width:100%;
+  }
+  .det-poster{
+    width:100px;margin:0 0 0 16px;
+    border-radius:10px;
+    box-shadow:0 12px 32px rgba(0,0,0,.6);
+    border:2px solid rgba(255,255,255,.08);
+  }
+  .det-title{
+    font-size:24px;text-align:left;
+    line-height:1.1;margin-bottom:10px;
+  }
+  .det-tags{justify-content:flex-start;gap:6px;margin-bottom:12px;}
+  .det-tag{font-size:11px;padding:3px 10px;}
+  .det-synopsis{font-size:13px;line-height:1.6;margin-bottom:16px;}
+  .det-btns{justify-content:flex-start;gap:8px;margin-bottom:16px;}
+  .det-btns button{font-size:13px;padding:10px 18px;}
+  .btn-watch{flex:1;justify-content:center;}
+  .btn-more{padding:10px 14px;}
+
+  /* Player mobile */
+  .player-section{margin-top:12px;}
+  .player-box{border-radius:12px;}
+  .server-grid{gap:6px;}
+  .srv-btn{font-size:11px;padding:7px 14px;border-radius:18px;}
+
+  /* Episódios mobile */
+  .seasons-section{margin-top:16px;}
+  .season-tabs{gap:6px;}
+  .season-tab{font-size:12px;padding:5px 12px;}
+  .episodes-grid{max-height:280px;gap:6px;}
+  .episode-card{padding:8px;gap:10px;}
+  .ep-thumb{width:90px;height:50px;border-radius:6px;}
+  .ep-title{font-size:13px;}
+  .ep-desc{font-size:11px;}
+
+  /* Bottom nav redesenhada */
+  #mobile-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    height:58px;background:rgba(14,14,14,.95);
+    border-top:1px solid rgba(255,255,255,.06);
+    z-index:1000;
+    justify-content:space-around;align-items:center;
+    padding-bottom:env(safe-area-inset-bottom);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+  }
+  .mob-nav-btn{
+    display:flex;flex-direction:column;align-items:center;
+    gap:2px;background:none;border:none;color:#666;
+    font-size:9px;font-weight:700;cursor:pointer;
+    font-family:'Barlow',sans-serif;padding:6px 8px;
+    transition:color .15s;min-width:52px;
+    letter-spacing:.3px;text-transform:uppercase;
+  }
+  .mob-nav-btn i{font-size:20px;margin-bottom:2px;transition:transform .2s;}
+  .mob-nav-btn.active,.mob-nav-btn:active{color:#fff;}
+  .mob-nav-btn.active i{color:var(--red);transform:scale(1.1);}
+  .mob-nav-btn:active i{transform:scale(.9);}
+
+  /* Touch feedback nos cards */
+  .card:active{transform:scale(.96)!important;transition:transform .1s;}
+  .nf-card:active{transform:scale(.96)!important;}
+  .ep-card:active{transform:scale(.96)!important;}
+  .mob-cat:active{transform:scale(.95);}
+  .pill:active{transform:scale(.95);}
+  .srv-btn:active{transform:scale(.95);}
+  .btn-watch:active{transform:scale(.97);}
+  .btn-more:active{transform:scale(.97);}
+
+  /* Searchbar mobile */
+  #searchbar.open{padding:10px 14px 0;}
+  .searchbar-inner{padding:4px 12px;}
+  #searchInput{font-size:15px;padding:8px 0;}
+  .search-dropdown{max-width:100%;}
+  .search-result-item{padding:6px 8px;}
+  .search-result-item img{width:32px;height:48px;}
+
+  /* Toast mobile */
+  #toast{bottom:calc(58px + env(safe-area-inset-bottom) + 12px);right:14px;left:14px;transform:translateY(10px);text-align:center;}
+  #toast.show{transform:translateY(0);}
+
+  /* Transição suave entre seções */
+  #sections-container{transition:opacity .2s;}
+  #sections-container.switching{opacity:0;}
+
+  /* Bottom sheet swipe hint */
+  .swipe-hint{
+    display:flex;align-items:center;justify-content:center;
+    gap:6px;padding:8px 0;color:#555;font-size:11px;
+  }
+  .swipe-hint i{font-size:14px;}
+}
+
+/* Desktop: esconde elementos mobile */
+@media(min-width:769px){
+  #mobile-cats{display:none;}
+  #mobile-nav{display:none;}
+  .sheet-backdrop{display:none;}
+  .sheet-handle{display:none;}
+  .swipe-hint{display:none;}
 }
 </style>
 
@@ -564,56 +804,60 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   <div id="sections-container"></div>
 </div>
 
+<div class="sheet-backdrop" id="sheet-backdrop" onclick="closeDetails()"></div>
 <div id="page-details" style="display:none;">
-  <div class="btn-close" onclick="closeDetails()"><i class="fas fa-times"></i></div>
-  <div class="det-backdrop" id="det-backdrop"></div>
-  <div class="det-body">
-    <div class="det-poster"><img id="det-poster" src="" alt="" decoding="async"></div>
-    <div class="det-info">
-      <h1 class="det-title" id="det-title"></h1>
-      <div class="det-tags" id="det-tags"></div>
-      <p class="det-synopsis" id="det-synopsis"></p>
-      <div class="det-btns" id="det-btns"></div>
+  <div class="sheet-content">
+    <div class="sheet-handle"></div>
+    <div class="btn-close" onclick="closeDetails()"><i class="fas fa-times"></i></div>
+    <div class="det-backdrop" id="det-backdrop"></div>
+    <div class="det-body">
+      <div class="det-poster"><img id="det-poster" src="" alt="" decoding="async"></div>
+      <div class="det-info">
+        <h1 class="det-title" id="det-title"></h1>
+        <div class="det-tags" id="det-tags"></div>
+        <p class="det-synopsis" id="det-synopsis"></p>
+        <div class="det-btns" id="det-btns"></div>
 
-      <div class="player-section">
-        <div class="player-box" id="player-box">
-          <!-- iframe e fake-play são injetados dinamicamente pelo JS -->
-        </div>
-        <div class="fallback-bar" id="fallback-bar" style="margin-top:10px;">
-          <span id="fallback-msg">⚠️ Tela preta detectada. Trocando servidor...</span>
-          <button onclick="nextServer()">Trocar agora</button>
-        </div>
-        <div id="ep-nav-btns" class="ep-nav-row">
-          <button class="btn-more ep-nav-btn" onclick="prevEpisode()"><i class="fas fa-step-backward"></i> Ep. Anterior</button>
-          <span id="ep-current-label" class="ep-nav-label"></span>
-          <button class="btn-more ep-nav-btn" onclick="nextEpisode()">Próx. Ep. <i class="fas fa-step-forward"></i></button>
-        </div>
-        <div style="margin-top:16px;">
-          <p class="player-label"><i class="fas fa-film"></i> Fontes de Vídeo</p>
-          <div class="carousel-wrap" style="position:relative;">
-            <button class="carousel-btn prev srv-scroll" onclick="scrollSrv(-1)" style="left:-12px;opacity:0.6;width:32px;height:32px;font-size:12px;" title="Servidores anteriores"><i class="fas fa-chevron-left"></i></button>
-            <div class="server-grid" id="server-grid"></div>
-            <button class="carousel-btn next srv-scroll" onclick="scrollSrv(1)" style="right:-12px;opacity:0.6;width:32px;height:32px;font-size:12px;" title="Próximos servidores"><i class="fas fa-chevron-right"></i></button>
+        <div class="player-section">
+          <div class="player-box" id="player-box">
+            <!-- iframe e fake-play são injetados dinamicamente pelo JS -->
           </div>
-          <p style="color:var(--gray);font-size:12px;margin-top:8px;line-height:1.5;">
-            Se o vídeo não carregar ou estiver sem dublagem, tente outra fonte acima. As fontes com 🇧🇷 têm opção de dublagem em português.
-          </p>
+          <div class="fallback-bar" id="fallback-bar" style="margin-top:10px;">
+            <span id="fallback-msg">⚠️ Tela preta detectada. Trocando servidor...</span>
+            <button onclick="nextServer()">Trocar agora</button>
+          </div>
+          <div id="ep-nav-btns" class="ep-nav-row">
+            <button class="btn-more ep-nav-btn" onclick="prevEpisode()"><i class="fas fa-step-backward"></i> Ep. Anterior</button>
+            <span id="ep-current-label" class="ep-nav-label"></span>
+            <button class="btn-more ep-nav-btn" onclick="nextEpisode()">Próx. Ep. <i class="fas fa-step-forward"></i></button>
+          </div>
+          <div style="margin-top:16px;">
+            <p class="player-label"><i class="fas fa-film"></i> Fontes de Vídeo</p>
+            <div class="carousel-wrap" style="position:relative;">
+              <button class="carousel-btn prev srv-scroll" onclick="scrollSrv(-1)" style="left:-12px;opacity:0.6;width:32px;height:32px;font-size:12px;" title="Servidores anteriores"><i class="fas fa-chevron-left"></i></button>
+              <div class="server-grid" id="server-grid"></div>
+              <button class="carousel-btn next srv-scroll" onclick="scrollSrv(1)" style="right:-12px;opacity:0.6;width:32px;height:32px;font-size:12px;" title="Próximos servidores"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <p style="color:var(--gray);font-size:12px;margin-top:8px;line-height:1.5;">
+              Se o vídeo não carregar ou estiver sem dublagem, tente outra fonte acima. As fontes com 🇧🇷 têm opção de dublagem em português.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="seasons-section" id="seasons-section" style="display:none">
-        <div class="seasons-label"><i class="fas fa-tv"></i> Temporadas e Episódios</div>
-        <div class="season-tabs" id="season-tabs"></div>
-        <div class="episodes-grid" id="episodes-grid"></div>
-      </div>
-
-      <div class="seasons-section" id="recommendations-section" style="display:none; margin-top:40px;">
-        <div class="seasons-label"><i class="fas fa-star"></i> Títulos Semelhantes Recomendados</div>
-        <div class="carousel-wrap">
-          <div class="carousel" id="recommendations-carousel"></div>
+        <div class="seasons-section" id="seasons-section" style="display:none">
+          <div class="seasons-label"><i class="fas fa-tv"></i> Temporadas e Episódios</div>
+          <div class="season-tabs" id="season-tabs"></div>
+          <div class="episodes-grid" id="episodes-grid"></div>
         </div>
-      </div>
 
+        <div class="seasons-section" id="recommendations-section" style="display:none; margin-top:40px;">
+          <div class="seasons-label"><i class="fas fa-star"></i> Títulos Semelhantes Recomendados</div>
+          <div class="carousel-wrap">
+            <div class="carousel" id="recommendations-carousel"></div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
@@ -1210,15 +1454,37 @@ async function loadMore(secId){
 function clearPage(hideHero, eventElement) {
   clearTimeout(fallbackTimer);
   document.getElementById('player-box').innerHTML='';
-  document.getElementById('page-home').style.display='block';
-  document.getElementById('page-details').style.display='none';
+  const pageDetails = document.getElementById('page-details');
+  const pageHome = document.getElementById('page-home');
+  const backdrop = document.getElementById('sheet-backdrop');
+
+  // Fecha o sheet/bottom sheet se estiver aberto
+  if(pageDetails && pageDetails.style.display !== 'none'){
+    const isMobile = window.innerWidth <= 768;
+    if(isMobile){
+      pageDetails.classList.add('closing');
+      pageDetails.classList.remove('open');
+      if(backdrop) backdrop.classList.remove('open');
+      setTimeout(()=>{
+        pageDetails.style.display='none';
+        pageDetails.classList.remove('closing');
+        pageHome.style.display='block';
+        const nav = document.getElementById('mobile-nav');
+        if(nav) nav.style.display='';
+        const pills = document.getElementById('mobile-cats');
+        if(pills) pills.style.display='';
+      }, 300);
+    } else {
+      pageDetails.style.display='none';
+      pageHome.style.display='block';
+    }
+  }
+
   window.location.hash='';
   document.getElementById('hero').style.display = hideHero ? 'none' : 'block';
   const sc = document.getElementById('sections-container');
   sc.innerHTML='';
-  // Espaçamento: quando hero está oculto, garante distância do header
   sc.style.paddingTop = hideHero ? 'calc(var(--header-h) + 32px)' : '0';
-  // Fecha a barra de busca sempre que mudar de seção
   const searchbar = document.getElementById('searchbar');
   const dropdown = document.getElementById('search-dropdown');
   if(searchbar){
@@ -1741,7 +2007,31 @@ async function loadEpisodes(id,season){
 // 12. ABERTURA DE DETALHES GERAL
 async function openDetails(id,type){
   window.location.hash=`#${type}/${id}`;
-  document.getElementById('page-home').style.display='none'; document.getElementById('page-details').style.display='block'; window.scrollTo(0,0);
+  const isMobile = window.innerWidth <= 768;
+  const pageDetails = document.getElementById('page-details');
+  const backdrop = document.getElementById('sheet-backdrop');
+  const pageHome = document.getElementById('page-home');
+
+  if(isMobile){
+    // Mobile: bottom sheet animation
+    pageHome.style.display='block'; // mantém home visível por baixo
+    pageDetails.style.display='block';
+    pageDetails.classList.add('open');
+    pageDetails.classList.remove('closing');
+    if(backdrop) backdrop.classList.add('open');
+    // Esconde bottom nav
+    const nav = document.getElementById('mobile-nav');
+    if(nav) nav.style.display='none';
+    // Esconde pills
+    const pills = document.getElementById('mobile-cats');
+    if(pills) pills.style.display='none';
+  } else {
+    // Desktop: comportamento original
+    pageHome.style.display='none';
+    pageDetails.style.display='block';
+    window.scrollTo(0,0);
+  }
+
   document.getElementById('player-box').innerHTML='';
   document.getElementById('seasons-section').style.display='none'; document.getElementById('fallback-bar').classList.remove('show');
   clearTimeout(fallbackTimer);
@@ -1813,17 +2103,38 @@ function openTrailer(key){
 }
 
 function closeDetails() {
-    localStorage.removeItem('pf_watching'); // usuário fechou voluntariamente
+    localStorage.removeItem('pf_watching');
     window._curId = ''; window._curType = ''; window._curSrv = 0;
-    document.getElementById('page-details').style.display='none'; document.getElementById('page-home').style.display='block';
-    window.location.hash=''; 
-    // Limpar iframe para liberar memória de vídeo
+    const isMobile = window.innerWidth <= 768;
+    const pageDetails = document.getElementById('page-details');
+    const backdrop = document.getElementById('sheet-backdrop');
+    const pageHome = document.getElementById('page-home');
+
+    if(isMobile && pageDetails){
+      // Mobile: animação de fechamento
+      pageDetails.classList.add('closing');
+      pageDetails.classList.remove('open');
+      if(backdrop) backdrop.classList.remove('open');
+      setTimeout(()=>{
+        pageDetails.style.display='none';
+        pageDetails.classList.remove('closing');
+        pageHome.style.display='block';
+        // Restaura bottom nav e pills
+        const nav = document.getElementById('mobile-nav');
+        if(nav) nav.style.display='';
+        const pills = document.getElementById('mobile-cats');
+        if(pills) pills.style.display='';
+      }, 300);
+    } else {
+      pageDetails.style.display='none';
+      pageHome.style.display='block';
+    }
+
+    window.location.hash='';
     const box = document.getElementById('player-box');
     if(box) box.innerHTML='';
-    // Forçar garbage collection do iframe (remove referências)
     const frame = document.getElementById('player-frame');
     if(frame){ frame.src='about:blank'; frame.remove(); }
-    // Limpar timeouts pendentes
     clearTimeout(fallbackTimer);
 }
 
@@ -1999,6 +2310,62 @@ window.addEventListener('scroll', () => {
   lastScrollTop = Math.max(scrollTop, 0); 
 });
 
+
+
+// ═══════════════════════════════════════════════════════
+// GESTOS DE SWIPE NO MOBILE (Bottom Sheet)
+// ═══════════════════════════════════════════════════════
+(function(){
+  let startY = 0, startX = 0, currentY = 0;
+  const sheet = document.getElementById('page-details');
+  const content = sheet ? sheet.querySelector('.sheet-content') : null;
+
+  if(!content) return;
+
+  content.addEventListener('touchstart', function(e){
+    if(e.touches.length !== 1) return;
+    startY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+    currentY = startY;
+    content.style.transition = 'none';
+  }, {passive:true});
+
+  content.addEventListener('touchmove', function(e){
+    if(e.touches.length !== 1) return;
+    currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY;
+    const deltaX = Math.abs(e.touches[0].clientX - startX);
+
+    // Só permite swipe down se estiver no topo do scroll e movimento vertical > horizontal
+    if(deltaY > 0 && deltaX < deltaY * 1.5 && content.scrollTop <= 0){
+      const translate = Math.min(deltaY * 0.5, 200);
+      content.style.transform = `translateY(${translate}px)`;
+      const opacity = Math.max(1 - (deltaY / 400), 0.3);
+      sheet.style.opacity = opacity;
+    }
+  }, {passive:true});
+
+  content.addEventListener('touchend', function(e){
+    const deltaY = currentY - startY;
+    content.style.transition = '';
+    sheet.style.opacity = '';
+
+    if(deltaY > 100 && content.scrollTop <= 0){
+      // Swipe down suficiente -> fechar
+      closeDetails();
+    } else {
+      // Voltar ao normal
+      content.style.transform = '';
+    }
+  }, {passive:true});
+
+  // Pull-to-refresh prevention no sheet
+  content.addEventListener('touchmove', function(e){
+    if(content.scrollTop <= 0 && e.touches[0].clientY > startY){
+      e.preventDefault();
+    }
+  }, {passive:false});
+})();
 
 // ══════════════════════════════════════════════════════════════
 // 16. BLOQUEADOR INTELIGENTE DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
