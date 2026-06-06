@@ -45,7 +45,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 
 /* Busca */
 #searchbar{position:fixed;top:var(--header-h);left:0;right:0;background:linear-gradient(180deg,rgba(10,10,10,.98) 0%,rgba(10,10,10,.92) 100%);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:14px 4% 0;z-index:899;border-bottom:none;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4);}
-#searchbar.open{display:flex;gap:10px;}
+#searchbar{border:none!important;box-shadow:none!important;}#searchbar.open{display:flex;gap:10px;}
 #searchbar input{flex:1;background:#1e1e1e;border:1px solid #333;border-radius:6px;padding:10px 16px;color:#fff;font-size:15px;font-family:'Barlow',sans-serif;outline:none;}
 #searchbar input:focus{border-color:#555;}
 #searchbar button{background:var(--red);color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;}
@@ -57,7 +57,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s;background:center/cover no-repeat;}
 .hero-slide.active{opacity:1;}
 .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.4) 40%,transparent 70%), linear-gradient(to right,rgba(10,10,10,.85) 0%,transparent 55%);}
-.hero-content{position:absolute;bottom:10%;left:4%;max-width:540px;z-index:10;}
+.hero-content{position:absolute;bottom:10%;left:2%;max-width:600px;z-index:10;}
 .hero-grad{background:linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,.6) 40%, transparent 100%);}
 .hero-tags{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
 .hero-tag{font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:2px;text-transform:uppercase;}
@@ -66,18 +66,18 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .hero-title{font-family:'Barlow Condensed',sans-serif;font-size:62px;font-weight:900;line-height:.95;letter-spacing:1px;margin-bottom:12px;text-shadow:0 2px 20px rgba(0,0,0,.5);}
 .hero-meta{font-size:13px;color:var(--gray);margin-bottom:12px;display:flex;gap:12px;align-items:center;}
 .hero-meta .score{color:var(--green);font-weight:700;}
-.hero-desc{font-size:15px;color:#ccc;line-height:1.6;max-height:72px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+.hero-desc{font-size:15px;color:#ccc;line-height:1.6;max-height:96px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;}
 .hero-btns{display:flex;gap:12px;margin-top:20px;}
 .btn-watch{background:var(--red);color:#fff;border:none;padding:11px 28px;border-radius:4px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Barlow',sans-serif;transition:background .2s;}
 .btn-watch:hover{background:var(--red2);}
 .btn-more{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);padding:11px 24px;border-radius:4px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Barlow',sans-serif;backdrop-filter:blur(4px);transition:background .2s;}
 .btn-more:hover{background:rgba(255,255,255,.25);}
-.hero-dots{position:absolute;bottom:6%;left:4%;display:flex;gap:6px;z-index:10;}
+.hero-dots{position:absolute;bottom:6%;left:2%;display:flex;gap:6px;z-index:10;}
 .hero-dot{width:6px;height:6px;background:rgba(255,255,255,.3);border-radius:50%;cursor:pointer;transition:all .3s;}
 .hero-dot.active{width:20px;border-radius:3px;background:var(--red);}
 
 #page-home{padding-bottom:60px;padding-top:8px;}
-.section{padding:0 4%;margin-top:32px;}
+.section{padding:0 2%;margin-top:32px;}
 .section-header{display:flex;align-items:baseline;gap:14px;margin-bottom:16px;}
 .section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;}
 
@@ -113,7 +113,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 #page-details{position:fixed;inset:0;background:var(--bg);z-index:950;display:none;overflow-y:auto;padding-top:0;}
 .det-backdrop{width:100%;height:calc(420px + var(--header-h));position:relative;background:center/cover no-repeat;flex-shrink:0;}
 .det-backdrop::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.3) 55%,transparent 85%);}
-.det-body{max-width:1100px;margin:0 auto;padding:0 4% 60px;display:flex;gap:36px;margin-top:-160px;position:relative;z-index:5;}
+.det-body{max-width:1240px;margin:0 auto;padding:0 2% 60px;display:flex;gap:36px;margin-top:-160px;position:relative;z-index:5;}
 .det-poster{width:210px;flex-shrink:0;border-radius:8px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.7);}
 .det-poster img{width:100%;display:block;}
 .det-info{flex:1;min-width:0;}
@@ -122,7 +122,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 .det-tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 12px;border-radius:3px;font-size:12px;color:#ccc;}
 .det-tag.green{color:var(--green);border-color:rgba(70,211,105,.3);}
 .det-tag.red{background:rgba(229,9,20,.15);border-color:rgba(229,9,20,.3);color:#ff7070;}
-.det-synopsis{font-size:15px;line-height:1.7;color:#bbb;margin-bottom:24px;}
+.det-synopsis{font-size:15px;line-height:1.7;color:#bbb;margin-bottom:24px;max-width:100%;}
 .det-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;}
 
 /* Player e Servidores */
@@ -238,7 +238,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   max-height:0;
   overflow:hidden;
 }
-#searchbar.open{
+#searchbar{border:none!important;box-shadow:none!important;}#searchbar.open{
   display:flex;
   max-height:85vh;
   padding:12px 4% 0;
@@ -427,7 +427,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   .avatar{width:28px;height:28px;font-size:12px;border-radius:4px;}
 
   /* Barra de busca mobile */
-  #searchbar.open{padding:10px 16px 0;}
+  #searchbar{border:none!important;box-shadow:none!important;}#searchbar.open{padding:10px 16px 0;}
   .searchbar-inner{max-width:100%;padding:4px 12px;}
   #searchInput{font-size:15px;padding:8px 0;}
   .search-dropdown{max-width:100%;}
@@ -467,7 +467,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   .card-thumb{border-radius:6px;}
 
   /* Página de detalhes mobile */
-  .det-body{flex-direction:column;margin-top:-50px;padding:0 16px 100px;}
+  .det-body{flex-direction:column;margin-top:-50px;padding:0 12px 100px;}
   .det-poster{width:110px;margin:0 auto;}
   .det-title{font-size:26px;text-align:center;}
   .det-tags{justify-content:center;}
@@ -564,7 +564,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   <div id="sections-container"></div>
 </div>
 
-<div id="page-details">
+<div id="page-details" style="display:none;">
   <div class="btn-close" onclick="closeDetails()"><i class="fas fa-times"></i></div>
   <div class="det-backdrop" id="det-backdrop"></div>
   <div class="det-body">
@@ -641,6 +641,17 @@ function saveWatchLater(list){
   }
 }
 function isInWatchLater(id){return getWatchLater().some(x=>String(x.id)===String(id));}
+// Escapa string para uso seguro em atributos HTML onclick
+function escapeHtmlAttr(str){
+  if(!str) return '';
+  return String(str)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\'")
+    .replace(/"/g,'\\"')
+    .replace(/\n/g,'\n')
+    .replace(/\r/g,'\r');
+}
+
 function addWatchLater(item){
   const list=getWatchLater();
   if(list.some(x=>String(x.id)===String(item.id))) return false;
@@ -929,25 +940,28 @@ function toggleFav(id,type,name,poster){
   const f=getFavs();
   const isNowFav = !f[id];
   if(f[id]){ delete f[id]; toast('Removido dos favoritos'); }
-  else{ f[id]={id,type,name,poster:normalizePoster(poster)}; toast('⭐ Adicionado aos favoritos!'); }
+  else{ f[id]={id,type,name:name||'',poster:normalizePoster(poster)}; toast('⭐ Adicionado aos favoritos!'); }
   store.set('pf_favs',f);
   // Atualiza cards nos carrosséis
   document.querySelectorAll(`.card-btn.fav[data-id="${id}"]`).forEach(b=>{
     b.classList.toggle('fav-on',!!f[id]); b.title = f[id]?'Remover':'Favoritar';
   });
   // Atualiza botão na página de detalhes (se existir)
-  const detBtn = document.querySelector('#det-btns button[onclick*="toggleFav"]');
-  if(detBtn){
-    detBtn.innerHTML = `<i class="fas fa-heart"></i> ${isNowFav?'Remover':'Favoritar'}`;
-  }
+  const detBtns = document.querySelectorAll('#det-btns button');
+  detBtns.forEach(btn => {
+    if(btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleFav')){
+      btn.innerHTML = `<i class="fas fa-heart"></i> ${isNowFav?'Remover':'Favoritar'}`;
+    }
+  });
 }
 function getContinue(){ return store.get('pf_cont'); }
 function saveContinue(id,type,name,poster,season,ep){
   const c=getContinue();
-  // Se já existe, preserva o poster atual se o novo estiver vazio
   const existing = c[id] || {};
+  // Preserva nome e poster existentes se os novos estiverem vazios
+  const finalName   = name   || existing.name   || '';
   const finalPoster = normalizePoster(poster) || existing.poster || '';
-  c[id]={id,type,name,poster:finalPoster,season,ep,ts:Date.now()};
+  c[id]={id,type,name:finalName,poster:finalPoster,season,ep,ts:Date.now()};
   store.set('pf_cont',c);
 }
 
@@ -1331,18 +1345,26 @@ async function showContinue(e){
     return;
   }
 
-  // Pré-busca posters faltantes da API
-  const missingPosters = cont.filter(f => !f.poster);
-  if(missingPosters.length){
-    await Promise.all(missingPosters.map(async f => {
+  // Pré-busca posters e nomes faltantes da API
+  const missingData = cont.filter(f => !f.poster || !f.name);
+  if(missingData.length){
+    await Promise.all(missingData.map(async f => {
       try{
         const d = await api(`/${f.type}/${f.id}`, {});
-        if(d && d.poster_path){
+        const c = getContinue();
+        if(!c[f.id]) return;
+        let updated = false;
+        if(d && d.poster_path && !f.poster){
           f.poster = `${IMG}/w500${d.poster_path}`;
-          // Atualiza no localStorage
-          const c = getContinue(); 
-          if(c[f.id]){ c[f.id].poster = f.poster; store.set('pf_cont',c); }
+          c[f.id].poster = f.poster;
+          updated = true;
         }
+        if(d && (d.title || d.name) && !f.name){
+          f.name = d.title || d.name;
+          c[f.id].name = f.name;
+          updated = true;
+        }
+        if(updated) store.set('pf_cont',c);
       }catch(e){}
     }));
   }
@@ -1748,13 +1770,21 @@ async function openDetails(id,type){
     document.getElementById('det-synopsis').textContent=m.overview||'Sinopse não disponível.';
     
     const trailer=(m.videos?.results||[]).find(v=>v.type==='Trailer'&&v.site==='YouTube');
+    // Armazena dados do item atual para uso seguro (evita quebrar HTML com aspas no título/overview)
+    window._currentItem = {
+      id, type, name: m.title||m.name||'',
+      poster: m.poster_path?IMG+'/w500'+m.poster_path:'',
+      release: m.release_date||m.first_air_date||'',
+      overview: m.overview||'',
+      rating: m.vote_average||0
+    };
     document.getElementById('det-btns').innerHTML=`
       <button class="btn-watch" onclick="loadServer(0)"><i class="fas fa-play"></i> Assistir</button>
       ${trailer?`<button class="btn-more" onclick="openTrailer('${trailer.key}')"><i class="fab fa-youtube"></i> Trailer</button>`:''}
-      <button class="btn-more" onclick="toggleFav(${id},'${type}','${name.replace(/'/g,"\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
+      <button class="btn-more" onclick="toggleFav(${id},'${type}','${escapeHtmlAttr(name)}','${escapeHtmlAttr(m.poster_path?IMG+'/w500'+m.poster_path:'')}')"\'")}','${m.poster_path?IMG+'/w500'+m.poster_path:''}')">
         <i class="fas fa-heart"></i> ${getFavs()[id]?'Remover':'Favoritar'}
       </button>
-      <button class="btn-more" id="wl-btn-${id}" onclick="doToggleWatchLater(${id},'${type}','${name.replace(/'/g,"\\'")}','${m.poster_path||''}','${m.release_date||m.first_air_date||''}','${m.overview||''}',${m.vote_average||0})">
+      <button class="btn-more" id="wl-btn-${id}" onclick="doToggleWatchLater(${id})">
         <i class="fas fa-bookmark"></i> ${isInWatchLater(id)?'Na Lista':'Minha Lista'}
       </button>
     `;
@@ -2209,12 +2239,26 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })();
 
 // Função para toggling da Minha Lista diretamente do index
-function doToggleWatchLater(id, type, title, poster_path, release, overview, rating){
+function doToggleWatchLater(id){
+  // Busca dados do item atual (armazenado em openDetails) ou do cache
+  let itemData = window._currentItem;
+  if(!itemData || String(itemData.id) !== String(id)){
+    // Fallback: tenta reconstruir do que temos
+    const fav = getFavs()[id];
+    itemData = { id, type: curType||'movie', name: 'Título '+id, poster: '', release: '', overview: '', rating: 0 };
+    if(fav){ itemData.name = fav.name; itemData.poster = fav.poster; itemData.type = fav.type; }
+  }
+
   const item = {
-    id, type, title,
-    poster: normalizePoster(poster_path),
-    release, overview: (overview||'').substring(0,500), rating
+    id: itemData.id,
+    type: itemData.type,
+    title: itemData.name,
+    poster: normalizePoster(itemData.poster),
+    release: itemData.release,
+    overview: (itemData.overview||'').substring(0,500),
+    rating: itemData.rating
   };
+
   const added = toggleWatchLater(item);
   // Atualiza TODOS os botões de Minha Lista na página (detalhes + cards)
   document.querySelectorAll('[id^="wl-btn-"]').forEach(btn => {
@@ -2252,7 +2296,5 @@ function doToggleWatchLater(id, type, title, poster_path, release, overview, rat
     <i class="fas fa-bookmark"></i>Minha Lista
   </button>
 </nav>
-</bo
-
-dy>
+</body>
 </html>
