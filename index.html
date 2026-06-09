@@ -790,6 +790,7 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
 
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -4213,9 +4214,8 @@ function injectIframe(box, url){
   frame.allowFullscreen = true;
   // sandbox: permite scripts, forms (necessário para alguns players como WarezCDN),
   // apresentação e mesma origem. allow-popups e allow-top-navigation são DEIXADOS DE FORA
-  // para bloquear anúncios e redirecionamentos. allow-forms é necessário para players
-  // que usam POST/form para carregar o vídeo.
-  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-presentation allow-forms');
+  // O sandbox foi removido do iframe principal para compatibilidade com players.
+  // O bloqueio de popups é feito pelo anti-anúncio no MutationObserver (linha ~4817).
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
   frame.setAttribute('referrerpolicy','no-referrer');
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
