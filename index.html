@@ -1441,8 +1441,6 @@ function injectIframe(box, url){
   frame.id = 'player-frame';
   frame.allowFullscreen = true;
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
-  // SEM sandbox — players como WarezCDN detetam e bloqueiam o vídeo.
-  // O bloqueio de popups é feito pelo window.open=null no nosso AdBlock.
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
@@ -1642,64 +1640,7 @@ window.addEventListener('scroll', () => {
 });
 
 
-// ══════════════════════════════════════════════════════════════
-// 16. BLOQUEADOR AGRESSIVO DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
-// ══════════════════════════════════════════════════════════════
-(function(){
 
-  // ── A. Bloqueio SIMPLES: só window.open e _blank — não interfere nos players ──
-  window.open = function(){
-    console.log('[PureFlix] popup bloqueado');
-    return null;
-  };
-
-  document.addEventListener('click', function(e){
-    const a = e.target.tagName === 'A' ? e.target : e.target.closest('a');
-    if(a && a.target === '_blank'){
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('[PureFlix] link _blank bloqueado');
-    }
-  }, true);
-
-  // ── B. Auto-Resume: salva estado com localStorage para sobreviver a redirects ──
-  function pfSaveWatching(){
-    try{
-      localStorage.setItem('pf_watching', JSON.stringify({
-        hash:    window.location.hash,
-        id:      window._curId   || '',
-        type:    window._curType || '',
-        srv:     window._curSrv  || 0,
-        ts:      Date.now()
-      }));
-    }catch(e){}
-  }
-
-  function pfRestoreWatching(){
-    try{
-      const raw = localStorage.getItem('pf_watching');
-      if(!raw) return;
-      const w = JSON.parse(raw);
-      // Só restaura se foi há menos de 30 segundos (saiu por anúncio)
-      if(!w || (Date.now() - w.ts) > 30000) return;
-      localStorage.removeItem('pf_watching');
-      if(w.hash && w.hash.match(/^#(movie|tv)\/\d+/)){
-        // Redireciona de volta para o filme/série
-        setTimeout(()=>{ window.location.hash = w.hash; }, 300);
-      }
-    }catch(e){}
-  }
-
-  // Salva sempre que o usuário está assistindo
-  window.addEventListener('pagehide',        pfSaveWatching);
-  window.addEventListener('visibilitychange', ()=>{ if(document.hidden) pfSaveWatching(); });
-
-  // Restaura ao carregar/voltar para a página
-  pfRestoreWatching();
-  window.addEventListener('pageshow', (e)=>{ if(e.persisted) pfRestoreWatching(); });
-
-  console.log('[PureFlix] Proteção ativa ✓');
-})();
 
 
 // ══════════════════════════════════════════
@@ -1746,8 +1687,8 @@ const _origOpenDetails = openDetails;
 // Patch para esconder bottom nav na página de detalhes
 document.addEventListener('DOMContentLoaded', ()=>{
   const nav = document.getElementById('mobile-nav');
-  const cats = document.getElementById('mobile-cats');
   const obs = new MutationObserver(()=>{
+  const cats = document.getElementById('mobile-cats');
     const detOpen = document.getElementById('page-details').style.display === 'block';
     if(nav)  nav.style.display  = detOpen ? 'none' : '';
     if(cats) cats.style.display = detOpen ? 'none' : '';
@@ -4212,10 +4153,7 @@ function injectIframe(box, url){
   const frame = document.createElement('iframe');
   frame.id = 'player-frame';
   frame.allowFullscreen = true;
-  // sandbox: permite scripts, forms (necessário para alguns players como WarezCDN),
   // apresentação e mesma origem. allow-popups e allow-top-navigation são DEIXADOS DE FORA
-  // O sandbox foi removido do iframe principal para compatibilidade com players.
-  // O bloqueio de popups é feito pelo anti-anúncio no MutationObserver (linha ~4817).
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
   frame.setAttribute('referrerpolicy','no-referrer');
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
@@ -4705,178 +4643,7 @@ window.addEventListener('scroll', () => {
 });
 
 
-// ══════════════════════════════════════════════════════════════
-// 16. BLOQUEADOR INTELIGENTE DE ANÚNCIOS + PERSISTÊNCIA DE ESTADO
-// ══════════════════════════════════════════════════════════════
-(function(){
 
-  // ── LISTA DE DOMÍNIOS DE PLAYERS LEGÍTIMOS ──
-  // Estes domínios NUNCA serão bloqueados pelo anti-anúncio
-  const ALLOWED_DOMAINS = [
-    'vidsrc.to', 'vidsrc.me', 'vidsrc.pro',
-    'cdn-embed.com', 'embedmovies.org',
-    'warezcdn.site', 'warezcdn.lat',
-    '2embed.cc', '2embed.ru',
-    'multiembed.mov', 'multiembed.cc',
-    'autoembed.co', 'autoembed.cc',
-    'youtube.com', 'youtu.be', 'googlevideo.com',
-    'blogger.com', 'blogspot.com',
-    'jwpcdn.com', 'jwplayer.com',
-    'cloudflare.com', 'cdnjs.cloudflare.com',
-    'jsdelivr.net', 'unpkg.com',
-    'themoviedb.org', 'tmdb.org',
-    'image.tmdb.org'
-  ];
-
-  function isAllowedUrl(url){
-    if(!url) return false;
-    try{
-      const u = new URL(url, window.location.href);
-      return ALLOWED_DOMAINS.some(d => u.hostname.includes(d));
-    }catch(e){ return false; }
-  }
-
-  // ── A. Bloqueio INTELIGENTE de popups ──
-  // Só bloqueia popups que NÃO são de players legítimos
-  const _origOpen = window.open;
-  window.open = function(url, target, features){
-    if(isAllowedUrl(url)){
-      console.log('[PureFlix] popup de player permitido:', url);
-      return _origOpen.call(window, url, target, features);
-    }
-    console.log('[PureFlix] popup bloqueado:', url);
-    return null;
-  };
-
-  // ── B. Proteção contra redirecionamento FORÇADO por anúncios ──
-  // Só bloqueia se a URL de destino NÃO for um player legítimo
-  let _lastNavTime = 0;
-  window.addEventListener('beforeunload', function(e){
-    // Se o hash indica que estamos assistindo
-    if(window.location.hash.match(/^#(movie|tv)\/\d+/)){
-      // Só bloqueia se foi há menos de 2 segundos (redirecionamento forçado)
-      if(Date.now() - _lastNavTime < 2000){
-        e.preventDefault();
-        e.returnValue = '';
-        return '';
-      }
-    }
-  });
-  // Marca quando o usuário clicou em algo legítimo
-  document.addEventListener('click', ()=>{ _lastNavTime = Date.now(); }, true);
-
-  // ── C. Bloquear dialogs de ANÚNCIOS (não de players) ──
-  // Só bloqueia se o caller não for um iframe de player
-  function isFromPlayerFrame(){
-    try{
-      // Se estamos dentro de um iframe, verificar se é o player-frame
-      return window.frameElement && window.frameElement.id === 'player-frame';
-    }catch(e){ return false; }
-  }
-  try{
-    const _origAlert = window.alert;
-    window.alert = function(msg){
-      if(isFromPlayerFrame()){ console.log('[PureFlix] alert de player permitido:', msg); return _origAlert(msg); }
-      console.log('[PureFlix] alert bloqueado:', msg);
-    };
-    const _origConfirm = window.confirm;
-    window.confirm = function(msg){
-      if(isFromPlayerFrame()) return _origConfirm(msg);
-      console.log('[PureFlix] confirm bloqueado:', msg); return false;
-    };
-    const _origPrompt = window.prompt;
-    window.prompt = function(msg){
-      if(isFromPlayerFrame()) return _origPrompt(msg);
-      console.log('[PureFlix] prompt bloqueado:', msg); return null;
-    };
-  }catch(e){}
-
-  // ── D. Proteção contra iframes de ANÚNCIOS ──
-  // Só aplica sandbox restrito a iframes que PARECEM ser anúncios
-  const _origAppend = Element.prototype.appendChild;
-  Element.prototype.appendChild = function(node){
-    if(node && node.tagName === 'IFRAME' && node.id !== 'player-frame'){
-      const src = node.src || node.getAttribute('src') || '';
-      const width = node.width || node.style.width || '';
-      const height = node.height || node.style.height || '';
-
-      // Se o iframe é de um player legítimo, NÃO toca no sandbox
-      if(isAllowedUrl(src)){
-        console.log('[PureFlix] iframe de player permitido:', src);
-        return _origAppend.call(this, node);
-      }
-
-      // Se o iframe é muito pequeno (provável anúncio) ou invisível
-      const isTiny = (parseInt(width) > 0 && parseInt(width) < 100) || 
-                   (parseInt(height) > 0 && parseInt(height) < 100);
-      const isHidden = node.style.display === 'none' || node.style.visibility === 'hidden' ||
-                       node.style.opacity === '0' || node.getAttribute('hidden') !== null;
-
-      if(isTiny || isHidden || !src){
-        // Anúncio detectado: sandbox restrito
-        node.setAttribute('sandbox','allow-scripts allow-presentation');
-        node.removeAttribute('allow-popups');
-        node.removeAttribute('allow-top-navigation');
-        console.log('[PureFlix] iframe de anúncio sandboxed');
-      }
-      // Se não parece anúncio, deixa como está (pode ser componente legítimo)
-    }
-    return _origAppend.call(this, node);
-  };
-
-  // ── E. Bloquear links _blank SUSPEITOS ──
-  // Permite links de players, bloqueia links de anúncios
-  document.addEventListener('click', function(e){
-    const a = e.target.tagName === 'A' ? e.target : e.target.closest('a');
-    if(!a) return;
-    const href = a.href || a.getAttribute('href') || '';
-    const target = a.target || '';
-    const rel = a.getAttribute('rel') || '';
-
-    // Só bloqueia se for _blank E não for domínio permitido
-    if(target === '_blank' || rel.includes('noopener')){
-      if(!isAllowedUrl(href)){
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('[PureFlix] link externo de anúncio bloqueado:', href);
-        return false;
-      }
-    }
-  }, true);
-
-  // ── F. Auto-Resume: salva estado com localStorage ──
-  function pfSaveWatching(){
-    try{
-      localStorage.setItem('pf_watching', JSON.stringify({
-        hash:    window.location.hash,
-        id:      window._curId   || '',
-        type:    window._curType || '',
-        srv:     window._curSrv  || 0,
-        ts:      Date.now()
-      }));
-    }catch(e){}
-  }
-
-  function pfRestoreWatching(){
-    try{
-      const raw = localStorage.getItem('pf_watching');
-      if(!raw) return;
-      const w = JSON.parse(raw);
-      if(!w || (Date.now() - w.ts) > 30000) return;
-      localStorage.removeItem('pf_watching');
-      if(w.hash && w.hash.match(/^#(movie|tv)\/\d+/)){
-        setTimeout(()=>{ window.location.hash = w.hash; }, 300);
-      }
-    }catch(e){}
-  }
-
-  window.addEventListener('pagehide',        pfSaveWatching);
-  window.addEventListener('visibilitychange', ()=>{ if(document.hidden) pfSaveWatching(); });
-  pfRestoreWatching();
-  window.addEventListener('pageshow', (e)=>{ if(e.persisted) pfRestoreWatching(); });
-
-  console.log('[PureFlix] Proteção inteligente ativa ✓');
-})();
 
 
 // ══════════════════════════════════════════
@@ -4924,8 +4691,8 @@ const _origOpenDetails = openDetails;
 // Patch para esconder bottom nav na página de detalhes
 document.addEventListener('DOMContentLoaded', ()=>{
   const nav = document.getElementById('mobile-nav');
-  const cats = document.getElementById('mobile-cats');
   const obs = new MutationObserver(()=>{
+  const cats = document.getElementById('mobile-cats');
     const detOpen = document.getElementById('page-details').style.display === 'block';
     if(nav)  nav.style.display  = detOpen ? 'none' : '';
     if(cats) cats.style.display = detOpen ? 'none' : '';
