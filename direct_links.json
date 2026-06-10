@@ -1,535 +1,93 @@
 {
-  "456": {
-    "title": "Os simpsons",
+  "37424": {
+    "title": "Hagure Yuusha no Estetica",
     "type": "tv",
     "episodes": [
       {
         "season": 1,
         "episode": 1,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP01"
-      },
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxXiiECaKhL6pivwH7BNazOXhgOfSzMXJBKbL3qEPnAuwDdil_NFODR5F2NdepLnzth-KAaW0Uc9COv2hM4a6-CXdNOqyRkOXAYOpzik6cjwu0vI-yxjReOYGF4Q9_-KDXYl-c"
+      }
+    ]
+  },
+  "95479": {
+    "title": "Jujutsu Kaisen",
+    "type": "tv",
+    "episodes": [
       {
         "season": 1,
-        "episode": 2,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP02"
-      },
-      {
-        "season": 1,
-        "episode": 3,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP03"
-      },
-      {
-        "season": 1,
-        "episode": 4,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP04"
-      },
-      {
-        "season": 1,
-        "episode": 5,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP05"
-      },
-      {
-        "season": 1,
-        "episode": 6,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP06"
-      },
-      {
-        "season": 1,
-        "episode": 7,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP07"
-      },
-      {
-        "season": 1,
-        "episode": 8,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP08"
-      },
-      {
-        "season": 1,
-        "episode": 9,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP09"
-      },
-      {
-        "season": 1,
-        "episode": 10,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP10"
-      },
-      {
-        "season": 1,
-        "episode": 11,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP11"
-      },
-      {
-        "season": 1,
-        "episode": 12,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP12"
-      },
-      {
-        "season": 1,
-        "episode": 13,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP13"
-      },
-      {
-        "season": 2,
         "episode": 1,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP01"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxXiiECaKhL6pivwH7BNazOXhgOfSzMXJBKbL3qEPnAuwDdil_NFODR5F2NdepLnzth-KAaW0Uc9COv2hM4a6-CXdNOqyRkOXAYOpzik6cjwu0vI-yxjReOYGF4Q9_-KDXYl-c"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 2,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP02"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyQO4BmgmyANnCEeTZLivgKaIMviwZQaLqrzcrKgXrWASq7kN7icrOzaWPfp6b-GR0h3-KTin6Ih_Rx7t0RlcvBB68s8DsKfATSuo2LeIVeETrtKfcyKOtz1XlRujLPruAVIrw"
       },
       {
-        "season": 2,
-        "episode": 3,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP03"
-      },
-      {
-        "season": 2,
-        "episode": 4,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP04"
-      },
-      {
-        "season": 2,
-        "episode": 5,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP05"
-      },
-      {
-        "season": 2,
+        "season": 1,
         "episode": 6,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP06"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dw44sAOJbjwE92EmKrl4t3lwj3NzwqDlPNX3U-gcY9afmwH50x90QMcD3Ihn2WTw0LOGhHrVVh_fRi_F0WRR_SnegNKeK9al4iQOgX1VQ_86HLatyBkPRZFfvUTgROYNVF097wF"
       },
       {
-        "season": 2,
-        "episode": 7,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP07"
-      },
-      {
-        "season": 2,
+        "season": 1,
         "episode": 8,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP08"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwUJTEi2HQkTpZKddn6yQ-kEwiRbGN7RODd01dUCoJCmr5Wt14EVNY9CRL9T2PRLknX-tSwnzHa88UxCHld2PxaV9nmGKQV2-4egDXp1870pY2XVK99o94KI3Jkg5AQOGLRGNJT"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 9,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP09"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxJBRGY9Op-2ax4As7nI_nTAF4Kh5QAc8M1gJhCuExcXay7jKOc0_yQk2JYANTDbRavLiVteNcwa7hRsXfiOLCzSujwzct88o_VoCEO7jPGJW9Ygc7GcRH7WOOj4BzNIEE1s2g"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 10,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP10"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzJ1PVdcS3jA2uu89ciMG5bu8sGGn2t2WmV9GoaU4oGk3v3VckFwsZ-SOj5Ud-iN1AzPEmitHXnuVbPiKvOThdku3IArELyx0nfiS4vsChambGwb-eXjxB8UiHzIAWJQqcj0zFr"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 11,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP11"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzLhnjGZdMuoy32xEausEIzzmAU2p-taXIkqFn-psbVQGjM6cNUSFxy78UD2EmZss8Hst1mNhcJNDAN7nyLKdfjZXdITZdJTvS_UURu_l-0awLdbwZzAMSozgNZe6KVkCwd2rvM"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 12,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP12"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx4UJoSqfW5Y-qRCUMAhSmQOoPsHUhS6jfKOf5_xOe0mr_a8aelLq-CtLxPHD3xFXgE3xu7kU2Vcdo1hsuy1SjO-vYv9r5xuZEboSTTQSNrNyDkYNIWuEdp1T3sI80zZjTQe-Wf"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 13,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP13"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dynDKhLjxoC_UUne9fw2MkULFNNqIF-GOQ2IzG-siRdx4KxHnGBo-iBVM11f8zmdhw9ELMssMoLXuEUkdoMJ_2fpht58cSzJTHbYj_5gzWb44NIJQXelTc6qwOgU1brZEDd_nU"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 14,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP14"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwcccfLaNSV9CKfhlSXqhkyNab_kBdFi4rGjUMbJ-n7qqqTy15Ay4KTjvV_Ds2Ylju1x7PC51A6DSMHFw6J_OVYQo5KM_iLp0MI4N47CrF94anhZ3aiKYuj_f91XNOIj43x2FTQ"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 15,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP15"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxXJ9bYr44pUEJfK62VlpYf2MhcSdkEPNN3AfFNylWOk0h-1NIRVpBnm0tSM0lCFgOTYJPG-pAwzKlQYyl1ortYusuk4kLe6O4SjnaM7naoXAYdH4UyVhheddBKxCU4wUJzgDlf"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 16,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP16"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx1PnaewgUL_ngiJCRxzWTFU8N9Bpf3g9zEr3m5hGZtw8QEDiReg7XM9NnOrAcLzcgZl63MsCrhXziAchSFX9VykVWJmo9kjp6a7sWeC592c7UN8qSyyOrQ6Xwc7WLCLSZcUcA"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 17,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP17"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwGxqUQXEoCjK-27P0nhI60at0IWGcIXqD9yZlXJG1fDxy5KoYjNVELUG-FFLmPxFYZTxWt9ICf9yhhQMtdRq8VSgQV-HI8v8o_mCxaN4scrsYcfvzk5LGApF2yBoLRpVJJYlQM"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 18,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP18"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyC-EeX82sKykv4bohZR23aw1SLGorC5REBQNtL_RZhJRfRkYgcQotlcgQ1VDfxniEGFJg3TT7WgpOCIlGP_vrZZLZfAf46qa5ooMUh5ngrn09_FQmMHeafvhg4WnTl8Xt-_g9M"
       },
       {
-        "season": 2,
+        "season": 1,
         "episode": 19,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP19"
-      },
-      {
-        "season": 2,
-        "episode": 20,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP20"
-      },
-      {
-        "season": 2,
-        "episode": 21,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP21"
-      },
-      {
-        "season": 2,
-        "episode": 22,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP22"
-      }
-    ]
-  },
-  "16907": {
-    "title": "Naruto: O Confronto Ninja no País da Neve",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCServer08&subfolder=ondemand&vid=NRTOFILME01"
-  },
-  "18861": {
-    "title": "Naruto: Guardiões do Reino da Lua Crescente",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer5&subfolder=ondemand&vid=NRTOFILME03"
-  },
-  "50723": {
-    "title": "Naruto Shippuden O Filme: A Torre Perdida",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=935d8edf"
-  },
-  "118406": {
-    "title": "Naruto Shippuden O Filme: Caminho do Ninja",
-    "type": "movie",
-    "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/06.mp4/index.m3u8&nocache1771202931"
-  },
-  "36728": {
-    "title": "Naruto Shippuden O Filme: Herdeiros da Vontade",
-    "type": "movie",
-    "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/03.mp4/index.m3u8&nocache1771203205"
-  },
-  "17581": {
-    "title": "Naruto Shippuden O Filme: Laços",
-    "type": "movie",
-    "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/02.mp4/index.m3u8&nocache1771203529"
-  },
-  "31910": {
-    "title": "Naruto Shippuden",
-    "type": "tv",
-    "episodes": [
-      {
-        "season": 1,
-        "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeC03V1JpQ0Y4ZHV5dHVCNFdOcXBoSXB6MjZyQjFMN2Q3N1lhd19OOXJyd0VEMEJWdGpiTWltcGhkTkJHbjQyUXpBMXkzeDJzYnZaTjI2SGlfR3ZycHhlSHlkYzlQdDgyQjR5cTFRcTMxdURQcjY3S0RZWVZQeEtZUl9fYVR4bEttZTNaYw=="
-      },
-      {
-        "season": 1,
-        "episode": 2,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkelBGTXlnSVVwYzZPdGpCd1JjcWFJSTc4dHAzRjRBeFJRQXBWUEN0aVd3dTQwTzcxWklVX3pnVFhISmRvMERyUjRzSDdNUHRKZ18zSlE5bVNhZVZkWGt1UWFIaFVYbWsxTzNQeURoZ3VjaVlfVGM0Z2pDbm8wY3RkcVctblZZVVBQOTdZTQ=="
-      },
-      {
-        "season": 1,
-        "episode": 3,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkekRsWEoyZWgtM2owSFJqNVF0dS1fUFVtNlZYQndidTh6U0FIMERvdXJvMFNYRU5iZXYyb1Z6UWpON2VMY0dPcVktSzM3a1l1M001WWFNOWptNUxDUXNyR19iUDBJZkprYzRDOGdkQUZQSW9ZQ2laTVRDRlozU2tQNkU4QUpFUmxUUDdoSQ=="
-      },
-      {
-        "season": 1,
-        "episode": 4,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkempZLWxYUHM1ZXd2WGhtUm1wY3VEd3FVbV82RWNNam1mZ2dfV18yVWhPVzJGQnltSXhObGh3U3o4XzZBaHZuVXdWbHFJMy1aOTlkNHNXajJzTzBrUVpuM2dfMkI0OWUwU3czSW42RzFBdUFXS1dvVklLSTJFOFJfLXZESGRuR2VPWTJtYw=="
-      },
-      {
-        "season": 1,
-        "episode": 5,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd2t0QlU3Nkk2cmZWbTZyOGJjSy11WUVzSTdJSWVDZEF0SG92Z0tRbXBYSF9mUHFZWmtkeWVCUk5IV25uWGI0Q0lOLU9oT3d0TUJGR1pDUmczUmFRZk1VQWV6Ulk3cXVUQnBGUDloSWRRc0hxeHpwWngzZ2NtVmVPVHotUnlFT3l0d1g5RTA="
-      },
-      {
-        "season": 1,
-        "episode": 6,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeTJpclpENkN5RjNSbnZsZGtsQ1dXSmZYcEJMVVpYaTNvZ2NmOWhRMWlZdzRWWHBKS3JFQnd3cFNSZlRlWVMzQU04UmxLdllYeVk0am1nVXVUN05YV0JZOXNoMngwOHNQMlE0RXRRcTFFMFZSRTlPY1RQd1YydE93ajREd19lLTNuSHRiWnU="
-      },
-      {
-        "season": 1,
-        "episode": 7,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeVVqNXA2U1Exa1NFNW4xeWQ3WmtJY28tQlpTeGNqWUFabkVQOEo1dElscmpWMGlMSTh5MVRPZ3BoeFJFRDRQald4OEc5TWxaMlpFQ09JUFpMM2xBdHViOFFlbHpwd2NTWHpTcDhUcTBtTjlnRjc5VGxQMl91cTBnbHpaYkdVVm1hUWhnWTY="
-      },
-      {
-        "season": 1,
-        "episode": 8,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkemxVSVNMVEJZdmFVZ3E3WWUtanpaeG1XYWJEN3hBYmF1dndVbEZvbEMyNmhyYmJPcFZIbFNrMWpvMlppUGNGQnRoNXBhWnpicHJPcDZiM2NVQTAwX2hqb1N5YVB2MTFWRWhyejdvQmJVbFJfVHdZMFRhUkRaTmxNRnZOSzhFNko0cV9UUUo="
-      },
-      {
-        "season": 1,
-        "episode": 9,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkejlWME5VcHViN29WUzJIN1V3eXJSUzJnVUdmMm9EVnljc2xRX3I4MnBzR056LTJNb0RnSUFKWlBNcy1WTkQ5amI1dGoySWVFaWZQVkNiTHVPM0ttSnJPRW92alJXT1ZoU2JXd3E2OGhvbW04NUsyRGUyNkpaUlR1YmhfTGx0ZC1XTlJnT3Y="
-      },
-      {
-        "season": 1,
-        "episode": 10,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd0VzNWctbzl3ZTlmZkdCQWVLbjU4MXdxcFRxWTN4UWVyVmR1bXI3NUZGeXVYTXFtTkFKWmJDLUx4N1FHLTd3SGpsWHBtZnFVTXN3OE5mR2lTVl94UDk2YmdTdTh3NVFwOXhCaThPdC14MG1nTU1lcURzVDFpcjF6WWNjbkdiUl9NUmNkcWg="
-      }
-    ]
-  },
-  "46260": {
-    "title": "Naruto",
-    "type": "tv",
-    "episodes": [
-      {
-        "season": 1,
-        "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd3VqWW5jZ3BaYzRfUVhYRVJ6SkJmN2Y0dk9zcC13YmpZVXB2aEVSeGxZb1JiZV92WlRVNnJfbXFBUGR4dUNZdU1iNnFob0JPVXhhZXExcndMMTZIOXhteC1pQW9FdllLMTZPLWh1UUI3RnllNHZ1bVlYOVJpa3E1V0pFRUw0U2U2eGhwWFc="
-      },
-      {
-        "season": 1,
-        "episode": 2,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd2hyS0NJVXFFVlpoNVA2bVU4NmpjVXVaSUF5M3gzRUZZZWZOTFpnb2FVcDNlV3QzOEstZXhhLTJ4Ny1Ya0RrTU5zZWF5RENDOXpycVJoajBLb3NSSk5QMFhqVDMtYW83WWpEQjhWTmJ6ZnFlUVRva3JSRkpyXzR6R1ZRbGhrWXRaOUFmNA=="
-      },
-      {
-        "season": 1,
-        "episode": 3,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd3FyMUZZdXBSMFdvRkJkWkc1N2Rrejlrb3N4VlBPSUFDeUZQRjFrUnhvN3N3TG1XVjhjakhNWlpSblNqZUxGX3BMQnpDMmpReHg1WEl2cVI0dGk0REwxT0s4bTJ6cXBEOW51YzNyVEdRU1ZsSVM2U0FBdkZWVEtyRWtTOXNBa2VMUkVwSVU="
-      },
-      {
-        "season": 1,
-        "episode": 4,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeHlQMlNuMGlpYXlGaDJNZVFERFFLaVNvd2hrdmFGLTAxQy11bVBDVkZKeTl2WkZXdTNJVEI5RzlQRmFIT25CWlpLQTUyVVBNN0g5dUhLU18wd01aNDRwYW1QaERfaDg1cnFsSjRDVHhiMUEyQ2p2eHNYNmRabV84TzNVOE5nNHRWOE9Jaw=="
-      },
-      {
-        "season": 1,
-        "episode": 5,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd0ZRQnJuNkNfczBQSmt0a0VJSGRDc2JucnIxZExqYURVYkZZbWRDSEJTMFoxQVhQNGhkcVlGVkZka3Y5RlEycXVMcW9TNDgxaWZCR2lsOU00MURUMlowdDZsT2tFVHI1eVJfa3h2b09QdGRTaFdFZ2g2N3ZJeUdYcGpvMFhKQzZLbGpxQUI="
-      },
-      {
-        "season": 1,
-        "episode": 6,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkekl2SV85VVhjWmxWUHgxNVR4M3Y4blVDT0Z5S2hXM0c1QXFVclY4MXRrOGJtdUJtTEowdnI5QlBxbFRScmxkeHZBUDkyVUlRMTcxblBISjU1X3ZocWJ3cUkzWXVndS1OaEJVSnd4UUdjdVBfREwxUkF4UGFKaGFZRWRJc2NKdVRhTGlaWDk="
-      },
-      {
-        "season": 1,
-        "episode": 7,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeDNWdlNvQlQwdGRsdUxCdUdrWnM4em4tSkRwalhoTkY5eHc1cWxjVzljN0NGX1k2UmNnTmQ2dHA2d2lMSVIyaS1RbXJUYXU2LXpPZTNqSE16czRlQ0ZjWjJoMHFCVFRjV0hDbkRwbHBYRFNzd0NtY1ZubHRIaUxCLUU0eDRBelk4TkNocTk="
-      },
-      {
-        "season": 1,
-        "episode": 8,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd0s1eEVNMDNUNmhiMl85bFQ2bElkdzlpa1lLOE0wVS1FOUJWYnI1V0tndmV0S0hQdEJLTmdCZDkwMTBuclNXOHJxNUF3ZUFqWWlHdHQ5eFQ2X3lCRXR6T3JxUUxSYTZlRmZuVm04cVBnN2M1S280RHhhQ0F0TG9vcV9wZER0SFhjQzVJaw=="
-      },
-      {
-        "season": 1,
-        "episode": 9,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkenIyX3F5MGZIa3l6eVU0MmpiRnFxZDlzcFNxdm9wV3R6bjlNckNaMkIzcG9IMmlFX1JTemdHOTNmVkVwUXZRS25GYVRYbFlrdFl3WTNzZDgwVlhLOU9Ia2pzc0dvaHE5SFo5WENvTXZxeGUyRTBEamJkbTYxV0EyRWVRRFVneEt4UVR3"
-      },
-      {
-        "season": 1,
-        "episode": 10,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeDJHMFBwMDJGenlWR1dwZklUOWttX3lSNTlkVVdiYS04dFItQ01kYnVwcGRmQzNNalUyMDk1SDBIbnhNNWVEdkRGZVBNdTFjdFpGY2NfTXZEWEttUTNlRmY0X21iTTAtdEJ3Q0I4aHdqalVMSHMzODVFUDZydGdncDVtZG9rcHJreUZkNA=="
-      },
-      {
-        "season": 1,
-        "episode": 11,
-        "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-classico-hd-remastered/11.mp4/index.m3u8&nocache1771225130P6rtggp5mdokprkyFd4"
-      },
-      {
-        "season": 1,
-        "episode": 12,
-        "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-classico-hd-remastered/12.mp4/index.m3u8&nocache1771225129"
-      },
-      {
-        "season": 1,
-        "episode": 13,
-        "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-classico-hd-remastered/13.mp4/index.m3u8&nocache1771224805"
-      }
-    ]
-  },
-  "65930": {
-    "title": "My Hero Academia",
-    "type": "tv",
-    "episodes": [
-      {
-        "season": 1,
-        "episode": 1,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/1/"
-      },
-      {
-        "season": 1,
-        "episode": 2,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/2/"
-      },
-      {
-        "season": 1,
-        "episode": 3,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/3/"
-      },
-      {
-        "season": 1,
-        "episode": 4,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/4/"
-      },
-      {
-        "season": 1,
-        "episode": 5,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/5/"
-      },
-      {
-        "season": 1,
-        "episode": 6,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/6/"
-      },
-      {
-        "season": 1,
-        "episode": 7,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/7/"
-      },
-      {
-        "season": 1,
-        "episode": 8,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/8/"
-      },
-      {
-        "season": 1,
-        "episode": 9,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/9/"
-      },
-      {
-        "season": 1,
-        "episode": 10,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/10/"
-      },
-      {
-        "season": 1,
-        "episode": 11,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/11/"
-      },
-      {
-        "season": 1,
-        "episode": 12,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/12/"
-      },
-      {
-        "season": 1,
-        "episode": 13,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/1/13/"
-      },
-      {
-        "season": 2,
-        "episode": 1,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/1/"
-      },
-      {
-        "season": 2,
-        "episode": 2,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/2/"
-      },
-      {
-        "season": 2,
-        "episode": 3,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/3/"
-      },
-      {
-        "season": 2,
-        "episode": 4,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/4/"
-      },
-      {
-        "season": 2,
-        "episode": 5,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/5/"
-      },
-      {
-        "season": 2,
-        "episode": 6,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/6/"
-      },
-      {
-        "season": 2,
-        "episode": 7,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/7/"
-      },
-      {
-        "season": 2,
-        "episode": 8,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/8/"
-      },
-      {
-        "season": 2,
-        "episode": 9,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/9/"
-      },
-      {
-        "season": 2,
-        "episode": 10,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/10/"
-      },
-      {
-        "season": 2,
-        "episode": 11,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/11/"
-      },
-      {
-        "season": 2,
-        "episode": 12,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/12/"
-      },
-      {
-        "season": 2,
-        "episode": 13,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/13/"
-      },
-      {
-        "season": 2,
-        "episode": 14,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/14/"
-      },
-      {
-        "season": 2,
-        "episode": 15,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/15/"
-      },
-      {
-        "season": 2,
-        "episode": 16,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/16/"
-      },
-      {
-        "season": 2,
-        "episode": 17,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/17/"
-      },
-      {
-        "season": 2,
-        "episode": 18,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/18/"
-      },
-      {
-        "season": 2,
-        "episode": 19,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/19/"
-      },
-      {
-        "season": 2,
-        "episode": 20,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/20/"
-      },
-      {
-        "season": 2,
-        "episode": 21,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/21/"
-      },
-      {
-        "season": 2,
-        "episode": 22,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/22/"
-      },
-      {
-        "season": 2,
-        "episode": 23,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/23/"
-      },
-      {
-        "season": 2,
-        "episode": 24,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/24/"
-      },
-      {
-        "season": 2,
-        "episode": 25,
-        "url": "https://serv01.meusdoramas.club/#/video/659301/2/25/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxAqvFoyIsF0z1WSYRTBPkyYHozz8H2da_o48pgUOlgSId-muW1XLACqXQu2tGhjxPbw8bfzPZSc-wxDDP-FiX5ZV-WLz0tIXQmd8CK4BmWPKBfq283sOqzi4nLQRQ188K3rVM"
       }
     ]
   },
@@ -575,213 +133,780 @@
       {
         "season": 1,
         "episode": 8,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkekprZnhtQ0dWVWNmM0FZNnZRUUlJSVA3R1owc3VhREhGNjZHYi1XaUN5R2pCOGp3UlZVUFh3YWRKSGxYX01Xd2FRb015TWpvU3pBZlN4QVFIZ1R3SzJFd21vWWxzSWkzTnhqTGZTaDNZd1lJVWwxLV94TXFkbEQ3OTdNYkZUcEFSaUZGd1o="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzJkfxmCGVUcf3AY6vQQIIIP7GZ0suaDHF66Gb-WiCyGjB8jwRVUPXwadJHlX_MWwaQoMyMjoSzAfSxAQHgTwK2EwmoYlsIi3NxjLfSh3YwYIUl1-_xMqdlD797MbFTpARiFFwZ"
       },
       {
         "season": 1,
         "episode": 9,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkenc0aE02c0pqVWZJZ3RDT2pHc293SkRCOEpKTzFObHFqNTM5cDM5cDRha0dCYlhzaXZrZ0NMbVZQaHBwRlA5cXpKbHA1TmJwOVN4X3hYVk9UMkh0WENhaVA1QU5wZHNQQzRpb0IxM1BhdkRkTkhDYlVtZEZKTDcyTFRBNFBvamk5cXd6TQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzw4hM6sJjUfIgtCOjGsowJDB8JJO1Nlqj539p39p4akGBbXsivkgCLmVPhppFP9qzJlp5Nbp9Sx_xXVOT2HtXCaiP5ANpdsPC4ioB13PavDdNHCbUmdFJL72LTA4Poji9qwzM"
       },
       {
         "season": 1,
         "episode": 10,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkemJ1TDVoX2tpTllERlJKbi1BNjZ0b2tFbF8zeTEtc1AxbkdTNC0zdDF2a05BRVVzQ0F2NVhkOUhLUGV3bURKVkVQbHczRkR4UE5hSXdpXzktaFpNaGZrUDBKdmRRaHNNejBYSlhYNXM3ZnQwRkNFZGxwaUg0dFpCZHNzSnpqT0EyT0NHNA=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzbuL5h_kiNYDFRJn-A66tokEl_3y1-sP1nGS4-3t1vkNAEUsCAv5Xd9HKPewmDJVEPlw3FDxPNaIwi_9-hZMhfkP0JvdQhsMz0XJXX5s7ft0FCEdlpiH4tZBdssJzjOA2OCG4"
       },
       {
         "season": 1,
         "episode": 11,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd3RSRWI1c011YmFsX2V5dmFEVU5UT0tiU0oyOUh4a1l6OXNwd3J6amNQMWo4NWRzMzQ4d1E5dTNZcm1uM09uamh6N05MclBLS3ZiN2p0LVlmWjZLQlRBMllVWlJhS2JaM250TTloLWZhQXRBUFFhVzUzcVJGeUxlbWs1RFNWTzh2TERpdTk="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwtREb5sMubal_eyvaDUNTOKbSJ29HxkYz9spwrzjcP1j85ds348wQ9u3Yrmn3Onjhz7NLrPKKvb7jt-YfZ6KBTA2YUZRaKbZ3ntM9h-faAtAPQaW53qRFyLemk5DSVO8vLDiu9"
       },
       {
         "season": 1,
         "episode": 12,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeS1oYkt5TUVySUh5ZnF5TW8tRHlZblZ5ZExSQ1NmYjFCUE51THJUY0lwQ0VYSzNod3ZMdEUtd2lqQjF4VlI2Z3FtU2JTOVJSRjVVZjItWXdIZ1Y3TzFyd3AyMmFMT19fRXVqSGVJbEc2T2p4Z0N1MXE0RlU4aFZYMkk1M0JRTVNTc3htdE0="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dy-hbKyMErIHyfqyMo-DyYnVydLRCSfb1BPNuLrTcIpCEXK3hwvLtE-wijB1xVR6gqmSbS9RRF5Uf2-YwHgV7O1rwp22aLO__EujHeIlG6OjxgCu1q4FU8hVX2I53BQMSSsxmtM"
       },
       {
         "season": 1,
         "episode": 13,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeWV1eWVrbVZQZFozNTdNOUhkWmcxckdrLUVUaEViNlk2SVNXOHo5T2tSa1E1Q1lxbUhSaTJFVkc2a1NOS0I3Mm0zNzZnWXVrWDU3cUtFSXJQRG51c3N5N0Q0ZUtxNnE2RGkzeE9aN0REc29oek00c01la3MxOU5UR1FZLUptcHh2ZjgyLXQ="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyeuyekmVPdZ357M9HdZg1rGk-EThEb6Y6ISW8z9OkRkQ5CYqmHRi2EVG6kSNKB72m376gYukX57qKEIrPDnussy7D4eKq6q6Di3xOZ7DDsohzM4sMeks19NTGQY-Jmpxvf82-t"
       },
       {
         "season": 1,
         "episode": 14,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeFhZdE54LXB6aWw5cW1WdEY1RUhZbXp0a1pIZ3p2Wl9lT1lyYk93V3ZDWFFtdklaVTdHQ0d4clA4di0zMmZLMzdmWFY0RWFtQzJyQ1FVVktnbC1RdnA3WHlKR0NEWU4xNWhLRDM3ZkZ1TkswamhEWnUxZUZOV09LOHFBc3JPRE5mbmpWcS0="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxXYtNx-pzil9qmVtF5EHYmztkZHgzvZ_eOYrbOwWvCXQmvIZU7GCGxrP8v-32fK37fXV4EamC2rCQUVKgl-Qvp7XyJGCDYN15hKD37fFuNK0jhDZu1eFNWOK8qAsrODNfnjVq-"
       },
       {
         "season": 1,
         "episode": 15,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeVpUaFlfQUhjRkotdEROQXgxQ2FSOVZsdU1hYVRlOHdfcmJDOGFlOVNjMVVqMTZNVEMtZFdXVkZTelk1VlpZV01Sck1KakpNUzRjNEIxYkk5amVpeFdXdW9SRExsZjJhRWY5Yk5xV3Ruek1Ka2ViM3Jad0hFT1ZGZFlYeUhVV1RTUE5KVnU="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyZThY_AHcFJ-tDNAx1CaR9VluMaaTe8w_rbC8ae9Sc1Uj16MTC-dWWVFSzY5VZYWMRrMJjJMS4c4B1bI9jeixWWuoRDLlf2aEf9bNqWtnzMJkeb3rZwHEOVFdYXyHUWTSPNJVu"
       },
       {
         "season": 1,
         "episode": 16,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkemNfYXlWTWhLa0F5RFNFcTVILVM2UHN2M0pnQ3JNeUI0VGZFMkZUcWhGQy16OVVRWnNObnY1Zy1nbEQ4a1k3Y2s3R2JxX1diTlZGek81YzhxYXctY2lRQXZ1OVlGaHh5N3d5OXJ1UmtlTnVnM3NMZXA2T3BMaTRjS0tUakVIbWJIekFZWQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzc_ayVMhKkAyDSEq5H-S6Psv3JgCrMyB4TfE2FTqhFC-z9UQZsNnv5g-glD8kY7ck7Gbq_WbNVFzO5c8qaw-ciQAvu9YFhxy7wy9ruRkeNug3sLep6OpLi4cKKTjEHmbHzAYY"
       },
       {
         "season": 1,
         "episode": 17,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkel9TSFZUUGxzcFlTUGY4Wmc4c29Qam0tSUE3NElPNDhtWTd6aDE3T3R4LWZIYllDckVwdC10Z3ZvSjliVHZvNlpfSkg2d2d5Ym1lbEpSU0FRVGlBd2VRQy1ZRnRpdzZVZFA3MWdkR3R2enVJU2xiN0ZRTDZXVDBIajJaSXdiRnAybzdQVmE="
-      },
-      {
-        "season": 1,
-        "episode": 18,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeXlIX3FQcXQyNEhDaHNwQ2FvR19vWm10RnpVZ1AyZjRaZ3VCNDRYRGZCbXd4X2lFTUs3eVhIVzBlVXBnd09jVTFsb2RqS2UxZ05ZaFkzb0h4S0piLWF1S25WWHhtT19NWS1zeTBHSjB4SWItZ3A5THJ1Z1dJM2U4MHZnZGpqSkNBbUZtNTI="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dz_SHVTPlspYSPf8Zg8soPjm-IA74IO48mY7zh17Otx-fHbYCrEpt-tgvoJ9bTvo6Z_JH6wgybmelJRSAQTiAweQC-YFtiw6UdP71gdGtvzuISlb7FQL6WT0Hj2ZIwbFp2o7PVa"
       },
       {
         "season": 1,
         "episode": 19,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkelU5MjZvaXdHYm9TWU1zWHhoeU92YVM3a3FDc3prRlN5M2txb0E1c3lQYUNVaXpwVHdHTENZbW9JTnlXekpJXzh3YWw3UThmNG51czBOUzlyYndwcURnc2FnNjlybkFHdnpTZkZ2cldfX1gyZ3FmRDhwcmh3Tzh3bmVlYkNyRWxRZEZGQ24="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzU926oiwGboSYMsXxhyOvaS7kqCszkFSy3kqoA5syPaCUizpTwGLCYmoINyWzJI_8wal7Q8f4nus0NS9rbwpqDgsag69rnAGvzSfFvrW__X2gqfD8prhwO8wneebCrElQdFFCn"
       },
       {
         "season": 1,
         "episode": 20,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeUxUcDF6OTNFa0p4V0ljODRCR3I4WjhaZ0hudTRtMkpuVUotb1RMZHVjSkN4R1c3QXNvMXhUelhJN3FZbktOcTQ4eU1aRE84SVVaWG9sdFJXUWNfQzNtcTkyand2aHFsMm1Jc2V4OEJEempfRks1cXFlUmFNV2UyN0E2ZzJMSktNcEpnQQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyLTp1z93EkJxWIc84BGr8Z8ZgHnu4m2JnUJ-oTLducJCxGW7Aso1xTzXI7qYnKNq48yMZDO8IUZXoltRWQc_C3mq92jwvhql2mIsex8BDzj_FK5qqeRaMWe27A6g2LJKMpJgA"
       },
       {
         "season": 1,
         "episode": 21,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeVdydnR2TUI2cDh0VnBHZVJ3VkF5SmtOc3Y4cExkVDVUMy1PRmh6VEhyVzNPTGpkbXh5QjBydU5pOWxiT3pCVUhtLTUzdWItT0xVeEVpY3dXcDVtLWgzT0s1WVU5NUVGSUowWEZWQUNYcVZUR0dlSml0RFM0M3lOQzlDaVpwZkY0eVpjUUY="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyWrvtvMB6p8tVpGeRwVAyJkNsv8pLdT5T3-OFhzTHrW3OLjdmxyB0ruNi9lbOzBUHm-53ub-OLUxEicwWp5m-h3OK5YU95EFIJ0XFVACXqVTGGeJitDS43yNC9CiZpfF4yZcQF"
       },
       {
         "season": 1,
         "episode": 22,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkdzFxZWNzX2ZZUDNXV2E1MVhYbV9aZUdsRDBhVFFsMzJFMnZPREtQaXhMd3JWY25hWHBZRTJIbGx5enZhTmRtTkRWWG5rOW8yNEpXM2dYNGNIYXJJQ2IxSks1cUlSNUI0SVg5MkVmSFBHR3Z1aXA5M1llSHZJTnE0VDg3bjRQVHVYMTE2NDE="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dw1qecs_fYP3WWa51XXm_ZeGlD0aTQl32E2vODKPixLwrVcnaXpYE2HllyzvaNdmNDVXnk9o24JW3gX4cHarICb1JK5qIR5B4IX92EfHPGGvuip93YeHvINq4T87n4PTuX11641"
       },
       {
         "season": 1,
         "episode": 23,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkenpBMm9Xenh0cE5kNU9uYWh3TGFMT1h5MmZxcXBOWmp6VEo5WUNNcU10SURKVTJNN3ZVUGZzZ0V1aDZRNHdYVXVNQ3RMaEdsTHM0VDdPWWpkTW1sOVhGYkpfcGxuaHgyYXkzU2h6X3dCcEFGd0thTzZqVVVZcGxQbWwxNDF1UkJyRFdPRQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzzA2oWzxtpNd5OnahwLaLOXy2fqqpNZjzTJ9YCMqMtIDJU2M7vUPfsgEuh6Q4wXUuMCtLhGlLs4T7OYjdMml9XFbJ_plnhx2ay3Shz_wBpAFwKaO6jUUYplPml141uRBrDWOE"
       },
       {
         "season": 1,
         "episode": 24,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeU9JU2FndXZDRWVMSi1yeGN0amtlLUttbE12TU10MHEtcExWZjg2UVhMSkVpWERnS2ltdmJaQ2o4ZjBCRk5kSWxTX2I0ME5ReW5Zbkt0NzRlVjBXc1NlbFkzRE8tT21vdGh4WXFlRXFtRk5QU3QzNkx4dFFoMjVaZkRMUmwzRF83ampfdWc="
-      },
-      {
-        "season": 1,
-        "episode": 25,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd21sNExYRUVQSk1RcnJCSFVmb2NVMlNqVEFiYktwYzBYOWx0LVRkNTBUQU52QjU1eUQ2OHA2NjdRS3E5ZV96cmFpTXB3SUhBY2Z2UUxwNS1tN2NKWGF1Qm56aUIyM1JWUUhKWW1xakJRV2VaUU9TejNka0tsTS1rcFVyMlF0ZGI3dFBHZ3Y="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyOISaguvCEeLJ-rxctjke-KmlMvMMt0q-pLVf86QXLJEiXDgKimvbZCj8f0BFNdIlS_b40NQynYnKt74eV0WsSelY3DO-OmothxYqeEqmFNPSt36LxtQh25ZfDLRl3D_7jj_ug"
       },
       {
         "season": 1,
         "episode": 26,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd0M2YU1mMGc1V2RiUGxJSlMzcXZDaWlEeXVJT2JaVlJaZExiSktYX3BwWmxzRDN3aHVVQ1BuNHRzbWhrU3pxbTdmdDZrdktPYWVzQXVTVl9sQkhKRUZBYW5jeGJCclJ0ZlkxRUVWMEJXc3RjMDQ4MUhPRTh3dmJ4QTVic2ctNE5Md0E2cFc="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwC6aMf0g5WdbPlIJS3qvCiiDyuIObZVRZdLbJKX_ppZlsD3whuUCPn4tsmhkSzqm7ft6kvKOaesAuSV_lBHJEFAancxbBrRtfY1EEV0BWstc0481HOE8wvbxA5bsg-4NLwA6pW"
       },
       {
         "season": 2,
         "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeVI1SWJreXdYeGRiZDRTQXducUd2QTJfMFl5X1N5ejRHbGdSb09hMlpwdGZrYVoxZVNzbC1jOFYxSy10YlF3VXMxRFRRLWtnZExMQy1kdWJJanR4X082LWlPQjh3R1BFXzZDV3N2Z1VpdWJ1b3I0dWloQWRkSS1Ld3ZEa19WeHM2TXpuYw=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyR5IbkywXxdbd4SAwnqGvA2_0Yy_Syz4GlgRoOa2ZptfkaZ1eSsl-c8V1K-tbQwUs1DTQ-kgdLLC-dubIjtx_O6-iOB8wGPE_6CWsvgUiubuor4uihAddI-KwvDk_Vxs6Mznc"
       },
       {
         "season": 2,
         "episode": 2,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkdzZmRzFhMU10TVZJY0xIbmlBb1dWZGF1Rm5KaDFtVXYxOFZmeTJITlVIcHZpRzBobTVpTUprT1RMWVduNjNBQnA5bW03Y3BoNU5qTWJkcFZoN1o4b1pYSW8wLWdjb3ZRRzZTMFNVaVdVSWYtUlpvSDJXNXlJcFUyQnB0UVNNTnVDUl8zYw=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dw6fG1a1MtMVIcLHniAoWVdauFnJh1mUv18Vfy2HNUHpviG0hm5iMJkOTLYWn63ABp9mm7cph5NjMbdpVh7Z8oZXIo0-gcovQG6S0SUiWUIf-RZoH2W5yIpU2BptQSMNuCR_3c"
       },
       {
         "season": 2,
         "episode": 3,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeVpFb0dlbFZjNWZIWlpZRHBxNE5IcHVnU0p1bzFzYWxvWS1XU1FLM191LXVtd2g4MzI3bk9wRHJIbWYtYmQwb2JtcHlOcXJ1OWJEZW12VlVpZWc5dkpKUXdfNmx2Mlh1ZG9VZjhEN09PREZ2Q0FJbGlYdjVuQmJBM2c3cTVNdldYYlNSV2s="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyZEoGelVc5fHZZYDpq4NHpugSJuo1saloY-WSQK3_u-umwh8327nOpDrHmf-bd0obmpyNqru9bDemvVUieg9vJJQw_6lv2XudoUf8D7OODFvCAIliXv5nBbA3g7q5MvWXbSRWk"
       },
       {
         "season": 2,
         "episode": 4,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd2RGRmVnWk1ueFdmNDZBeFNOMlZPSHdsdllKb2N2YTlhX3dBYm42QmlnU09RVHB5Umk1Z3M3bWxWa1RjRGttZWRjSHJCdUYyMmNodFJob19idXlMTWpWUVpkRHE3WGxSLWF4YVBxeVFOZUNtSUJKWjc1UFdFQXNJdnN6WV9lWHY4RVdhTQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwdFFegZMnxWf46AxSN2VOHwlvYJocva9a_wAbn6BigSOQTpyRi5gs7mlVkTcDkmedcHrBuF22chtRho_buyLMjVQZdDq7XlR-axaPqyQNeCmIBJZ75PWEAsIvszY_eXv8EWaM"
       },
       {
         "season": 2,
         "episode": 5,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeGltMEJhMXhEQUl5YVhMd3hQMndtemJSM1ViSDN5OU01X1NWTTlmUk9vVXBJS1Fzbk41UmtYVkZXSDBiN1ViUGtCQVZ1bG1pVUhnZ25qWERCTEU4eWVnd1NhU1dxbHI0WXBLbnFRZWh2V0VNX21DdWdkcXFvUjhYTThrQ19DQm9mX3U2UQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxim0Ba1xDAIyaXLwxP2wmzbR3UbH3y9M5_SVM9fROoUpIKQsnN5RkXVFWH0b7UbPkBAVulmiUHggnjXDBLE8yegwSaSWqlr4YpKnqQehvWEM_mCugdqqoR8XM8kC_CBof_u6Q"
       },
       {
         "season": 2,
         "episode": 6,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeEhPYko2N1gtM0xweGlEaEJWV2NvM2doR21FdVZBdm4wMnNEWnJpTndObmozVFBJbEh0RUd0SDBXbVJXTmRpczBxb3dfbmg0bWZLMVYtX3BndWlCSlZmck9rNFo1ZXJEbFVTZkJJUjRMODlidFRoZkRuWUN1Z1lXQmF1eFpDcy1sQi14UQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxHObJ67X-3LpxiDhBVWco3ghGmEuVAvn02sDZriNwNnj3TPIlHtEGtH0WmRWNdis0qow_nh4mfK1V-_pguiBJVfrOk4Z5erDlUSfBIR4L89btThfDnYCugYWBauxZCs-lB-xQ"
       },
       {
         "season": 2,
         "episode": 7,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd19iNU16NHRKVUpiYXVZemw4NkNzalg5czk4TDFFQ3E0V0JCYXEtVV82aWZhdHBVUkktTVpydEdEZDNYWk5ib3ZHY3U2T2FPWHhNUEVUX2tGVlpYLVFyMjdsM0FxdHUwOWdQUXk5cHd0YUExT0pXb3duTVJqWnctalY1TkhWUlpnVDA0a1M="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dw_b5Mz4tJUJbauYzl86CsjX9s98L1ECq4WBBaq-U_6ifatpURI-MZrtGDd3XZNbovGcu6OaOXxMPET_kFVZX-Qr27l3Aqtu09gPQy9pwtaA1OJWownMRjZw-jV5NHVRZgT04kS"
+      },
+      {
+        "season": 3,
+        "episode": 1,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzsKs4p_X928vJNFn5826VdEXD2Hdm1Dd3Hv3GEMOdAaz_WzPYSD1EylsqViuh4xBnt-oqyyOAkrqne8Dr6q5P4KhEk0uqEoOefX6rsvMjECR2ZfYrX5m3yfj3hFfjvdeSK-KZ_"
+      },
+      {
+        "season": 3,
+        "episode": 2,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwC2z2slOAxNENuXOajRiLgJhlIzWptMt9nX8gigNdwNsAIHz0X44hc4bxSPbxKA1fC1cDuy_0QlAFHmjvmJ2YhkowlqQt6FsVN6d4A8feYr5itsqJowH2xznjHPEARXIiwZp4z"
+      },
+      {
+        "season": 3,
+        "episode": 3,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzBQ7FU0cLcf8HIfwybOikpg5UWVnshYHlt4R01gQjkb7NoMEAoi5IcMsmQ5-ofAsjjCdZPRdjOruvKdTXW2GWY8q1sGVWnKqc4hJoQ3TjirmJeVQUbgUmXhf9uxtRGQcy1RJY"
+      },
+      {
+        "season": 3,
+        "episode": 4,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzOI-oXaXQ7WF-kuGe47BTOuQtN_FEdemaqRvKHuxkdYn9eZQxhg2aWhTyL1UX75bzAtktWtWNaaVqP19qPXtVnhmQqab0KZOzh8ICZjD3v0jrI7rfyxsOZsyEMQrr8Np_E4BEX"
+      },
+      {
+        "season": 3,
+        "episode": 5,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxBU1t8oj_b7CdMiJ7YWWxN1zMLUCVbyIeVJ2dq4SYbyXG54auycPDzHo1HpJ1g-ir31GMNLJ-LD4-TKv761xBs8UHSzWZR5TRIUd01jadvKsz7AIh9UX1X4_0KFYOQfj2z1KP3"
+      },
+      {
+        "season": 3,
+        "episode": 6,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx8IeHqOKOGO3ZDMK4c5x0Y9wMRWHPIBRNklZeOkkWUZ_ft_RcZzaxstqEQyqHGNPDGCUEON_aaDqTfb0XdpVOX_JM3TGkgjDs_716VU7tBabiZx0MU7JAXqfe_AQBOYe-nv-M"
+      },
+      {
+        "season": 3,
+        "episode": 7,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwAvZ-u-99ixXin3vwoMla4ugUsJxcP_kt2cVfCvmWaMBPFSx6cq6RaPXYjMR5XSmGjESK4upITdOISTlbuPss3OZ0iuwylLcfojZO6Os9oszPQNemvFruy8r8DZCWlWh41Wzgn"
+      },
+      {
+        "season": 3,
+        "episode": 8,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxxDIirpd8Joag6jeUZib7VvSi8SbIsYL1rHG9-uNhwrAjx1sR64wZg49RutbwEn0uK0Eez7wxn_0G2aJPE8S9j2iPelYtitz3PypWXJrp5XdlkkjOTIyJJsoNp9mMFbsahU64K"
+      },
+      {
+        "season": 3,
+        "episode": 9,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxgR6fKH3xg-L8QKAUEKKMsd4UznECLPBW7zwI4sWTopEEbcXhpff3ccrG0tEVWVo_SShVsR0Z8cm4WBMs_UruwrL0_rCG9y9esmTi9lNHxHM4VMVEzpridqktKqloS3ssb1ry9"
+      },
+      {
+        "season": 3,
+        "episode": 10,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dweCLKm6KSSMlkIZPeRqAajBT7lVhAEC59l86GITGNOht6JzHLbii3VDvJZs6cRwI3wd3DZMhGxHLEoEetE1dUDeJb7DuYZHV892a0nvZET30vZ7yE4ptXKqXkyHrRwz7UDcrEU"
+      },
+      {
+        "season": 3,
+        "episode": 11,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer20&subfolder=ondemand&vid=DEMOSLYRKMTSNYBAT03EP11"
       }
     ]
   },
-  "95479": {
-    "title": "Jujutsu Kaisen",
+  "65930": {
+    "title": "My Hero Academia",
     "type": "tv",
     "episodes": [
       {
         "season": 1,
         "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd3hMUHlzWlZUOGFZOGdzZ1U3OWRxOW1hSkFvMmQySnVjY25oWHc4TDFUc1JmeGc3X1NURENmb01PZ1o1UlVzOGlfR0R5d3pMSnoxb0gwTUw5LXVlY3ZzSllLZFhKVDBIWXFCaUJNZkN3eFowcjNKTWJpaElCYlNQc1FfT2hLa3FVcGh6NF8="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP01"
       },
       {
         "season": 1,
         "episode": 2,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeVFPNEJtZ215QU5uQ0VlVFpMaXZnS2FJTXZpd1pRYUxxcnpjcktnWHJXQVNxN2tON2ljck96YVdQZnA2Yi1HUjBoMy1LVGluNkloX1J4N3QwUmxjdkJCNjhzOERzS2ZBVFN1bzJMZUlWZUVUcnRLZmN5S090ejFYbFJ1akxQcnVBVklydw=="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP02"
+      },
+      {
+        "season": 1,
+        "episode": 3,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP03"
+      },
+      {
+        "season": 1,
+        "episode": 4,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP04"
+      },
+      {
+        "season": 1,
+        "episode": 5,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP05"
       },
       {
         "season": 1,
         "episode": 6,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkdzQ0c0FPSmJqd0U5MkVtS3JsNHQzbHdqM056d3FEbFBOWDNVLWdjWTlhZm13SDUweDkwUU1jRDNJaG4yV1R3MExPR2hIclZWaF9mUmlfRjBXUlJfU25lZ05LZUs5YWw0aVFPZ1gxVlFfODZITGF0eUJrUFJaRmZ2VVRnUk9ZTlZGMDk3d0Y="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP06"
+      },
+      {
+        "season": 1,
+        "episode": 7,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP07"
       },
       {
         "season": 1,
         "episode": 8,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd1VKVEVpMkhRa1RwWktkZG42eVEta0V3aVJiR043Uk9EZDAxZFVDb0pDbXI1V3QxNEVWTlk5Q1JMOVQyUFJMa25YLXRTd256SGE4OFV4Q0hsZDJQeGFWOW5tR0tRVjItNGVnRFhwMTg3MHBZMlhWSzk5bzk0S0kzSmtnNUFRT0dMUkdOSlQ="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP08"
       },
       {
         "season": 1,
         "episode": 9,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeEpCUkdZOU9wLTJheDRBczduSV9uVEFGNEtoNVFBYzhNMWdKaEN1RXhjWGF5N2pLT2MwX3lRazJKWUFOVERiUmF2TGlWdGVOY3dhN2hSc1hmaU9MQ3pTdWp3emN0ODhvX1ZvQ0VPN2pQR0pXOVlnYzdHY1JIN1dPT2o0QnpOSUVFMXMyZw=="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP09"
       },
       {
         "season": 1,
         "episode": 10,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkekoxUFZkY1MzakEydXU4OWNpTUc1YnU4c0dHbjJ0MldtVjlHb2FVNG9HazN2M1Zja0Z3c1otU09qNVVkLWlOMUF6UEVtaXRIWG51VmJQaUt2T1RoZGt1M0lBckVMeXgwbmZpUzR2c0NoYW1iR3diLWVYanhCOFVpSHpJQVdKUXFjajB6RnI="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP10"
       },
       {
         "season": 1,
         "episode": 11,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkekxobmpHWmRNdW95MzJ4RWF1c0VJenptQVUycC10YVhJa3FGbi1wc2JWUUdqTTZjTlVTRnh5NzhVRDJFbVpzczhIc3QxbU5oY0pOREFON255TEtkZmpaWGRJVFpkSlR2U19VVVJ1X2wtMGF3TGRid1p6QU1Tb3pnTlplNktWa0N3ZDJydk0="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP11"
       },
       {
         "season": 1,
         "episode": 12,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeDRVSm9TcWZXNVktcVJDVU1BaFNtUU9vUHNIVWhTNmpmS09mNV94T2UwbXJfYThhZWxMcS1DdEx4UEhEM3hGWGdFM3h1N2tVMlZjZG8xaHN1eTFTak8tdll2OXI1eHVaRWJvU1RUUVNOck55RGtZTklXdUVkcDFUM3NJODB6WmpUUWUtV2Y="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP12"
       },
       {
         "season": 1,
         "episode": 13,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeW5ES2hManhvQ19VVW5lOWZ3Mk1rVUxGTk5xSUYtR09RMkl6Ry1zaVJkeDRLeEhuR0JvLWlCVk0xMWY4em1kaHc5RUxNc3NNb0xYdUVVa2RvTUpfMmZwaHQ1OGNTekpUSGJZal81Z3pXYjQ0TklKUVhlbFRjNnF3T2dVMWJyWkVEZF9uVQ=="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS01EP13"
+      },
+      {
+        "season": 2,
+        "episode": 1,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP01"
+      },
+      {
+        "season": 2,
+        "episode": 2,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP02"
+      },
+      {
+        "season": 2,
+        "episode": 3,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP03"
+      },
+      {
+        "season": 2,
+        "episode": 4,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP04"
+      },
+      {
+        "season": 2,
+        "episode": 5,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP05"
+      },
+      {
+        "season": 2,
+        "episode": 6,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP06"
+      },
+      {
+        "season": 2,
+        "episode": 7,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP07"
+      },
+      {
+        "season": 2,
+        "episode": 8,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP08"
+      },
+      {
+        "season": 2,
+        "episode": 9,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP09"
+      },
+      {
+        "season": 2,
+        "episode": 10,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP10"
+      },
+      {
+        "season": 2,
+        "episode": 11,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP11"
+      },
+      {
+        "season": 2,
+        "episode": 12,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP12"
+      },
+      {
+        "season": 2,
+        "episode": 13,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP13"
+      },
+      {
+        "season": 2,
+        "episode": 14,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP14"
+      },
+      {
+        "season": 2,
+        "episode": 15,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP15"
+      },
+      {
+        "season": 2,
+        "episode": 16,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP16"
+      },
+      {
+        "season": 2,
+        "episode": 17,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP17"
+      },
+      {
+        "season": 2,
+        "episode": 18,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP18"
+      },
+      {
+        "season": 2,
+        "episode": 19,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP19"
+      },
+      {
+        "season": 2,
+        "episode": 20,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP20"
+      },
+      {
+        "season": 2,
+        "episode": 21,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP21"
+      },
+      {
+        "season": 2,
+        "episode": 22,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP22"
+      },
+      {
+        "season": 2,
+        "episode": 23,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP23"
+      },
+      {
+        "season": 2,
+        "episode": 24,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP24"
+      },
+      {
+        "season": 2,
+        "episode": 25,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer12&subfolder=ondemand&vid=BKNHROS02EP25"
+      }
+    ]
+  },
+  "46260": {
+    "title": "Naruto",
+    "type": "tv",
+    "episodes": [
+      {
+        "season": 1,
+        "episode": 1,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwujYncgpZc4_QXXERzJBf7f4vOsp-wbjYUpvhERxlYoRbe_vZTU6r_mqAPdxuCYuMb6qhoBOUxaeq1rwL16H9xmx-iAoEvYK16O-huQB7Fye4vumYX9Rikq5WJEEL4Se6xhpXW"
+      },
+      {
+        "season": 1,
+        "episode": 2,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwhrKCIUqEVZh5P6mU86jcUuZIAy3x3EFYefNLZgoaUp3eWt38K-exa-2x7-XkDkMNseayDCC9zrqRhj0KosRJNP0XjT3-ao7YjDB8VNbzfqeQTokrRFJr_4zGVQlhkYtZ9Af4"
+      },
+      {
+        "season": 1,
+        "episode": 3,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwqr1FYupR0WoFBdZG57dkz9kosxVPOIACyFPF1kRxo7swLmWV8cjHMZZRnSjeLF_pLBzC2jQxx5XIvqR4ti4DL1OK8m2zqpD9nuc3rTGQSVlIS6SAAvFVTKrEkS9sAkeLREpIU"
+      },
+      {
+        "season": 1,
+        "episode": 4,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxyP2Sn0iiayFh2MeQDDQKiSowhkvaF-01C-umPCVFJy9vZFWu3ITB9G9PFaHOnBZZKA52UPM7H9uHKS_0wMZ44pamPhD_h85rqlJ4CTxb1A2CjvxsX6dZm_8O3U8Ng4tV8OIk"
+      },
+      {
+        "season": 1,
+        "episode": 5,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwFQBrn6C_s0PJktkEIHdCsbnrr1dLjaDUbFYmdCHBS0Z1AXP4hdqYFVFdkv9FQ2quLqoS481ifBGil9M41DT2Z0t6lOkETr5yR_kxvoOPtdShWEgh67vIyGXpjo0XJC6KljqAB"
+      },
+      {
+        "season": 1,
+        "episode": 6,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzIvI_9UXcZlVPx15Tx3v8nUCOFyKhW3G5AqUrV81tk8bmuBmLJ0vr9BPqlTRrldxvAP92UIQ171nPHJ55_vhqbwqI3Yugu-NhBUJwxQGcuP_DL1RAxPaJhaYEdIscJuTaLiZX9"
+      },
+      {
+        "season": 1,
+        "episode": 7,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx3VvSoBT0tdluLBuGkZs8zn-JDpjXhNF9xw5qlcW9c7CF_Y6RcgNd6tp6wiLIR2i-QmrTau6-zOe3jHMzs4eCFcZ2h0qBTTcWHCnDplpXDSswCmcVnltHiLB-E4x4AzY8NChq9"
+      },
+      {
+        "season": 1,
+        "episode": 8,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwK5xEM03T6hb2_9lT6lIdw9ikYK8M0U-E9BVbr5WKgvetKHPtBKNgBd9010nrSW8rq5AweAjYiGtt9xT6_yBEtzOrqQLRa6eFfnVm8qPg7c5Ko4DxaCAtLooq_pdDtHXcC5Ik"
+      },
+      {
+        "season": 1,
+        "episode": 9,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzr2_qy0fHkyzyU42jbFqqd9spSqvopWtzn9MrCZ2B3poH2iE_RSzgG93fVEpQvQKnFaTXlYktYwY3sd80VXK9OHkjssGohq9HZ9XCoMvqxe2E0Djbdm61WA2EeQDUgxKxQTw"
+      },
+      {
+        "season": 1,
+        "episode": 10,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx2G0Pp02FzyVGWpfIT9km_yR59dUWba-8tR-CMdbuppdfC3MjU2095H0HnxM5eDvDFePMu1ctZFcc_MvDXKmQ3eFf4_mbM0-tBwCB8hwjjULHs385EP6rtggp5mdokprkyFd4"
+      },
+      {
+        "season": 1,
+        "episode": 11,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP011"
+      },
+      {
+        "season": 1,
+        "episode": 12,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP012"
+      },
+      {
+        "season": 1,
+        "episode": 13,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP013"
       },
       {
         "season": 1,
         "episode": 14,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd2NjY2ZMYU5TVjlDS2ZobFNYcWhreU5hYl9rQmRGaTRyR2pVTWJKLW43cXFxVHkxNUF5NEtUanZWX0RzMllsanUxeDdQQzUxQTZEU01IRnc2Sl9PVllRbzVLTV9pTHAwTUk0TjQ3Q3JGOTRhbmhaM2FpS1l1al9mOTFYTk9JajQzeDJGVFE="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP014"
       },
       {
         "season": 1,
         "episode": 15,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeFhKOWJZcjQ0cFVFSmZLNjJWbHBZZjJNaGNTZGtFUE5OM0FmRk55bFdPazBoLTFOSVJWcEJubTB0U00wbENGZ09UWUpQRy1wQXd6S2xRWXlsMW9ydFl1c3VrNGtMZTZPNFNqbmFNN25hb1hBWWRINFV5VmhoZWRkQkt4Q1U0d1VKemdEbGY="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP015"
       },
       {
         "season": 1,
         "episode": 16,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeDFQbmFld2dVTF9uZ2lKQ1J4eldURlU4TjlCcGYzZzl6RXIzbTVoR1p0dzhRRURpUmVnN1hNOU5uT3JBY0x6Y2dabDYzTXNDcmhYemlBY2hTRlg5VnlrVldKbW85a2pwNmE3c1dlQzU5MmM3VU44cVN5eU9yUTZYd2M3V0xDTFNaY1VjQQ=="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP016"
       },
       {
         "season": 1,
         "episode": 17,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkd0d4cVVRWEVvQ2pLLTI3UDBuaEk2MGF0MElXR2NJWHFEOXlabFhKRzFmRHh5NUtvWWpOVkVMVUctRkZMbVB4RllaVHhXdDlJQ2Y5eWhoUU10ZFJxOFZTZ1FWLUhJOHY4b19tQ3hhTjRzY3JzWWNmdnprNUxHQXBGMnlCb0xScFZKSllsUU0="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP017"
       },
       {
         "season": 1,
         "episode": 18,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeUMtRWVYODJzS3lrdjRib2haUjIzYXcxU0xHb3JDNVJFQlFOdExfUlpoSlJmUmtZZ2NRb3RsY2dRMVZEZnhuaUVHRkpnM1RUN1dncE9DSWxHUF92clpaTFpmQWY0NnFhNW9vTVVoNW5ncm4wOV9GUW1NSGVhZnZoZzRXblRsOFh0LV9nOU0="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP018"
       },
       {
         "season": 1,
         "episode": 19,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeEFxdkZveUlzRjB6MVdTWVJUQlBreVlIb3p6OEgyZGFfbzQ4cGdVT2xnU0lkLW11VzFYTEFDcVhRdTJ0R2hqeFBidzhiZnpQWlNjLXd4RERQLUZpWDVaVi1XTHowdElYUW1kOENLNEJtV1BLQmZxMjgzc09xemk0bkxRUlExODhLM3JWTQ=="
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP019"
+      },
+      {
+        "season": 1,
+        "episode": 20,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP020"
+      },
+      {
+        "season": 1,
+        "episode": 21,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP021"
+      },
+      {
+        "season": 1,
+        "episode": 22,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP022"
+      },
+      {
+        "season": 1,
+        "episode": 23,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP023"
+      },
+      {
+        "season": 1,
+        "episode": 24,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP024"
+      },
+      {
+        "season": 1,
+        "episode": 25,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP025"
+      },
+      {
+        "season": 1,
+        "episode": 26,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP026"
+      },
+      {
+        "season": 1,
+        "episode": 27,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP027"
+      },
+      {
+        "season": 1,
+        "episode": 28,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP028"
+      },
+      {
+        "season": 1,
+        "episode": 29,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP029"
+      },
+      {
+        "season": 1,
+        "episode": 30,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP030"
+      },
+      {
+        "season": 1,
+        "episode": 31,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP031"
+      },
+      {
+        "season": 1,
+        "episode": 32,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP032"
+      },
+      {
+        "season": 1,
+        "episode": 33,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP033"
+      },
+      {
+        "season": 1,
+        "episode": 34,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP034"
+      },
+      {
+        "season": 1,
+        "episode": 35,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP035"
+      },
+      {
+        "season": 1,
+        "episode": 36,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP036"
+      },
+      {
+        "season": 1,
+        "episode": 37,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP037"
+      },
+      {
+        "season": 1,
+        "episode": 38,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP038"
+      },
+      {
+        "season": 1,
+        "episode": 39,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP039"
+      },
+      {
+        "season": 1,
+        "episode": 40,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=NRTOEP040"
+      }
+    ]
+  },
+  "31910": {
+    "title": "Naruto Shippuden",
+    "type": "tv",
+    "episodes": [
+      {
+        "season": 1,
+        "episode": 1,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx-7WRiCF8duytuB4WNqphIpz26rB1L7d77Yaw_N9rrwED0BVtjbMimphdNBGn42QzA1y3x2sbvZN26Hi_GvrpxeHydc9Pt82B4yq1Qq31uDPr67KDYYVPxKYR__aTxlKme3Zc"
+      },
+      {
+        "season": 1,
+        "episode": 3,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzDlXJ2eh-3j0HRj5Qtu-_PUm6VXBwbu8zSAH0Douro0SXENbev2oVzQjN7eLcGOqY-K37kYu3M5YaM9jm5LCQsrG_bP0IfJkc4C8gdAFPIoYCiZMTCFZ3SkP6E8AJERlTP7hI"
+      },
+      {
+        "season": 1,
+        "episode": 4,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzjY-lXPs5ewvXhmRmpcuDwqUm_6EcMjmfgg_W_2UhOW2FBymIxNlhwSz8_6AhvnUwVlqI3-Z99d4sWj2sO0kQZn3g_2B49e0Sw3In6G1AuAWKWoVIKI2E8R_-vDHdnGeOY2mc"
+      },
+      {
+        "season": 1,
+        "episode": 5,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwktBU76I6rfVm6r8bcK-uYEsI7IIeCdAtHovgKQmpXH_fPqYZkdyeBRNHWnnXb4CIN-OhOwtMBFGZCRg3RaQfMUAezRY7quTBpFP9hIdQsHqxzpZx3gcmVeOTz-RyEOytwX9E0"
+      },
+      {
+        "season": 1,
+        "episode": 6,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dy2irZD6CyF3RnvldklCWWJfXpBLUZXi3ogcf9hQ1iYw4VXpJKrEBwwpSRfTeYS3AM8RlKvYXyY4jmgUuT7NXWBY9sh2x08sP2Q4EtQq1E0VRE9OcTPwV2tOwj4Dw_e-3nHtbZu"
+      },
+      {
+        "season": 1,
+        "episode": 7,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyUj5p6SQ1kSE5n1yd7ZkIco-BZSxcjYAZnEP8J5tIlrjV0iLI8y1TOgphxRED4PjWx8G9MlZ2ZECOIPZL3lAtub8QelzpwcSXzSp8Tq0mN9gF79TlP2_uq0glzZbGUVmaQhgY6"
+      },
+      {
+        "season": 1,
+        "episode": 8,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzlUISLTBYvaUgq7Ye-jzZxmWabD7xAbauvwUlFolC26hrbbOpVHlSk1jo2ZiPcFBth5paZzbprOp6b3cUA00_hjoSyaPv11VEhrz7oBbUlR_TwY0TaRDZNlMFvNK8E6J4q_TQJ"
+      },
+      {
+        "season": 1,
+        "episode": 9,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dz9V0NUpub7oVS2H7UwyrRS2gUGf2oDVycslQ_r82psGNz-2MoDgIAJZPMs-VND9jb5tj2IeEifPVCbLuO3KmJrOEovjRWOVhSbWwq68homm85K2De26JZRTubh_Lltd-WNRgOv"
+      },
+      {
+        "season": 1,
+        "episode": 10,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwEs5g-o9we9ffGBAeKn581wqpTqY3xQerVdumr75FFyuXMqmNAJZbC-Lx7QG-7wHjlXpmfqUMsw8NfGiSV_xP96bgSu8w5Qp9xBi8Ot-x0mgMMeqDsT1ir1zYccnGbR_MRcdqh"
+      },
+      {
+        "season": 1,
+        "episode": 11,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP011"
+      },
+      {
+        "season": 1,
+        "episode": 12,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP012"
+      },
+      {
+        "season": 1,
+        "episode": 13,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP013"
+      },
+      {
+        "season": 1,
+        "episode": 14,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP014"
+      },
+      {
+        "season": 1,
+        "episode": 15,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP015"
+      },
+      {
+        "season": 1,
+        "episode": 16,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP016"
+      },
+      {
+        "season": 1,
+        "episode": 17,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP017"
+      },
+      {
+        "season": 1,
+        "episode": 18,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP018"
+      },
+      {
+        "season": 1,
+        "episode": 19,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP019"
+      },
+      {
+        "season": 1,
+        "episode": 20,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP020"
+      },
+      {
+        "season": 1,
+        "episode": 21,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP021"
+      },
+      {
+        "season": 1,
+        "episode": 22,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP022"
+      },
+      {
+        "season": 1,
+        "episode": 23,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP023"
+      },
+      {
+        "season": 1,
+        "episode": 24,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP024"
+      },
+      {
+        "season": 1,
+        "episode": 25,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP025"
+      },
+      {
+        "season": 1,
+        "episode": 26,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP026"
+      },
+      {
+        "season": 1,
+        "episode": 27,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP027"
+      },
+      {
+        "season": 1,
+        "episode": 28,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP028"
+      },
+      {
+        "season": 1,
+        "episode": 29,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP029"
+      },
+      {
+        "season": 1,
+        "episode": 30,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP030"
+      },
+      {
+        "season": 1,
+        "episode": 31,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP031"
+      },
+      {
+        "season": 1,
+        "episode": 32,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP032"
+      },
+      {
+        "season": 1,
+        "episode": 33,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP033"
+      },
+      {
+        "season": 1,
+        "episode": 34,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP034"
+      },
+      {
+        "season": 1,
+        "episode": 35,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP035"
+      },
+      {
+        "season": 1,
+        "episode": 36,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP036"
+      },
+      {
+        "season": 1,
+        "episode": 37,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP037"
+      },
+      {
+        "season": 1,
+        "episode": 38,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP038"
+      },
+      {
+        "season": 1,
+        "episode": 39,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP039"
+      },
+      {
+        "season": 1,
+        "episode": 40,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=NRTOSHPDUBEP040"
       }
     ]
   },
@@ -792,17 +917,17 @@
       {
         "season": 1,
         "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkenFleXRYc3R5dVJ4a3NTRGpMMEN6M0Nob1lsM0NvZzN3UWtmTDNnRjd3Z1FBQTN3aHpBWWNzYXNWbHpRVDdIaEVDcWh5clV0a2RSNEhPUXlKSDVEUEg5SlJYZEpsX2RBcnByZ3E2ZExjb05FVHlKa0NCakJTSkhjOE1mY0wyWndSMnBNNnU="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzqeytXstyuRxksSDjL0Cz3ChoYl3Cog3wQkfL3gF7wgQAA3whzAYcsasVlzQT7HhECqhyrUtkdR4HOQyJH5DPH9JRXdJl_dArprgq6dLcoNETyJkCBjBSJHc8MfcL2ZwR2pM6u"
       },
       {
         "season": 1,
         "episode": 2,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeWFlVzZmODlWTUJfODk5bTJvYUZtU1Jjd0UyaFVra0xWOFF6QUtKSzN2YnRkeFFoY1RzUXcwLVRoMGVwMzBEbnJYWDF4N1h3Z0h0Wlk3aWJfdmtwaFJ4Ym8tcEFnUG5md1MxdEZyd0daZjRBbFQ1R0NpQUZZa2htdEE3bERmSndhaVlEVQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyaeW6f89VMB_899m2oaFmSRcwE2hUkkLV8QzAKJK3vbtdxQhcTsQw0-Th0ep30DnrXX1x7XwgHtZY7ib_vkphRxbo-pAgPnfwS1tFrwGZf4AlT5GCiAFYkhmtA7lDfJwaiYDU"
       },
       {
         "season": 1,
         "episode": 3,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeHBLZjFIODVfaW1nUE1UeWRISE44OXNyVFcxd3BlRTlBUWQ0dFdIaDNNaVdfenNoZ2w0bndZZVg4VzJBMUJ6SU8xYkh5NTVEaktub084d1lmeS1KS25lNnhlcWhwVkdJa3l6ZmJ3MzJ2b1V6N1dzQl9hODMyVEc4c3ROQ1ZWWkRuMzNCQ20="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxpKf1H85_imgPMTydHHN89srTW1wpeE9AQd4tWHh3MiW_zshgl4nwYeX8W2A1BzIO1bHy55DjKnoO8wYfy-JKne6xeqhpVGIkyzfbw32voUz7WsB_a832TG8stNCVVZDn33BCm"
       },
       {
         "season": 1,
@@ -852,67 +977,148 @@
       {
         "season": 1,
         "episode": 13,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/1/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dz7QjkBhE51tirLFUINCZ8pFIOncnBmxqe8otCW2YAl7yoNEUt9ppUT3U80kxqILXspEG616UcBOoXRDuXPzaw1_TC_Ng0JhQMCTkjMqmm4MkDoRBNruZo6UHCU60raya5Mq4c"
       },
       {
         "season": 1,
         "episode": 14,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/2/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxwaYe6IPV5UfkSXxzZ0Gi9U_5ZoPWGqRVp4gmGtg4gs59YKV9YVHMl9oc9Epq4yvXTWuBOyCTLxYOJslDEo4ZddGpL-RP9rptEqpkSV9Yw2dKF6BFS1C56Kmvq4iR6CNYdVCU"
       },
       {
         "season": 1,
         "episode": 15,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/3/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyZahKL1WeKKWGRJAiogDk8pilVkJ_VS1ldbvTAbOvoPpYCJti5UdxtEsig3NTJysYvPw9s-xK1H4vUJYwrLnRp8MpG-eUxMNIhUnfYqDTZmddqt6CKV00IGihxdwpyoN3aC-Q6"
       },
       {
         "season": 1,
         "episode": 16,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/4/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyUL0NZsJrzXJNULo77cskYGOSQIy0_DuEm5PsYiUzVhKwVPUmneVxRAvWRtVDXQ7bul0RrrfsDx67hiNqUEZS4z3-0D__RcDbqKb2JTrU1Anjh3yEN0ppcqh9iUJQLCGPkEmM"
       },
       {
         "season": 1,
         "episode": 17,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/5/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyGMmlkcoM_ISaxi7PefcJV6U--_T3Fy0CHNJu_LWJs9O_YfpoLfnKQtApwTEstDFevQfH9CYlnPtuXxlCCzG7z41r3s8hFCA9qpjLE5cwHTzMdPnGWURFoz9aO7IV9JSRg0g"
       },
       {
         "season": 1,
         "episode": 18,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/6/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dw_5k15LQESMxqXSXCRHkj9zud5CjXyZVtfF1zXIqt5FVZ_jVCveCjmUEtn888mrTWycVx-XB7HpcVpyYjCa5wyXEpex7yNT9cLfNTYodXlNkpR06sNdRQCL2teThp8AKf8Kdo"
       },
       {
         "season": 1,
         "episode": 19,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/7/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwj6Mo81s_71idW0kl12XfGKLYiLLI4QSplsKzS0lQTS3VDErENqTACjY1ZFoREdhJLckBzkQ0jgUExJAwIUY1DD4o4Ybxd7ZdgNwwwCzce0tOrlQjtaX2LWFC0tyIxIV16fYje"
       },
       {
         "season": 1,
         "episode": 20,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/8/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx-lx-QXWDr6adE3FymIVxcjS07tXgs4aRTLQb9ZZSk-JwWIWQe6NvutndBVppJbK_lVnusGXXHly59nmsPKDegY3OaFM-j2nAT01s006FSFxlgPmwoXN_BCMjZjxj0DRwsyjw"
       },
       {
         "season": 1,
         "episode": 21,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/9/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzl-lOagdWF5nKjLRqcL2P4zHXiuBXxUTCF3cLZDOKuQBmFj1Xi7eP8PDZZImtJyrF8xMutQV2rr3btrBRs2fPRse_NECo_4D0u6bRqG8Kk9AMuOzZJfp_G6jAvh9uvEuuH6w"
       },
       {
         "season": 1,
         "episode": 22,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/10/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxZFCyptLGswY237hf4xek8olscyEfozUCfM-11-MzB_DSfNvISl3hm4fSYrsjNW47wPX75dHsBLTRTbJV9m4QEKDSuu9HYbubp4t6QCvy7D29sM3hZ5TrIz3X2vYvLAxR77P8"
       },
       {
         "season": 1,
         "episode": 23,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/11/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwWO4JLA0Z_NHS4sVEpmWHanE8ikfpRgQeijmf7Peb81S_f0D6hc7qe0TLDAU6bcuGq_gaiqv5U0-Vp7d_L1yFeST8H98ENflaJPqjKsIKb4OWNoThPUp1ACEMKxyf8Y8y09hk"
       },
       {
         "season": 1,
         "episode": 24,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/12/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzL473LjFZcU7CXGeP6KfSVCGbMVA53LHyE_Uy5uUBHxza-D-hkkaJEfQqh_KYEz_JEQCU0t2L_gsAEKNksE54jIE9Lm-USo41Bl1x7-cbvQU6m2QTJCPwwpuZ3eJXn0Jl-Qfg"
       },
       {
         "season": 1,
         "episode": 25,
-        "url": "https://serv01.meusdoramas.club/#/video/127532/2/13/"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzw4CJry8Jh5Prw7gOmkml5oCgZl4uZiJqVGC62ZmoJNyvzk3b-fn8lZaaSPUCQ06mLvFMMrjxVBbHYibNcvH10hL7ASKYaJXCrg8Uji3FQ555ILcrqYi7Cc1xag0YqNhtARXnr"
+      }
+    ]
+  },
+  "37854": {
+    "title": "Sword Art Online",
+    "type": "tv",
+    "episodes": [
+      {
+        "season": 1,
+        "episode": 1,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwd9eBB2l_JvAW7LZDtiGPQBqhEmwWNFPn1bwh5F3X6a8_Zuwzj3fdH97Sjcaa852KqpNCYN4btQ9hv1pvrA3-SQwXXZAV4wZgx2SEuzoLp9Jfaf0Ivpp_yLIz0o7KJf_75rA"
+      },
+      {
+        "season": 1,
+        "episode": 2,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxNgvHYwmi5aQH86whC4P3qZ5MV9PvId9bgQKCL1QmIXbI1DhwrXH-m0ascLpO-s4ZpMBlewQBEBqqytF3F0IsHoYKf-6uV4_DLocCziwY3j2TAHFj64ftgbLRok2OnmKiLUXQ"
+      },
+      {
+        "season": 1,
+        "episode": 3,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyy5jer4EQwqKkOj2qPdhOOLOhXHb_rvFdYVFPjEgifbHTMq3ZlRublRm9N3ZLw49VYwH_vYSBdmM9pYStXca7atTcigL23V6dDxKwbex7aKpCgBPs24ZB2Y5mjWU-iyvyq1kc"
+      },
+      {
+        "season": 1,
+        "episode": 4,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzhCDqafcT1s3VPI0vhCs2pyvjqVZ32jGICG6YT7jg_pMgj6utkO2ujs0DeCpcp1LiB7jFid1hgPyuH-h0V2XitjfHdFYlu29kB8TVJ3ejtXZr4gXGX2q7GtRU-SSjOouNNpLYZ"
+      },
+      {
+        "season": 1,
+        "episode": 5,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxl8h74esJhFA3x2BBU5Hc-onkRsnUHci9vuHyrFNO5U2qbM_ZS7Co75X7Y9Zhsm-AI2CsL4fizZlx_on80OT3y6fm78_dCFpZo3PycwbDsAhz2Y1vHKRHNkSQF3VsjKvTnhVz2"
+      },
+      {
+        "season": 1,
+        "episode": 6,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzvgXwA76uY2pK54_r2-by5BxZkPHsE2T_7KpID8VakFUU3xNqUAkqkbcgi9UnTt1C3nS1-gBMXqA4qMU7Rd4GVIn0PkF3D3ntkzghEFZi9-ga1AACqUl0CmXWltJT1O2hEaYLO"
+      },
+      {
+        "season": 1,
+        "episode": 7,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzUoUSyvqLjgmgreWYBmcOpg_M_IFkI7JwVl6iR3NDj4Dz7svr9Fa_AWVznUIjXvqeOHxX24HuBTTNBtTmQBhh3BARgeNbkWZgg6l32JiaMJbafKvyhaclm9newdJqNcnKP-cg"
+      },
+      {
+        "season": 1,
+        "episode": 8,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwKwd4QskJk1-A4y7aQQuROh1yzi_jAK7Z4Fw_JpMzk98xXtpHtX_Jfk45wymFba8vLtCwcaEi2svx8-5X_HwwZYoJqB1mYOjEM6yQD7fycNpZbJdqq81Cxl8dTHn4LMgBFeXQ"
+      },
+      {
+        "season": 1,
+        "episode": 9,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzgZEljZw15e2hleHY4m7E8IDAmcRJLfjSvwVV2qZCpbiHyjiJt9uxMDcWQBXe5QUIP6UrhetadV79LdPcHpkM2jfICCdP0rqP8ad6GBeWky5Ky0-4k1CxJcmmRa4OTJg3EYmuf"
+      },
+      {
+        "season": 1,
+        "episode": 10,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx8etcJ-9rLTpqsWPpD-jo3AZ99RI2ymyk94WyZnYvkAycpZP1cGwOqPsHq39NT3Q5LidKxTh-cvA-eYRwhwiyM-FKSxtkvuJqN5I-qRqDoFVo16MvqIICD1eEMr08hxmsgo9uD"
+      },
+      {
+        "season": 1,
+        "episode": 11,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzo0W0DuFRNd0lWC74-bm2ogiwJIQHh5Vh7iIooDDEDna2DhGrcMt5N4EV3cRM6CL12bsJr15d_0-3Kx7JRVWJjB32yGx4Z5cPIKLi2FlFcJasKuz06Hsm6hyhl64hZ-QJpHBI"
+      },
+      {
+        "season": 1,
+        "episode": 12,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxEo1ZVMBo_C1W22Q9fKpjK7s1se5jdsTpdXgUGnuRsm3bT8_SCajn-djxUu1j_rzphjyhwUgxrGHKdIVS_NmwMwt0us2RbLpGhii4BHcXwJ_uVpUnNpLPFGgpo8rGIIuU1jFI"
+      },
+      {
+        "season": 1,
+        "episode": 13,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dz-_Mos9azSLfCjiUgjPKx5t43Jsvh0fQGCAUIM7ZwyTifw8B2d_QoLrYTuqy91gGdFTb8c9oZkuU_MdGd-YvuV1QUeTLcnrlQ59GlXmwo0720CCEUKT6KgdfyPv6tZkH5TK_k3"
+      },
+      {
+        "season": 1,
+        "episode": 14,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyALZzTcgiMhwuEh3L-4iWzIbB73yUlOUQeoErIOyeF8GsttZf7l3Y2j8y_JNDeJDPBpKcEa5yzVbLX8qliQYpXd8cwcqFAUpxqPa2C93tXRMoRCWfbj2DWTmvd_KS7SroSQajd"
+      },
+      {
+        "season": 1,
+        "episode": 15,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dz-wFmCF9u8sENhBseAYJ31XMH2P9_ZEJKxbKLu-MX80H8jAPTG2NUNf54_IuZaOmLKmkukbZhtTORx7YCCfewqT7STlomSqiSWf3tcfjOWeP_oMOlfqSxMABtF5K6DuIdK1Rk"
       }
     ]
   },
@@ -923,105 +1129,235 @@
       {
         "season": 1,
         "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeUxXWVRha2FfdXctTWJqbUwtRVBsSHliOFpOOHpDNkdYVWZJTTh1Zi1WUDB2OEFqN2lVOUZhQ3JLeVFNRXJmYjNiOGt4R011TS0tcmJDZEdsN1M3eEhVOXVYR2c2RUZZcmNMMW9wUTRVOGJZeEl0YkdDbEVmT2VSUjktLUFtWlRaYVZCYjU="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyLWYTaka_uw-MbjmL-EPlHyb8ZN8zC6GXUfIM8uf-VP0v8Aj7iU9FaCrKyQMErfb3b8kxGMuM--rbCdGl7S7xHU9uXGg6EFYrcL1opQ4U8bYxItbGClEfOeRR9--AmZTZaVBb5"
       },
       {
         "season": 1,
         "episode": 2,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeDFTd0oxNUZXSmV2eDVhakVhbWl3aHk4MlJFaUxiNW9md3IxeldvV092a1BjZGo4T2VrRk5XdnpfdGRqYXMwZFdDd3dRUjhvRnpoQUFRRU4yazE5TFBoV2V0c20yYnJxaDM1QkdOdktPVUdwclBMUGtaMlhiajNKeFBUeEUtOUhQMEpoa3g="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx1SwJ15FWJevx5ajEamiwhy82REiLb5ofwr1zWoWOvkPcdj8OekFNWvz_tdjas0dWCwwQR8oFzhAAQEN2k19LPhWetsm2brqh35BGNvKOUGprPLPkZ2Xbj3JxPTxE-9HP0Jhkx"
       },
       {
         "season": 1,
         "episode": 3,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkenJaQUljRTZ2TVpnUDBHbjJSaEZCb3A3NzM5OEgyZGR6cW03dWZldTlCNUhQTGN1Z0d3X3BzVm81OUYzRm4tdXNidnNEX21tTm5TXzZ0cVBJX0ZaelhMR1I2bGhwYnd1ZkhTQURCN0h0OG1aTU1iQzJFbDZaVGNqTmZYdml6c0VZZXh3"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzrZAIcE6vMZgP0Gn2RhFBop77398H2ddzqm7ufeu9B5HPLcugGw_psVo59F3Fn-usbvsD_mmNnS_6tqPI_FZzXLGR6lhpbwufHSADB7Ht8mZMMbC2El6ZTcjNfXvizsEYexw"
       },
       {
         "season": 1,
         "episode": 4,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkekVzdHFsMGNVRkZVaFB4VjRUZXlRc0xXWHdfU0VnUTRsdGZpU0pFTzhfU2VBZU5Ua2hxVWpwT215WGhkNW5ORDhRR3B6cGxVQVREYmRzYUtDY2JxN1BhV2s5cEt4Wk9EQnBLbFR1a3hNTTN1cDJrQ29QcFBfNnNhYkhBN2xvRmtpLVRDRQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzEstql0cUFFUhPxV4TeyQsLWXw_SEgQ4ltfiSJEO8_SeAeNTkhqUjpOmyXhd5nND8QGpzplUATDbdsaKCcbq7PaWk9pKxZODBpKlTukxMM3up2kCoPpP_6sabHA7loFki-TCE"
       },
       {
         "season": 1,
         "episode": 5,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkem9rdW1Ec0xERDBldm84SEdJWEVRWi1OQ3hTYkJtWFVVcS1nUVhUNU1UZThUTThqWWgxRkhFdy1CN1ZmeHVRanFXdTZhcHlUQVJoZjYyOHBGb2JpYWptRTUwc2lKSUpqdmZyN0NvOXROWmNZcHJhaXRFbXZHMkp1d0FWNUJTcS1lLTYxbw=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzokumDsLDD0evo8HGIXEQZ-NCxSbBmXUUq-gQXT5MTe8TM8jYh1FHEw-B7VfxuQjqWu6apyTARhf628pFobiajmE50siJIJjvfr7Co9tNZcYpraitEmvG2JuwAV5BSq-e-61o"
       },
       {
         "season": 1,
         "episode": 6,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeU5UUnItWWV0WHZaYnJpQlZSNHhQOERSWXFwd2lPWUtJOGRyY2NHeGVGaUdrWXR0WlZZdFpqcFB5OERqblVGa21Nc2tpSFJBbWFXZ0hzODljYkpFRVlvanRsOXRpb1Itd2NiVmdERGljX2JnaXJ2YUtQQ1hoWTJzU2JnSnpCeHdBSXJvNmw="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyNTRr-YetXvZbriBVR4xP8DRYqpwiOYKI8drccGxeFiGkYttZVYtZjpPy8DjnUFkmMskiHRAmaWgHs89cbJEEYojtl9tioR-wcbVgDDic_bgirvaKPCXhY2sSbgJzBxwAIro6l"
       },
       {
         "season": 1,
         "episode": 7,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeHBMbDc1eXJIUHNsNmNwRW1xNjMzUXdXdElpOEtTTTNZODlOTDEzdmZuRm5sRzZSRUdoeEczdHVxb1ZCSUNOLU80VUhWYzZNNmZydmk1VTBnb05BbFFVR0xjWTJTdlo0SFV5ZWhtckUtZGZFc2tKVnVwWUpVS1FNeEFzNkdWVG5BQ1lwSQ=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxpLl75yrHPsl6cpEmq633QwWtIi8KSM3Y89NL13vfnFnlG6REGhxG3tuqoVBICN-O4UHVc6M6frvi5U0goNAlQUGLcY2SvZ4HUyehmrE-dfEskJVupYJUKQMxAs6GVTnACYpI"
       },
       {
         "season": 1,
         "episode": 8,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkeUtUS1ctb0ZRbHF2YzdUT2JpNGlSU0QzOUlsV1JNYUdxRHJxWUllTzFiN2JsSkZGWGM1MDZKN2NWU2l4Vkp3bXhaUHptU2wwSlF0ZzFRUU5JWW9aNnVERnJvcHpXTlJYOUFfemxKODYtNEdGd05xOXAzOUh2WVJpb2lmdGZvR3lsZXpNMmU="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyKTKW-oFQlqvc7TObi4iRSD39IlWRMaGqDrqYIeO1b7blJFFXc506J7cVSixVJwmxZPzmSl0JQtg1QQNIYoZ6uDFropzWNRX9A_zlJ86-4GFwNq9p39HvYRioiftfoGylezM2e"
       },
       {
         "season": 1,
         "episode": 9,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkemFGbTBQMHV6b21ZYndaMFFLUWZ6MVJzU0FmX2tVWFNCTFZqVHkwWXdXczRBMjZjWFdlWE8yQ3lOUFRZRGQ4eVlpWHFMR0Vta25YY2taWlJLY3FLZk9YZG1Tc0lFSkJ6SGp3bk9uSk5EajJ4dnExNG9YdlJYNXFldnh4WkhHRS1kNWJXaHQ="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzaFm0P0uzomYbwZ0QKQfz1RsSAf_kUXSBLVjTy0YwWs4A26cXWeXO2CyNPTYDd8yYiXqLGEmknXckZZRKcqKfOXdmSsIEJBzHjwnOnJNDj2xvq14oXvRX5qevxxZHGE-d5bWht"
       },
       {
         "season": 1,
         "episode": 10,
-        "url": "https://www.blogger.com/video.g?token=QUQ2djVkdzY4b1lmTmRibVN4N1dLaHdFc2UxM2xHTnFYUTNIZzNSVlJnQnhPblBMdXdUZENFeWZmVkZreUlkaW1yTzhTSVlWY2dYUWdCY05LbWVtbzIzR204U0pjYzVMaGk1TWFSdENMSlBaQmpYOGdLVVhPb3hyUnNMZ1NkMnlScllMSWt3TUYyZw=="
+        "url": "https://www.blogger.com/video.g?token=AD6v5dw68oYfNdbmSx7WKhwEse13lGNqXQ3Hg3RVRgBxOnPLuwTdCEyffVFkyIdimrO8SIYVcgXQgBcNKmemo23Gm8SJcc5Lhi5MaRtCLJPZBjX8gKUXOoxrRsLgSd2yRrYLIkwMF"
       }
     ]
   },
-  "62171": {
-    "title": "Hagure Yuusha no Estetica",
+  "456": {
+    "title": "Os Simpsons",
     "type": "tv",
     "episodes": [
       {
         "season": 1,
         "episode": 1,
-        "url": "https://www.blogger.com/video.g?token=AD6v5dxXiiECaKhL6pivwH7BNazOXhgOfSzMXJBKbL3qEPnAuwDdil_NFODR5F2NdepLnzth-KAaW0Uc9COv2hM4a6-CXdNOqyRkOXAYOpzik6cjwu0vI-yxjReOYGF4Q9_-KDXYl-c"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP01"
+      },
+      {
+        "season": 1,
+        "episode": 2,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP02"
+      },
+      {
+        "season": 1,
+        "episode": 3,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP03"
+      },
+      {
+        "season": 1,
+        "episode": 4,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP04"
+      },
+      {
+        "season": 1,
+        "episode": 5,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP05"
+      },
+      {
+        "season": 1,
+        "episode": 6,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP06"
+      },
+      {
+        "season": 1,
+        "episode": 7,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP07"
+      },
+      {
+        "season": 1,
+        "episode": 8,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP08"
+      },
+      {
+        "season": 1,
+        "episode": 9,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP09"
+      },
+      {
+        "season": 1,
+        "episode": 10,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP10"
+      },
+      {
+        "season": 1,
+        "episode": 11,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP11"
+      },
+      {
+        "season": 1,
+        "episode": 12,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP12"
+      },
+      {
+        "season": 1,
+        "episode": 13,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP13"
+      },
+      {
+        "season": 2,
+        "episode": 1,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP01"
+      },
+      {
+        "season": 2,
+        "episode": 2,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP02"
+      },
+      {
+        "season": 2,
+        "episode": 3,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP03"
+      },
+      {
+        "season": 2,
+        "episode": 4,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP04"
+      },
+      {
+        "season": 2,
+        "episode": 5,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP05"
+      },
+      {
+        "season": 2,
+        "episode": 6,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP06"
+      },
+      {
+        "season": 2,
+        "episode": 7,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP07"
+      },
+      {
+        "season": 2,
+        "episode": 8,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP08"
+      },
+      {
+        "season": 2,
+        "episode": 9,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP09"
+      },
+      {
+        "season": 2,
+        "episode": 10,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP10"
+      },
+      {
+        "season": 2,
+        "episode": 11,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP11"
+      },
+      {
+        "season": 2,
+        "episode": 12,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP12"
+      },
+      {
+        "season": 2,
+        "episode": 13,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP13"
+      },
+      {
+        "season": 2,
+        "episode": 14,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP14"
+      },
+      {
+        "season": 2,
+        "episode": 15,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP15"
+      },
+      {
+        "season": 2,
+        "episode": 16,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP16"
+      },
+      {
+        "season": 2,
+        "episode": 17,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP17"
+      },
+      {
+        "season": 2,
+        "episode": 18,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP18"
+      },
+      {
+        "season": 2,
+        "episode": 19,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP19"
+      },
+      {
+        "season": 2,
+        "episode": 20,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP20"
+      },
+      {
+        "season": 2,
+        "episode": 21,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP21"
+      },
+      {
+        "season": 2,
+        "episode": 22,
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP22"
       }
     ]
-  },
-  "297762": {
-    "title": "Boruto: Naruto the Movie",
-    "type": "movie",
-    "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/08.mp4/index.m3u8&nocache1771202628"
-  },
-  "35": {
-    "title": "Os Simpsons - O Filme",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer4&subfolder=ondemand&vid=OSMPSFILME"
-  },
-  "585": {
-    "title": "Monstros S.A.",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer4&subfolder=ondemand&vid=MNSTRSA"
-  },
-  "257474": {
-    "title": "The Last: Naruto the Movie",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer3&subfolder=ondemand&vid=THLSTNRTOFLM"
-  },
-  "258893": {
-    "title": "Scooby-Doo! e WWE: Mistério na WrestleMania",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCServer09&subfolder=ondemand&vid=SCBDFLM22"
-  },
-  "409122": {
-    "title": "Scooby-Doo! e WWE: Maldição do Demônio Veloz",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCServer09&subfolder=ondemand&vid=SCBDFLM27"
-  },
-  "843906": {
-    "title": "Diretamente de Lugar Nenhum: Scooby-Doo! Encontra Coragem",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer5&subfolder=ondemand&vid=DRTMNTDLGRNHMSCBYDOENTCRGM"
-  },
-  "950387": {
-    "title": "Um Filme Minecraft",
-    "type": "movie",
-    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer3&subfolder=ondemand&vid=UMFLMNCRFT"
   },
   "124364": {
     "title": "Origem",
@@ -1030,178 +1366,243 @@
       {
         "season": 1,
         "episode": 1,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP01"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP01"
       },
       {
         "season": 1,
         "episode": 2,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP02"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP02"
       },
       {
         "season": 1,
         "episode": 3,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP03"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP03"
       },
       {
         "season": 1,
         "episode": 4,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP04"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP04"
       },
       {
         "season": 1,
         "episode": 5,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP05"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP05"
       },
       {
         "season": 1,
         "episode": 6,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP06"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP06"
       },
       {
         "season": 1,
         "episode": 7,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP07"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP07"
       },
       {
         "season": 1,
         "episode": 8,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP08"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP08"
       },
       {
         "season": 1,
         "episode": 9,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP09"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP09"
       },
       {
         "season": 1,
         "episode": 10,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP10"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP10"
       },
       {
         "season": 2,
         "episode": 1,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP01"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP01"
       },
       {
         "season": 2,
         "episode": 2,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP02"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP02"
       },
       {
         "season": 2,
         "episode": 3,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP03"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP03"
       },
       {
         "season": 2,
         "episode": 4,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP04"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP04"
       },
       {
         "season": 2,
         "episode": 5,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP05"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP05"
       },
       {
         "season": 2,
         "episode": 6,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP06"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP06"
       },
       {
         "season": 2,
         "episode": 7,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP07"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP07"
       },
       {
         "season": 2,
         "episode": 8,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP08"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP08"
       },
       {
         "season": 2,
         "episode": 9,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP09"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP09"
       },
       {
         "season": 2,
         "episode": 10,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP10"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP10"
       },
       {
         "season": 3,
         "episode": 1,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP01"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP01"
       },
       {
         "season": 3,
         "episode": 2,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP02"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP02"
       },
       {
         "season": 3,
         "episode": 3,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP03"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP03"
       },
       {
         "season": 3,
         "episode": 4,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP04"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP04"
       },
       {
         "season": 3,
         "episode": 5,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP05"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP05"
       },
       {
         "season": 3,
         "episode": 6,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP06"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP06"
       },
       {
         "season": 3,
         "episode": 7,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP07"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP07"
       },
       {
         "season": 3,
         "episode": 8,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP08"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP08"
       },
       {
         "season": 3,
         "episode": 9,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP09"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP09"
       },
       {
         "season": 3,
         "episode": 10,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP10"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP10"
       },
       {
         "season": 4,
         "episode": 1,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP01"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP01"
       },
       {
         "season": 4,
         "episode": 2,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP02"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP02"
       },
       {
         "season": 4,
         "episode": 3,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP03"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP03"
       },
       {
         "season": 4,
         "episode": 4,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP04"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP04"
       },
       {
         "season": 4,
         "episode": 5,
-        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP05"
+        "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP05"
       }
     ]
+  },
+  "950387": {
+    "title": "Um Filme Minecraft",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer3&subfolder=ondemand&vid=UMFLMNCRFT"
+  },
+  "585": {
+    "title": "Monstros S.A.",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer4&subfolder=ondemand&vid=MNSTRSA"
+  },
+  "409122": {
+    "title": "Scooby-Doo! e WWE: Maldição do Demônio Veloz",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=SCBDFLM27"
+  },
+  "843906": {
+    "title": "Scooby-Doo! Encontra Coragem",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer5&subfolder=ondemand&vid=DRTMNTDLGRNHMSCBYDOENTCRGM"
+  },
+  "1007757": {
+    "title": "Como Mágica",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer2&subfolder=ondemand&vid=CMOMGCA"
+  },
+  "269149": {
+    "title": "Zootopia",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer2&subfolder=ondemand&vid=ZOTPIA"
+  },
+  "1084242": {
+    "title": "Zootopia 2",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer2&subfolder=ondemand&vid=ZOTPIA2"
+  },
+  "635302": {
+    "title": "Demon Slayer: Mugen Train",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer5&subfolder=ondemand&vid=DEMOSLYRCMBINFTOFLM"
+  },
+  "287903": {
+    "title": "The Last: Naruto the Movie",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer3&subfolder=ondemand&vid=THLSTNRTOFLM"
+  },
+  "12722": {
+    "title": "Naruto: Guardiões do Reino da Lua",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer5&subfolder=ondemand&vid=NRTOFILME03"
+  },
+  "12720": {
+    "title": "Naruto: O Confronto Ninja na Neve",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer08&subfolder=ondemand&vid=NRTOFILME01"
+  },
+  "12725": {
+    "title": "Naruto Shippuden: Laços",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=4c194536"
+  },
+  "56391": {
+    "title": "Naruto Shippuden: A Torre Perdida",
+    "type": "movie",
+    "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=935d8edf"
   }
 }
