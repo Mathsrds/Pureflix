@@ -862,10 +862,15 @@
       }
     ]
   },
-  "287903": {
-    "title": "The Last: Naruto the Movie",
-    "type": "movie",
-    "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/07.mp4/index.m3u8&nocache1771202629"
+  "62171": {
+    "title": "Hagure Yuusha no Estetica",
+     "type": "tv",
+    "episodes": [
+        {
+        "season": 1,
+        "episode": 1,
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxXiiECaKhL6pivwH7BNazOXhgOfSzMXJBKbL3qEPnAuwDdil_NFODR5F2NdepLnzth-KAaW0Uc9COv2hM4a6-CXdNOqyRkOXAYOpzik6cjwu0vI-yxjReOYGF4Q9_-KDXYl-c"
+      },
   },
   "297762": {
     "title": "Boruto: Naruto the Movie",
