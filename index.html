@@ -764,9 +764,9 @@ const OPTS  = { headers:{ Authorization:`Bearer ${TOKEN}` } };
 const SERVERS = [
   { label:'⭐ PureFlix Direct', direct:true, fn:null },
   { label:'EmbedMovies 🇧🇷',     fn:(id,t,s,e)=>t==='movie'?`https://cdn-embed.com/filme/${id}`:`https://cdn-embed.com/serie/${id}/${s||1}/${e||1}` },
-  { label:'WarezCDN 🇧🇷',       fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.lat/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
-  { label:'2Embed 🇧🇷',          fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.online/embed/${id}`:`https://www.2embed.online/embedtv/${id}?s=${s||1}&e=${e||1}` },
-  { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.win/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'WarezCDN 🇧🇷',       fn:(id,t,s,e)=>t==='movie'?`https://warezcdn.site/filme/${id}`:`https://warezcdn.site/serie/${id}${s?'/'+s+'/'+e:''}` },
+  { label:'2Embed 🇧🇷',          fn:(id,t,s,e)=>t==='movie'?`https://www.2embed.cc/embed/${id}`:`https://www.2embed.cc/embedtv/${id}?s=${s||1}&e=${e||1}` },
+  { label:'VidSrc',             fn:(id,t,s,e)=>`https://vidsrc.to/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'VidSrc.me',          fn:(id,t,s,e)=>`https://vidsrc.me/embed/${t}?tmdb=${id}${s?'&season='+s+'&episode='+e:''}` },
   { label:'VidSrc Pro',         fn:(id,t,s,e)=>`https://vidsrc.pro/embed/${t}/${id}${s?'/'+s+'/'+e:''}` },
   { label:'MultiEmbed',         fn:(id,t,s,e)=>t==='movie'?`https://multiembed.mov/?video_id=${id}&tmdb=1`:`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
