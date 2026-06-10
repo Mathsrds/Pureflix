@@ -1684,15 +1684,6 @@ function mobCat(btn, section){
 
 // Oculta bottom nav ao entrar em detalhes, mostra ao sair
 const _origOpenDetails = openDetails;
-// Patch para esconder bottom nav na página de detalhes
-document.addEventListener('DOMContentLoaded', ()=>{
-  const nav = document.getElementById('mobile-nav');
-  const obs = new MutationObserver(()=>{
-  const cats = document.getElementById('mobile-cats');
-    const detOpen = document.getElementById('page-details').style.display === 'block';
-    if(nav)  nav.style.display  = detOpen ? 'none' : '';
-    if(cats) cats.style.display = detOpen ? 'none' : '';
-  });
   obs.observe(document.getElementById('page-details'), {attributes:true, attributeFilter:['style']});
 });
 
@@ -4153,9 +4144,7 @@ function injectIframe(box, url){
   const frame = document.createElement('iframe');
   frame.id = 'player-frame';
   frame.allowFullscreen = true;
-  // apresentação e mesma origem. allow-popups e allow-top-navigation são DEIXADOS DE FORA
   frame.setAttribute('allow','autoplay; fullscreen *; picture-in-picture *; encrypted-media');
-  frame.setAttribute('referrerpolicy','no-referrer');
   frame.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
   frame.addEventListener('load', onFrameLoad);
   box.appendChild(frame);
@@ -4688,15 +4677,6 @@ function mobCat(btn, section){
 
 // Oculta bottom nav ao entrar em detalhes, mostra ao sair
 const _origOpenDetails = openDetails;
-// Patch para esconder bottom nav na página de detalhes
-document.addEventListener('DOMContentLoaded', ()=>{
-  const nav = document.getElementById('mobile-nav');
-  const obs = new MutationObserver(()=>{
-  const cats = document.getElementById('mobile-cats');
-    const detOpen = document.getElementById('page-details').style.display === 'block';
-    if(nav)  nav.style.display  = detOpen ? 'none' : '';
-    if(cats) cats.style.display = detOpen ? 'none' : '';
-  });
   obs.observe(document.getElementById('page-details'), {attributes:true, attributeFilter:['style']});
 });
 
