@@ -67,6 +67,116 @@
         "season": 1,
         "episode": 13,
         "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST01EP13"
+      },
+      {
+        "season": 2,
+        "episode": 1,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP01"
+      },
+      {
+        "season": 2,
+        "episode": 2,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP02"
+      },
+      {
+        "season": 2,
+        "episode": 3,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP03"
+      },
+      {
+        "season": 2,
+        "episode": 4,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP04"
+      },
+      {
+        "season": 2,
+        "episode": 5,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP05"
+      },
+      {
+        "season": 2,
+        "episode": 6,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP06"
+      },
+      {
+        "season": 2,
+        "episode": 7,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP07"
+      },
+      {
+        "season": 2,
+        "episode": 8,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP08"
+      },
+      {
+        "season": 2,
+        "episode": 9,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP09"
+      },
+      {
+        "season": 2,
+        "episode": 10,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP10"
+      },
+      {
+        "season": 2,
+        "episode": 11,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP11"
+      },
+      {
+        "season": 2,
+        "episode": 12,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP12"
+      },
+      {
+        "season": 2,
+        "episode": 13,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP13"
+      },
+      {
+        "season": 2,
+        "episode": 14,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP14"
+      },
+      {
+        "season": 2,
+        "episode": 15,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP15"
+      },
+      {
+        "season": 2,
+        "episode": 16,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP16"
+      },
+      {
+        "season": 2,
+        "episode": 17,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP17"
+      },
+      {
+        "season": 2,
+        "episode": 18,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP18"
+      },
+      {
+        "season": 2,
+        "episode": 19,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP19"
+      },
+      {
+        "season": 2,
+        "episode": 20,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP20"
+      },
+      {
+        "season": 2,
+        "episode": 21,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP21"
+      },
+      {
+        "season": 2,
+        "episode": 22,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer01&subfolder=videos&vid=OSMPST02EP22"
       }
     ]
   },
@@ -864,18 +974,234 @@
   },
   "62171": {
     "title": "Hagure Yuusha no Estetica",
-     "type": "tv",
+    "type": "tv",
     "episodes": [
-        {
+      {
         "season": 1,
         "episode": 1,
         "url": "https://www.blogger.com/video.g?token=AD6v5dxXiiECaKhL6pivwH7BNazOXhgOfSzMXJBKbL3qEPnAuwDdil_NFODR5F2NdepLnzth-KAaW0Uc9COv2hM4a6-CXdNOqyRkOXAYOpzik6cjwu0vI-yxjReOYGF4Q9_-KDXYl-c"
-       }
+      }
     ]
   },
   "297762": {
     "title": "Boruto: Naruto the Movie",
     "type": "movie",
     "url": "https://api.anivideo.net/videohls.php?d=https://cdn-s01.mywallpaper-4k-image.net/stream/n/naruto-shippuden-filmes-dublado/08.mp4/index.m3u8&nocache1771202628"
+  },
+  "35": {
+    "title": "Os Simpsons - O Filme",
+    "type": "movie",
+    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer4&subfolder=ondemand&vid=OSMPSFILME"
+  },
+  "585": {
+    "title": "Monstros S.A.",
+    "type": "movie",
+    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer4&subfolder=ondemand&vid=MNSTRSA"
+  },
+  "257474": {
+    "title": "The Last: Naruto the Movie",
+    "type": "movie",
+    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer3&subfolder=ondemand&vid=THLSTNRTOFLM"
+  },
+  "258893": {
+    "title": "Scooby-Doo! e WWE: Mistério na WrestleMania",
+    "type": "movie",
+    "url": "https://redecanais.nexus/player3/server.php?server=RCServer09&subfolder=ondemand&vid=SCBDFLM22"
+  },
+  "409122": {
+    "title": "Scooby-Doo! e WWE: Maldição do Demônio Veloz",
+    "type": "movie",
+    "url": "https://redecanais.nexus/player3/server.php?server=RCServer09&subfolder=ondemand&vid=SCBDFLM27"
+  },
+  "843906": {
+    "title": "Diretamente de Lugar Nenhum: Scooby-Doo! Encontra Coragem",
+    "type": "movie",
+    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer5&subfolder=ondemand&vid=DRTMNTDLGRNHMSCBYDOENTCRGM"
+  },
+  "950387": {
+    "title": "Um Filme Minecraft",
+    "type": "movie",
+    "url": "https://redecanais.nexus/player3/server.php?server=RCFServer3&subfolder=ondemand&vid=UMFLMNCRFT"
+  },
+  "124364": {
+    "title": "Origem",
+    "type": "tv",
+    "episodes": [
+      {
+        "season": 1,
+        "episode": 1,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP01"
+      },
+      {
+        "season": 1,
+        "episode": 2,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP02"
+      },
+      {
+        "season": 1,
+        "episode": 3,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP03"
+      },
+      {
+        "season": 1,
+        "episode": 4,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP04"
+      },
+      {
+        "season": 1,
+        "episode": 5,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP05"
+      },
+      {
+        "season": 1,
+        "episode": 6,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP06"
+      },
+      {
+        "season": 1,
+        "episode": 7,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP07"
+      },
+      {
+        "season": 1,
+        "episode": 8,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP08"
+      },
+      {
+        "season": 1,
+        "episode": 9,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP09"
+      },
+      {
+        "season": 1,
+        "episode": 10,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer19&subfolder=ondemand&vid=ORGMT01EP10"
+      },
+      {
+        "season": 2,
+        "episode": 1,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP01"
+      },
+      {
+        "season": 2,
+        "episode": 2,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP02"
+      },
+      {
+        "season": 2,
+        "episode": 3,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP03"
+      },
+      {
+        "season": 2,
+        "episode": 4,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP04"
+      },
+      {
+        "season": 2,
+        "episode": 5,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP05"
+      },
+      {
+        "season": 2,
+        "episode": 6,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP06"
+      },
+      {
+        "season": 2,
+        "episode": 7,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP07"
+      },
+      {
+        "season": 2,
+        "episode": 8,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP08"
+      },
+      {
+        "season": 2,
+        "episode": 9,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP09"
+      },
+      {
+        "season": 2,
+        "episode": 10,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer22&subfolder=ondemand&vid=ORGMT02EP10"
+      },
+      {
+        "season": 3,
+        "episode": 1,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP01"
+      },
+      {
+        "season": 3,
+        "episode": 2,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP02"
+      },
+      {
+        "season": 3,
+        "episode": 3,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP03"
+      },
+      {
+        "season": 3,
+        "episode": 4,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP04"
+      },
+      {
+        "season": 3,
+        "episode": 5,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP05"
+      },
+      {
+        "season": 3,
+        "episode": 6,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP06"
+      },
+      {
+        "season": 3,
+        "episode": 7,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP07"
+      },
+      {
+        "season": 3,
+        "episode": 8,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP08"
+      },
+      {
+        "season": 3,
+        "episode": 9,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP09"
+      },
+      {
+        "season": 3,
+        "episode": 10,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer25&subfolder=ondemand&vid=ORGMT03EP10"
+      },
+      {
+        "season": 4,
+        "episode": 1,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP01"
+      },
+      {
+        "season": 4,
+        "episode": 2,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP02"
+      },
+      {
+        "season": 4,
+        "episode": 3,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP03"
+      },
+      {
+        "season": 4,
+        "episode": 4,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP04"
+      },
+      {
+        "season": 4,
+        "episode": 5,
+        "url": "https://redecanais.nexus/player3/server.php?server=RCServer27&subfolder=ondemand&vid=ORGMT04EP05"
+      }
+    ]
   }
 }
