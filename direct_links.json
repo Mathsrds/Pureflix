@@ -1555,6 +1555,11 @@
     "type": "movie",
     "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=SCBDFLM27"
   },
+   "258893": {
+    "title": "Scooby-Doo! Mistério na Lutamania ",
+    "type": "movie",
+    "url": "https:////%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer09&subfolder=ondemand&vid=SCBDFLM22"
+  },
   "843906": {
     "title": "Scooby-Doo! Encontra Coragem",
     "type": "movie",
@@ -1604,5 +1609,9 @@
     "title": "Naruto Shippuden: A Torre Perdida",
     "type": "movie",
     "url": "https://%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCServer01&subfolder=videos&vid=935d8edf"
-  }
+  },
+   "35": {
+    "title": "Os simpsons o filme",
+    "type": "movie",
+    "url": "https:////%72%65%64%65%63%61%6E%61%69%73%2E%6E%65%78%75%73/player3/server.php?server=RCFServer4&subfolder=ondemand&vid=OSMPSFILME    "
 }
