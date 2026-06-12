@@ -512,56 +512,6 @@ body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;ove
   #mobile-cats{display:none;}
   #mobile-nav{display:none;}
 }
-
-/* ═══════════════════════════════════════════════════════
-   SEÇÃO ESPECIAL: PARA VER COM SEU AMOR (Dia dos Namorados)
-   ═══════════════════════════════════════════════════════ */
-#sec-romance .section-title{
-  color: #ff6b9d;
-  text-shadow: 0 0 12px rgba(255,107,157,.3);
-  animation: heartbeat 2s ease-in-out infinite;
-}
-#sec-romance .section-title::before{
-  content: '💕 ';
-}
-#sec-romance .section-title::after{
-  content: ' 💕';
-}
-@keyframes heartbeat{
-  0%,100%{ transform: scale(1); }
-  14%{ transform: scale(1.03); }
-  28%{ transform: scale(1); }
-  42%{ transform: scale(1.03); }
-}
-#sec-romance .card{
-  border: 1px solid rgba(255,107,157,.15);
-  box-shadow: 0 4px 20px rgba(255,107,157,.08);
-}
-#sec-romance .card:hover{
-  border-color: rgba(255,107,157,.4);
-  box-shadow: 0 8px 30px rgba(255,107,157,.2);
-}
-#sec-romance .card-badge{
-  background: linear-gradient(135deg, #ff6b9d, #e50914);
-}
-#sec-romance .card-overlay .card-meta{
-  color: #ff6b9d;
-}
-#sec-romance .carousel-btn:hover{
-  background: rgba(255,107,157,.9);
-  border-color: #ff6b9d;
-}
-/* Faixa decorativa romântica acima da seção */
-#sec-romance::before{
-  content: '';
-  display: block;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #ff6b9d, #e50914, #ff6b9d, transparent);
-  margin-bottom: 20px;
-  border-radius: 2px;
-  opacity: .6;
-}
-
 </style>
 
 <base target="_blank">
@@ -858,7 +808,7 @@ function hasDirectLink(id, type, season, episode){
 
 // 3. ESTRUTURAÇÃO DE CATEGORIAS E MENUS
 const SECTIONS_HOME = [
-  { id:'romance',   title:'💕 Para ver com seu amor',  endpoint:'/discover/movie',       params:{ with_genres:'10749', region:'BR', sort_by:'popularity.desc', 'vote_average.gte':6.0, without_genres:'16,27,53,80', without_keywords:'210024', certification_country:'BR', 'certification.lte':'16' }, type:'movie' },
+  { id:'romance',   title:'💕 Para ver com seu amor',  endpoint:'/discover/movie',       params:{ with_genres:'10749', region:'BR', sort_by:'popularity.desc', 'vote_average.gte':6.0, without_genres:'16,27,53,80', without_keywords:'210024' }, type:'movie' },
 
   { id:'trending',    title:'🔥 Bombando Agora',         endpoint:'/trending/all/week',   params:{ region:'BR' },                                                                                                                    type:'mixed' },
   { id:'mais_vistos', title:'👁️ Mais Assistidos',        endpoint:'/movie/popular',        params:{ region:'BR', without_genres:'16', without_keywords:'210024' },                                                                    type:'movie' },
@@ -1594,50 +1544,89 @@ function injectIframe(box, url){
 /* ═══════════════════════════════════════════════════════
    SEÇÃO ESPECIAL: PARA VER COM SEU AMOR (Dia dos Namorados)
    ═══════════════════════════════════════════════════════ */
+#sec-romance{
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,107,157,0.03) 0%, transparent 60%);
+  border-radius: 12px;
+  padding: 8px 2% 24px !important;
+  margin-top: 24px !important;
+}
 #sec-romance .section-title{
-  color: #ff6b9d;
-  text-shadow: 0 0 12px rgba(255,107,157,.3);
+  color: #ff6b9d !important;
+  font-size: 26px !important;
+  text-shadow: 0 0 16px rgba(255,107,157,0.4), 0 2px 4px rgba(0,0,0,0.3);
   animation: heartbeat 2s ease-in-out infinite;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 #sec-romance .section-title::before{
-  content: '💕 ';
+  content: '💕';
+  font-size: 28px;
+  animation: float 3s ease-in-out infinite;
 }
 #sec-romance .section-title::after{
-  content: ' 💕';
+  content: '💕';
+  font-size: 28px;
+  animation: float 3s ease-in-out infinite 0.5s;
 }
 @keyframes heartbeat{
-  0%,100%{ transform: scale(1); }
-  14%{ transform: scale(1.03); }
+  0%, 100%{ transform: scale(1); }
+  14%{ transform: scale(1.05); }
   28%{ transform: scale(1); }
-  42%{ transform: scale(1.03); }
+  42%{ transform: scale(1.05); }
+  70%{ transform: scale(1); }
+}
+@keyframes float{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
 }
 #sec-romance .card{
-  border: 1px solid rgba(255,107,157,.15);
-  box-shadow: 0 4px 20px rgba(255,107,157,.08);
+  border: 2px solid rgba(255,107,157,0.25) !important;
+  box-shadow: 0 4px 20px rgba(255,107,157,0.12) !important;
+  transition: all 0.3s ease;
 }
 #sec-romance .card:hover{
-  border-color: rgba(255,107,157,.4);
-  box-shadow: 0 8px 30px rgba(255,107,157,.2);
+  border-color: rgba(255,107,157,0.6) !important;
+  box-shadow: 0 12px 40px rgba(255,107,157,0.25) !important;
+  transform: scale(1.08) !important;
 }
 #sec-romance .card-badge{
-  background: linear-gradient(135deg, #ff6b9d, #e50914);
+  background: linear-gradient(135deg, #ff6b9d, #e50914) !important;
+  font-size: 10px !important;
+  padding: 3px 8px !important;
 }
 #sec-romance .card-overlay .card-meta{
-  color: #ff6b9d;
+  color: #ff8fab !important;
+  font-size: 12px !important;
 }
 #sec-romance .carousel-btn:hover{
-  background: rgba(255,107,157,.9);
-  border-color: #ff6b9d;
+  background: rgba(255,107,157,0.9) !important;
+  border-color: #ff6b9d !important;
+  color: #fff !important;
 }
 /* Faixa decorativa romântica acima da seção */
 #sec-romance::before{
   content: '';
   display: block;
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, transparent, #ff6b9d, #e50914, #ff6b9d, transparent);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   border-radius: 2px;
-  opacity: .6;
+  opacity: 0.8;
+  box-shadow: 0 0 12px rgba(255,107,157,0.3);
+}
+/* Corações flutuantes decorativos */
+#sec-romance .section-header::after{
+  content: '✨ 💘 ✨';
+  margin-left: 12px;
+  font-size: 18px;
+  opacity: 0.8;
+  animation: sparkle 2s ease-in-out infinite;
+}
+@keyframes sparkle{
+  0%, 100%{ opacity: 0.6; transform: scale(1); }
+  50%{ opacity: 1; transform: scale(1.1); }
 }
 
 </style></head><body>
